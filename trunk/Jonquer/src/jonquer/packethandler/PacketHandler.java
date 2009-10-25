@@ -11,8 +11,8 @@ import jonquer.model.Player;
  */
 public interface PacketHandler {
 
-    public void handlePacket(Player player, byte[] packet);
+	public void handlePacket(Player player, byte[] packet);
 
-    public int getPacketID();
+	public int getPacketID();
 
 }

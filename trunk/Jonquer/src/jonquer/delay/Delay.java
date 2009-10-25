@@ -8,15 +8,15 @@ package jonquer.delay;
  */
 public abstract class Delay extends DelayedAbstractEvent {
 
-    /**
-     * 
-     * @param ms
-     *            - the MS to handle the delay for.
-     */
-    public Delay(int ms) {
-	super(ms, false, 0);
-    }
+	/**
+	 * 
+	 * @param ms
+	 *            - the MS to handle the delay for.
+	 */
+	public Delay(int ms) {
+		super(ms, false, 0);
+	}
 
-    public abstract void execute();
+	public abstract void execute();
 
 }

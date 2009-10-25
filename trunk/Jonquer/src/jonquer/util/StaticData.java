@@ -10,16 +10,16 @@ import java.util.HashSet;
  */
 public class StaticData {
 
-    private static HashSet<String> accounts = new HashSet<String>();
+	private static HashSet<String> accounts = new HashSet<String>();
 
-    public static HashSet<String> characters = new HashSet<String>();
+	public static HashSet<String> characters = new HashSet<String>();
 
-    public static HashSet<String> getAccounts() {
-	return accounts;
-    }
+	public static HashSet<String> getAccounts() {
+		return accounts;
+	}
 
-    public static HashSet<String> getCharacters() {
-	return accounts;
-    }
+	public static HashSet<String> getCharacters() {
+		return accounts;
+	}
 
 }

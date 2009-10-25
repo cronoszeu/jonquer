@@ -8,15 +8,15 @@ package jonquer.delay;
  */
 public abstract class RollingDelay extends DelayedAbstractEvent {
 
-    /**
-     * 
-     * @param ms
-     *            - the MS to handle the delay for.
-     */
-    public RollingDelay(int ms, int amount) {
-	super(ms, true, amount);
-    }
+	/**
+	 * 
+	 * @param ms
+	 *            - the MS to handle the delay for.
+	 */
+	public RollingDelay(int ms, int amount) {
+		super(ms, true, amount);
+	}
 
-    public abstract void execute();
+	public abstract void execute();
 
 }
