@@ -1,6 +1,10 @@
 package jonquer.game;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.InetSocketAddress;
 
 import jonquer.model.World;
@@ -104,23 +108,32 @@ public class Server {
 
 	/**
 	 * We load up all the usernames allocated & store them.
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	public void prepareAccounts() {
-		int count = 0;
-		File folder = new File(Constants.SAVED_GAME_DIRECTORY);
-		if (!folder.exists())
-			folder.mkdir();
-		for (File f : folder.listFiles()) {
-			if (f.getName().endsWith(".cfg")) {
-				StaticData.getAccounts().add(f.getName().replaceAll(".cfg", "").toLowerCase());
-				/**
-				 * @Todo: Load each Object up, & store the character names (to
-				 *        check if character name is in use)
-				 */
+	public void prepareAccounts()  {
+		try {
+			int count = 0;
+			File folder = new File(Constants.SAVED_GAME_DIRECTORY);
+			if (!folder.exists())
+				folder.mkdir();
+			for (File f : folder.listFiles()) {
+				if(f.isDirectory() || f == null)
+					continue;
+				if (f.getName().endsWith(".cfg")) {
+					StaticData.getAccounts().add(f.getName().replaceAll(".cfg", "").toLowerCase());
+					ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(Constants.SAVED_GAME_DIRECTORY + f.getName())));
+					jonquer.model.Character ch = (jonquer.model.Character) in.readObject();
+					in.close();
+					StaticData.getCharacters().add(ch.getName().toLowerCase());
+					
+				}
+				count++;
 			}
-			count++;
+			System.out.printf("Loaded " + count + " Accounts...  ");
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
-		System.out.printf("Loaded " + count + " Accounts...  ");
 	}
 
 	/**
