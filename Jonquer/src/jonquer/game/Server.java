@@ -71,6 +71,8 @@ public class Server {
 	    for (File f : new File(System.getProperty("user.dir") + "/src/jonquer/packethandler/").listFiles()) {
 		if (f.getName().equals("PacketHandler.java"))
 		    continue;
+		if(f.isDirectory())
+			continue;
 		Class c = Class.forName("jonquer.packethandler." + f.getName().replaceAll(".java", ""));
 		Object o = c.newInstance();
 		if (o instanceof PacketHandler) {
