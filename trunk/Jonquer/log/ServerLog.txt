@@ -1,0 +1,12 @@
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
