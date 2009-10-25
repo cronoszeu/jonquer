@@ -26,8 +26,8 @@ public class GameLogin implements PacketHandler {
 		if (p != null) {
 			player.retainObject(p, key);
 		}
-		player.getActionSender().sendHeroInfo();
-		player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "ANSWER_OK");
+		//player.getActionSender().sendHeroInfo();
+		player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "NEW_ROLE");
 
 	}
 
