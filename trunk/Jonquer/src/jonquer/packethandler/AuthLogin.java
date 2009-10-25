@@ -54,7 +54,7 @@ public class AuthLogin implements PacketHandler {
 				player.getCharacter().setAccountName(username);
 				player.getCharacter().setPassword(pass);
 				player.getCharacter().setConquerPoints(0);
-				player.getCharacter().setDexterity((short)50);
+				player.getCharacter().setAgility((short)50);
 				player.getCharacter().setHairstyle((short)130);
 				player.getCharacter().setHealthPoints((short)1000);
 				player.getCharacter().setLevel((byte)1);
