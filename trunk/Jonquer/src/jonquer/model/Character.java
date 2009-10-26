@@ -295,5 +295,9 @@ public class Character implements Serializable {
 	  * The Y location of the character on the map
 	  */
 	 private short y;
+	 /**
+	  * Direction this character is facing
+	  */
+	 public byte direction = 0;
 
 }

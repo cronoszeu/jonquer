@@ -24,6 +24,15 @@ public class Log {
 		cout(text);
 		write(text);
 	}
+	
+	/**
+	 * When someone does something the client would not normally do without modifications.
+	 * @param text
+	 */
+	public static void hack(String text) {
+	    write("HACK: " + text);
+	    cout(text);
+	}
 
 	public static void debug(String text) {
 		if (Constants.VERBOSE_DEBUG_MODE)
