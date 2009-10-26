@@ -4,6 +4,31 @@ import jonquer.model.Player;
 import jonquer.model.Character;
 
 public class Formula {
+    
+    public static final int HITPOINTS_UPDATE_TYPE = 0;
+    public static final int MAX_HITPOINTS_UPDATE_TYPE = 1;
+    public static final int MANA_UPDATE_TYPE = 2;
+    public static final int MAX_MANA_UPDATE_TYPE = 3;
+    public static final int MONEY_UPDATE_TYPE = 4;
+    public static final int EXPERIENCE_UPDATE_TYPE = 5;
+    public static final int PK_POINTS_UPDATE_TYPE = 6;
+    public static final int PROFESSION_UPDATE_TYPE = 7;
+    public static final int BLESSED_UPDATE_TYPE = 8;
+    public static final int STAMINA_UPDATE_TYPE = 9;
+    public static final int STAT_POINTS_UPDATE_TYPE = 11;
+    public static final int MODEL_UPDATE_TYPE = 12;
+    public static final int LEVEL_UPDATE_TYPE = 13;
+    public static final int SPIRIT_UPDATE_TYPE = 14;
+    public static final int VITALITY_UPDATE_TYPE = 15;
+    public static final int STRENGTH_UPDATE_TYPE = 16;
+    public static final int AGILITY_UPDATE_TYPE = 17;
+    public static final int HEAVENS_BLESSING_UPDATE_TYPE = 18;
+    public static final int DOUBLE_EXPERIENCE_TIMER_UPDATE_TYPE = 19;
+    public static final int CURSED_TIMER_UPDATE_TYPE = 21;
+    public static final int RAISE_FLAG_UPDATE_TYPE = 26;
+    public static final int LUCKY_TIME_UPDATE_TYPE = 29;
+    public static final int HAIR_STYLE_UPDATE_TYPE = 31;
+
 
     public static final short TALK_MESSAGE_TYPE = 2000;
     public static final short WHISPER_MESSAGE_TYPE = 2001;

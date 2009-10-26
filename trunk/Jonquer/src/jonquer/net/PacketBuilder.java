@@ -135,7 +135,7 @@ public class PacketBuilder {
 	bb.putInt(8, model);
 	bb.putInt(12, hero.getStats());
 	bb.putShort(48, hero.getHealthPoints());
-	bb.put(50, hero.getLevel());
+	bb.put(50,(byte) hero.getLevel());
 	//bb.putInt(28, ); head id
 	//bb.putInt(32, ); armor id
 	//bb.putInt(36, ); right hand id
@@ -146,13 +146,25 @@ public class PacketBuilder {
 	bb.put(58, (byte) hero.getDirection());
 	bb.put(59, (byte) hero.getAction()); // action
 	bb.put(60, hero.getReborn());
-	bb.put(62, hero.getLevel());	
+	bb.put(62,(byte) hero.getLevel());
 	bb.put(80, (byte) 1);
 	bb.put(81, (byte) hero.getName().length());
 	for (int i = 0; i < hero.getName().length(); i++) {
 	    bb.put(82 + i, (byte) hero.getName().charAt(i));
 	}
 	write(bb);
+    }
+
+    public void sendUpdatePacket(int updateType, int value) {
+        ByteBuffer bb = ByteBuffer.allocate(20);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+        bb.putShort(0, (short) 20);
+        bb.putShort(2, (short) 1017);
+        bb.putInt(4, player.getCharacter().getID());
+        bb.put(8, (byte) 1);
+        bb.putInt(12, updateType);
+        bb.putInt(16, value);
+        write(bb);
     }
 
     public void write(ByteBuffer b) {
