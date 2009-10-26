@@ -129,15 +129,15 @@ public class Character implements Serializable {
 	this.manaPoints = manaPoints;
     }
 
-    public byte getLevel() {
+    public int getLevel() {
 	return level;
     }
 
-    public void setLevel(byte level) {
+    public void setLevel(int level) {
 	this.level = level;
     }
 
-    public byte getProfession() {
+    public int getProfession() {
 	return profession;
     }
 
@@ -339,11 +339,11 @@ public class Character implements Serializable {
     /**
      * The characters total level (max 130)
      */
-    private byte level;
+    private int level;
     /**
      * This characters Profession
      */
-    private byte profession;
+    private int profession;
     /**
      * This characters Rebirth status. 0 = Normal 1 = 1st Reborn 2 = 2nd Reborn?
      */

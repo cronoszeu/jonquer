@@ -54,7 +54,7 @@ public class CharacterCreation implements PacketHandler {
 
 	    Formula.createCharacter(player);
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.CREATE_ACCOUNT_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "ANSWER_OK");
-	    player.destroy();
+            player.destroy();
 	}
     }
 
