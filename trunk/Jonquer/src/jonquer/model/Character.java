@@ -256,6 +256,14 @@ public class Character implements Serializable {
 	return exp;
     }
 
+    public void setAction(int action) {
+	this.action = action;
+    }
+
+    public int getAction() {
+	return action;
+    }
+
     /**
      * The Character's name
      */
@@ -360,6 +368,10 @@ public class Character implements Serializable {
      * the amount of Experience this character has
      */
     private int exp = 0;
+    /**
+     * Your emotion that your using (sit, dance etc)
+     */
+    private transient int action = 100;
     /**
      * Is this player dead or not?
      */

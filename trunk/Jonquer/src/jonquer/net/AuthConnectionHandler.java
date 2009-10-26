@@ -75,7 +75,7 @@ public class AuthConnectionHandler implements IoHandler {
 	 */
 	public void sessionOpened(IoSession session) throws Exception {
 		Constants.PEAK_PLAYER_COUNT++;
-		session.setAttachment(new Player(session, 100000 + Constants.PEAK_PLAYER_COUNT));
+		session.setAttachment(new Player(session, 1000001 + Constants.PEAK_PLAYER_COUNT));
 		session.setIdleTime(IdleStatus.BOTH_IDLE, 20);
 		session.setWriteTimeout(30);
 		Player player = (Player) session.getAttachment();

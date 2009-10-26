@@ -2,6 +2,7 @@ package jonquer.net;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Random;
 
 import jonquer.game.Constants;
 import jonquer.model.Player;
@@ -23,7 +24,7 @@ public class PacketBuilder {
     public void sendAuthInfo() {
 
 	Constants.PEAK_PLAYER_COUNT++;
-	int accID = 100000 + Constants.PEAK_PLAYER_COUNT;
+	int accID = 1000001 + Constants.PEAK_PLAYER_COUNT;
 	int port = 5816;
 	player.getCharacter().setID(accID);
 	String host = Constants.GAME_HOST;
@@ -50,7 +51,7 @@ public class PacketBuilder {
 	bb.putShort(0, (short) bb.limit());
 	bb.putShort(2, (short) 1006); // packet id
 	bb.putInt(4, player.getCharacter().getID()); // id
-	bb.putInt(8, player.getCharacter().getModel()); // model
+	bb.putInt(8, Integer.parseInt("" + player.getCharacter().getAvatar() + "" + player.getCharacter().getModel())); // model
 	bb.putShort(12, (short) player.getCharacter().getHairstyle()); // hairstyle
 	bb.putInt(14, player.getCharacter().getMoney()); // money
 	bb.putInt(18, player.getCharacter().getConquerPoints()); // CP
@@ -127,9 +128,9 @@ public class PacketBuilder {
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 
 	int model = Integer.parseInt(hero.getAvatar() + "" + (hero.isDead() ? "1099" : hero.getModel()));
-
+	System.out.println(hero.getID());
 	bb.putShort(0, (short) bb.limit());
-	bb.putShort(2, (short) 1014);
+	bb.putShort(2, (short) 0x3f6);
 	bb.putInt(4, hero.getID());
 	bb.putInt(8, model);
 	bb.putInt(12, hero.getStats());
@@ -141,12 +142,11 @@ public class PacketBuilder {
 	//bb.putInt(40, ); left hand id
 	bb.putShort(52, hero.getX());
 	bb.putShort(54, hero.getY());
-	bb.putShort(56, hero.getHairstyle());
+	bb.putShort(56, (short)hero.getHairstyle()); // hair
 	bb.put(58, (byte) hero.getDirection());
-	bb.put(59, (byte) 0);
+	bb.put(59, (byte) hero.getAction()); // action
 	bb.put(60, hero.getReborn());
 	bb.put(62, hero.getLevel());	
-	bb.put(59, (byte)100); // action?
 	bb.put(80, (byte) 1);
 	bb.put(81, (byte) hero.getName().length());
 	for (int i = 0; i < hero.getName().length(); i++) {

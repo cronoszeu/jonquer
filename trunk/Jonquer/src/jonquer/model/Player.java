@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -115,32 +116,102 @@ public class Player {
 	getSession().close();
     }
 
-    public void updateSurroundings() {
-	updateOthersToMe();
-	updateMeToOthers();
-
-    }
 
     public void updateOthersToMe() {
-	for(Player p : World.getWorld().getPlayers()) {
-	    if(p == this)
-		continue;
-	    if(Formula.inView(p.getCharacter(), getCharacter())) {
-		// spawn them to us
-		getActionSender().sendSpawnPacket(p.getCharacter());
+	for(Player p : getPlayersInView()) {
+	    getActionSender().sendSpawnPacket(p.getCharacter());
+	}
+    }
+
+    public void updatePosition(Player p) {
+	updatePosition(p, true, null, -1 , -1);
+    }
+
+    public void updatePosition(Player p, boolean spawn, ByteBuffer data, int prevX, int prevY) {
+
+	if(Formula.inView(prevX, prevY, getCharacter().getX(), getCharacter().getY())) {
+	    if(!Formula.inView(p.getCharacter(), getCharacter())) { // leaving/left
+		getPlayersInView().remove(p);
+		p.getPlayersInView().remove(this);
+		if(!spawn) {    
+		    getActionSender().write(data);
+		    p.updateMeToOthers();
+		}
+		else {
+		    p.updateMeToOthers();
+		    updateMeToOthers();   
+		}
+	    } else {
+		if(!spawn) {
+		    p.updateOthersToMe();
+		    updateMeToOthers();  // ----
+		    getActionSender().write(data);
+		}
+		else {
+		    p.updateMeToOthers();
+		    updateMeToOthers();   
+		}
+	    }
+	} else { // not in view
+	    if(Formula.inView(p.getCharacter(), getCharacter())) { // going in
+		getPlayersInView().add(p);
+		p.getPlayersInView().add(this);
+		if(!spawn) {
+		    updateOthersToMe(); // ---
+		    updateMeToOthers();
+		    getActionSender().write(data);
+		}
+		else {
+		    p.updateMeToOthers();
+		    updateMeToOthers();   
+		}
+	    } else {
+		if(!spawn)
+		    getActionSender().write(data);
+		else {
+		    p.updateMeToOthers();
+		    updateMeToOthers();   
+		}
 	    }
 	}
+	/*if(getPlayersInView().contains(p)) {
+	    if(Formula.inView(getCharacter(), p.getCharacter())) {
+
+	    }
+	}
+
+	if(getPlayersInView().contains(p)) {
+	    if(Formula.inView(getCharacter(), p.getCharacter())) {
+		getPlayersInView().add(p);
+		p.getPlayersInView().add(this);
+		if(spawn) {
+		    p.updateOthersToMe();
+		    updateOthersToMe();
+		}
+	    } 
+	} else {
+	    if(!Formula.inView(p.getCharacter(), getCharacter())) {
+		getPlayersInView().remove(p);
+		p.getPlayersInView().remove(this);
+		if(spawn) {
+		    p.updateOthersToMe();
+		    updateOthersToMe();
+		} else {
+		    getActionSender().write(data);
+		}
+	    } else {
+	    }
+	}*/
     }
 
     public void updateMeToOthers() {
-	for(Player p : World.getWorld().getPlayers()) {
-	    if(p == this)
-		continue;
-	    if(Formula.inView(p.getCharacter(), getCharacter())) {
-		// spawn us to them
-		p.getActionSender().sendSpawnPacket(getCharacter());
-	    }
+	for(Player p : getPlayersInView()) {
+	    p.getActionSender().sendSpawnPacket(getCharacter());
 	}
+    }
+
+    public ArrayList<Player> getPlayersInView() {
+	return this.playersInView;
     }
 
     /**
@@ -208,6 +279,10 @@ public class Player {
 	return character;
     }
 
+    /**
+     * List of players in your view area.
+     */
+    private ArrayList<Player> playersInView = new ArrayList<Player>();
     public static final World world = World.getWorld();
     public Crypto crypt;
     private Character character;

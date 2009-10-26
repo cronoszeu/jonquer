@@ -19,7 +19,7 @@ public class WalkHandler implements PacketHandler {
 	ByteBuffer bb = ByteBuffer.wrap(packet);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 
-	
+
 	byte AddX = 0;
 	byte AddY = 0;
 	byte Dir = (byte)(bb.getShort(8) % 8);
@@ -71,19 +71,16 @@ public class WalkHandler implements PacketHandler {
 	    break;
 	}
 	}
+	player.getCharacter().setAction(100);
 	player.getCharacter().setDirection(Dir);
+	int x = player.getCharacter().getX();
+	int y = player.getCharacter().getY();
 	player.getCharacter().setX((short)(player.getCharacter().getX() + AddX));
 	player.getCharacter().setY((short)(player.getCharacter().getY() + AddY));
 	
-	for(Player p : World.getWorld().getPlayers()) {
-	    if(p != player) {
-		if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
-		    if(Formula.inView(player.getCharacter(), p.getCharacter())) {
-			p.getActionSender().write(bb);
-		    }
-		}
-	    }
-	}
+	World.getWorld().updatePosition(player, false, bb, x, y);
+	
+
 
     }
 
