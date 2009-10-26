@@ -47,11 +47,9 @@ public class GameLogin implements PacketHandler {
 	player.getCharacter().setID(id);
 
 	if(player.getCharacter().getSpouse() == null) {
-	    System.out.println("Char Creation");
-
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "NEW_ROLE");
 	} else {
-	    System.out.println("Loggin In");
+	    Log.debug("Logged In: " + player.getCharacter().getName());
 	    player.getActionSender().sendHeroInfo();
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "ANSWER_OK");
 	}

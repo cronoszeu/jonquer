@@ -102,11 +102,6 @@ public class PacketBuilder {
     }
 
     public void sendLocation() {
-	System.out.println("Map: " + player.getCharacter().getMap());
-	System.out.println("X: " + player.getCharacter().getMap());
-
-	System.out.println("Y: " + player.getCharacter().getMap());
-
 	ByteBuffer bb = ByteBuffer.wrap(createDataPacket((int) System.currentTimeMillis(), player.getCharacter().getID(), player.getCharacter().getMap(), player.getCharacter().getX(), player.getCharacter().getY(), (short) 0));
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	bb.putShort(22, (short) 74).array();

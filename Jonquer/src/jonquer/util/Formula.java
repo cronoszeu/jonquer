@@ -1,6 +1,7 @@
 package jonquer.util;
 
 import jonquer.model.Player;
+import jonquer.model.Character;
 
 public class Formula {
 
@@ -72,6 +73,16 @@ public class Formula {
 		p.getCharacter().setSpouse("None");
 		p.getCharacter().setHealthPoints((short)getHealth(p.getCharacter().getVitality(), p.getCharacter().getStrength(), p.getCharacter().getSpirit(), p.getCharacter().getAgility()));
 
+	}
+	
+	/**
+	 * Checks if another character is in view of this character.
+	 * @param you
+	 * @param them
+	 * @return
+	 */
+	public static boolean inView(Character you, Character them) {
+	    return Math.abs(you.getX() - them.getX()) <= 20 && Math.abs(you.getY() - them.getY()) <= 20;
 	}
 
 
