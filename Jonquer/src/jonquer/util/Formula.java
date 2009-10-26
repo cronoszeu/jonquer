@@ -82,7 +82,11 @@ public class Formula {
      * @return
      */
     public static boolean inView(Character you, Character them) {
-	return Math.abs(you.getX() - them.getX()) <= 20 && Math.abs(you.getY() - them.getY()) <= 20;
+	return Math.abs(you.getX() - them.getX()) <= 17 && Math.abs(you.getY() - them.getY()) <= 17;
+    }
+    
+    public static boolean inView(int oldx, int oldy, int newx, int newy) {
+	return Math.abs(oldy - newy) <= 17 && Math.abs(oldx - newx) <= 17;
     }
 
 

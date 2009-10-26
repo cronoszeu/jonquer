@@ -1,5 +1,6 @@
 package jonquer.model;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -64,6 +65,21 @@ public class World {
 	if (inst instanceof GameEngine)
 	    gameengine = (GameEngine) inst;
     }
+    
+    public void updatePosition(Player player) {
+	updatePosition(player, true, null, -1, -1);
+    }
+    
+    public void updatePosition(Player player, boolean spawn, ByteBuffer data, int prevX, int prevY) {
+	for(Player p : World.getWorld().getPlayers()) {
+	    if(p != player)
+	    if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+		p.updatePosition(player, spawn, data, prevX, prevY);
+	    }
+	}
+    }
+    
+    
 
     /**
      * 

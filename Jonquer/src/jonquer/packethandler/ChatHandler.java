@@ -21,7 +21,6 @@ public class ChatHandler implements PacketHandler {
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	int type = bb.getShort(8);
 
-	System.out.println(type);
 	int pos = 26;
 	String from = new String(bb.array(), pos, bb.get(25));
 	pos+=from.length();
@@ -46,7 +45,7 @@ public class ChatHandler implements PacketHandler {
 	    if(type == Formula.TALK_MESSAGE_TYPE) {
 		for(Player p : World.getWorld().getPlayers()) {
 		    if(p.getCharacter().getMap() == player.getCharacter().getMap() && p != player) {
-			if(Math.abs(p.getCharacter().getX() - player.getCharacter().getX()) <= 12 && Math.abs(p.getCharacter().getY() - player.getCharacter().getY()) <= 12) {
+			if(Math.abs(p.getCharacter().getX() - player.getCharacter().getX()) <= 25 && Math.abs(p.getCharacter().getY() - player.getCharacter().getY()) <= 25) {
 			    p.getActionSender().sendMessage(0xFFFFF, Formula.TALK_MESSAGE_TYPE, player.getCharacter().getName(), to, msg);
 			}
 		    }
