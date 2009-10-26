@@ -42,7 +42,7 @@ public class PacketBuilder {
     }
 
     public void sendHeroInfo() {
-	
+
 	String name = player.getCharacter().getName();
 	String spouse = player.getCharacter().getSpouse();
 	ByteBuffer bb = ByteBuffer.allocate(70 + name.length() + spouse.length());
@@ -120,6 +120,39 @@ public class PacketBuilder {
 	bb.putShort(18, arg2);
 	bb.putShort(20, arg3);
 	return bb.array();
+    }
+
+    public void sendSpawnPacket(jonquer.model.Character hero) {
+	ByteBuffer bb = ByteBuffer.allocate(85 + hero.getName().length());
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+
+	int model = Integer.parseInt(hero.getAvatar() + "" + (hero.isDead() ? "1099" : hero.getModel()));
+
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1014);
+	bb.putInt(4, hero.getID());
+	bb.putInt(8, model);
+	bb.putInt(12, hero.getStats());
+	bb.putShort(48, hero.getHealthPoints());
+	bb.put(50, hero.getLevel());
+	//bb.putInt(28, ); head id
+	//bb.putInt(32, ); armor id
+	//bb.putInt(36, ); right hand id
+	//bb.putInt(40, ); left hand id
+	bb.putShort(52, hero.getX());
+	bb.putShort(54, hero.getY());
+	bb.putShort(56, hero.getHairstyle());
+	bb.put(58, (byte) hero.getDirection());
+	bb.put(59, (byte) 0);
+	bb.put(60, hero.getReborn());
+	bb.put(62, hero.getLevel());	
+	bb.put(59, (byte)100); // action?
+	bb.put(80, (byte) 1);
+	bb.put(81, (byte) hero.getName().length());
+	for (int i = 0; i < hero.getName().length(); i++) {
+	    bb.put(82 + i, (byte) hero.getName().charAt(i));
+	}
+	write(bb);
     }
 
     public void write(ByteBuffer b) {

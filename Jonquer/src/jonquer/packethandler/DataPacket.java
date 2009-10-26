@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import jonquer.model.Player;
+import jonquer.model.World;
+import jonquer.util.Formula;
 import jonquer.util.Log;
 
 public class DataPacket implements PacketHandler {
@@ -17,6 +19,10 @@ public class DataPacket implements PacketHandler {
 		case 74:
 			player.getActionSender().sendLocation();
 			break;
+			
+		case 114: // get surroundings
+		    player.updateSurroundings();
+		    break;
 			
 		case 133: // jump
 		    short prevX = bb.getShort(0x10);
@@ -32,6 +38,15 @@ public class DataPacket implements PacketHandler {
 			} else {
 			    player.getCharacter().setX(nextX);
 			    player.getCharacter().setY(nextY);
+			    for(Player p : World.getWorld().getPlayers()) {
+				if(p != player)
+				if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+				    if(Formula.inView(p.getCharacter(), player.getCharacter())) {
+					p.getActionSender().write(bb);
+				    }
+				}
+			    }
+			    //player.updateSurroundings();
 			    // inset updating other players of your jump here.
 			}
 		    }
