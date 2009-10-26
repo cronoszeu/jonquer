@@ -22,12 +22,10 @@ public class PacketBuilder {
      */
     public void sendAuthInfo() {
 
-	int id = 0x41f;
 	Constants.PEAK_PLAYER_COUNT++;
 	int accID = 100000 + Constants.PEAK_PLAYER_COUNT;
-	int key = 50000 + Constants.PEAK_PLAYER_COUNT;
 	int port = 5816;
-
+	player.getCharacter().setID(accID);
 	String host = Constants.GAME_HOST;
 	ByteBuffer bb = ByteBuffer.allocate(32);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
@@ -44,26 +42,27 @@ public class PacketBuilder {
     }
 
     public void sendHeroInfo() {
-	String name = "xEnt";
-	String spouse = "None";
+	
+	String name = player.getCharacter().getName();
+	String spouse = player.getCharacter().getSpouse();
 	ByteBuffer bb = ByteBuffer.allocate(70 + name.length() + spouse.length());
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	bb.putShort(0, (short) bb.limit());
-	bb.putShort(2, (short) 1006);
+	bb.putShort(2, (short) 1006); // packet id
 	bb.putInt(4, player.getCharacter().getID()); // id
-	bb.putInt(8, 1003); // model
-	bb.putShort(12, (short) 130); // hairstyle
-	bb.putInt(14, 1); // money
-	bb.putInt(18, 2); // CP
-	bb.putShort(46, (short) 5); // str
-	bb.putShort(48, (short) 5); // dex
-	bb.putShort(50, (short) 5); // vit
-	bb.putShort(52, (short) 5); // spirit
-	bb.putShort(54, (short) 60); // stats points?
-	bb.putShort(56, (short) 500); // hp
-	bb.putShort(58, (short) 500); // mp
-	bb.put(62, (byte) 1); // lvl
-	bb.put(63, (byte) 15); // prof
+	bb.putInt(8, player.getCharacter().getModel()); // model
+	bb.putShort(12, (short) player.getCharacter().getHairstyle()); // hairstyle
+	bb.putInt(14, player.getCharacter().getMoney()); // money
+	bb.putInt(18, player.getCharacter().getConquerPoints()); // CP
+	bb.putShort(46, (short) player.getCharacter().getStrength()); // str
+	bb.putShort(48, (short) player.getCharacter().getAgility()); // agi
+	bb.putShort(50, (short) player.getCharacter().getVitality()); // vit
+	bb.putShort(52, (short) player.getCharacter().getSpirit()); // spirit
+	bb.putShort(54, (short) player.getCharacter().getStats()); // stats points?
+	bb.putShort(56, (short) player.getCharacter().getHealthPoints()); // hp
+	bb.putShort(58, (short) player.getCharacter().getManaPoints()); // mp
+	bb.put(62, (byte) player.getCharacter().getLevel()); // lvl
+	bb.put(63, (byte) player.getCharacter().getProfession()); // prof
 	bb.put(64, (byte) 5);
 	bb.put(65, (byte) 0);
 	bb.put(66, (byte) 1);
@@ -76,7 +75,6 @@ public class PacketBuilder {
 	for (int i = 0; i < spouse.length(); i++) {
 	    bb.put(70 + name.length() + i, (byte) spouse.charAt(i));
 	}
-
 	write(bb);
     }
 
@@ -104,6 +102,11 @@ public class PacketBuilder {
     }
 
     public void sendLocation() {
+	System.out.println("Map: " + player.getCharacter().getMap());
+	System.out.println("X: " + player.getCharacter().getMap());
+
+	System.out.println("Y: " + player.getCharacter().getMap());
+
 	ByteBuffer bb = ByteBuffer.wrap(createDataPacket((int) System.currentTimeMillis(), player.getCharacter().getID(), player.getCharacter().getMap(), player.getCharacter().getX(), player.getCharacter().getY(), (short) 0));
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	bb.putShort(22, (short) 74).array();

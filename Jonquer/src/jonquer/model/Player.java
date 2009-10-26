@@ -85,6 +85,7 @@ public class Player {
 	 * server
 	 */
 	public void destroy() {
+
 		ObjectOutputStream oos;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(Constants.SAVED_GAME_DIRECTORY + getCharacter().getAccountName() + ".cfg"));
@@ -98,6 +99,16 @@ public class Player {
 			e.printStackTrace();
 		}
 		
+		crypt = null;
+		Log.debug(this.getIP() + " has Left the server");
+		getSession().close();
+	}
+	
+	/**
+	 * Called when a player disconnects, gets kicked or needs to leave the
+	 * server
+	 */
+	public void destroy(boolean nosave) {
 		crypt = null;
 		Log.debug(this.getIP() + " has Left the server");
 		getSession().close();

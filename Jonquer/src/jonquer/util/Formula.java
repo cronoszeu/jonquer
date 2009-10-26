@@ -15,7 +15,7 @@ public class Formula {
 	public static final short DIALOG_MESSAGE_TYPE = 2101;
 
 
-	public static final short MODEL_BIG_GIRL = 2004;
+	public static final short MODEL_BIG_GIRL = 2002;
 	public static final short MODEL_SMALL_GIRL = 2001;
 	public static final short MODEL_BIG_BOY = 1004;
 	public static final short MODEL_SMALL_BOY = 1003;
@@ -65,8 +65,8 @@ public class Formula {
 		p.getCharacter().setMoney(100);
 		p.getCharacter().setLevel((byte)1);
 		p.getCharacter().setMap(1002);
-		p.getCharacter().setX((short)400);
-		p.getCharacter().setY((short)200);
+		p.getCharacter().setX((short)438);
+		p.getCharacter().setY((short)377);
 		p.getCharacter().setStats((short)0);
 		p.getCharacter().setManaPoints((short)0); // ill fix mana up later
 		p.getCharacter().setSpouse("None");

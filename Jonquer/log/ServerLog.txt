@@ -10,3 +10,610 @@ Loading Data..
 Data loaded in 8ms (0.0mb Allocated Memory)
 Auth Server Listening on 9958
 Game Server Listening on 5816
+Loading Data..
+jonquer/packethandler//svn
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 7ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1004 Length: 41
+Unhandled Packet: 1009 Length: 60
+Unhandled Packet: 1004 Length: 41
+Unhandled Packet: 1004 Length: 41
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1004 Length: 64
+Unhandled Packet: 25700 Length: 46
+Unhandled Packet: 1004 Length: 50
+Unhandled Packet: 1004 Length: 41
+Unhandled Packet: 1004 Length: 42
+Unhandled Packet: 1009 Length: 60
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1004 Length: 43
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1001 Length: 60
+Unhandled Packet: -2447 Length: 60
+Unhandled Packet: 6125 Length: 24
+Unhandled Packet: 14141 Length: 24
+Unhandled Packet: -18611 Length: 24
+Unhandled Packet: 22461 Length: 24
+Unhandled Packet: 13000 Length: 24
+Unhandled Packet: 21016 Length: 24
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1001 Length: 60
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Address already in use: bind
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 10ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 10ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 10ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 7ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 10ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: -8519 Length: 60
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: -8519 Length: 60
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: -8519 Length: 60
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 10ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: -8519 Length: 60
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 10ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 10ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 10ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 17ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 17ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 16ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 16ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 17ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 19ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Loading Data..
+Data loaded in 18ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 18ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 17ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Loading Data..
+Data loaded in 28ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Loading Data..
+Data loaded in 17ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1009 Length: 24
+Loading Data..
+Data loaded in 16ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Loading Data..
+Data loaded in 18ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+true true
+true true
+Loading Data..
+Data loaded in 20ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Loading Data..
+Data loaded in 17ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Loading Data..
+Data loaded in 17ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+true true
+Unhandled Packet: 706 Length: 28
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Loading Data..
+Data loaded in 16ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 17ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 18ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 706 Length: 28
+Loading Data..
+Data loaded in 18ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 18ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 18ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 20ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 20ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 17ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 17ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 19ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 21ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 18ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 19ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 18ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 18ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 23ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 20ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+F:\Goodies\Programming\ConquerServer\players\Entsf.cfg (The system cannot find the file specified)
+Loading Data..
+Data loaded in 7ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 17ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 19ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 706 Length: 28
+Loading Data..
+Data loaded in 18ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 19ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 22ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 10ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 16ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+F:\Goodies\Programming\ConquerServer\players\xent.cfg (The system cannot find the file specified)
+Loading Data..
+Data loaded in 9ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 21ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 18ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 20ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+F:\Goodies\Programming\ConquerServer\players\entice.cfg (The system cannot find the file specified)
+Loading Data..
+Data loaded in 19ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+F:\Goodies\Programming\ConquerServer\players\entice.cfg (The system cannot find the file specified)
+Loading Data..
+Data loaded in 19ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Loading Data..
+Data loaded in 10ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Loading Data..
+Data loaded in 17ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Loading Data..
+Data loaded in 8ms (0.0mb Allocated Memory)
+Auth Server Listening on 9958
+Game Server Listening on 5816
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1005 Length: 12
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24
+Unhandled Packet: 1009 Length: 24

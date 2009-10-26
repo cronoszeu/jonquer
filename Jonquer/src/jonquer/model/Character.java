@@ -179,6 +179,10 @@ public class Character implements Serializable {
 	public int getID() {
 		return id;
 	}
+	
+	public void setID(int id) {
+		this.id = id;
+	}
 
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
@@ -194,6 +198,7 @@ public class Character implements Serializable {
 	public short getAvatar() {
 		return avatar;
 	}
+	
 	/**
 	 * The Character's name
 	 */
@@ -211,13 +216,13 @@ public class Character implements Serializable {
 	 /**
 	  * This character's spouse (person they married too)
 	  */
-	 private String spouse;
+	 private String spouse = null;
 	 /**
 	  * This accounts Unique ID
 	  * 
 	  * @Info: marked transient because this variable does not get externalized
 	  */
-	 private transient final int id;
+	 private transient int id;
 	 /**
 	  * Not too sure on this one, model number?
 	  */
