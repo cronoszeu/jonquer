@@ -72,32 +72,34 @@ public class GameEngine {
     private final void processIncomingPackets() {
 	try {
 	    for (Player p : world.getPlayers()) {
-		boolean needsDestroy = false;
-		if (p != null && p.getIncomingPackets().size() > 0) {
+		synchronized(world.getPlayers()) {
+		    boolean needsDestroy = false;
+		    if (p != null && p.getIncomingPackets().size() > 0) {
 
-		    Iterator<Packet> i = p.getIncomingPackets().iterator();
-		    while (i.hasNext()) {
+			Iterator<Packet> i = p.getIncomingPackets().iterator();
+			while (i.hasNext()) {
 
-			if (p.crypt == null) {
-			    World.getWorld().getPlayers().remove(p);
-			    needsDestroy = true;
-			    break;
+			    if (p.crypt == null) {
+				World.getWorld().getPlayers().remove(p);
+				needsDestroy = true;
+				break;
+			    }
+
+			    Packet b = i.next();
+			    p.crypt.decrypt(b.getData());
+			    int packetID = (b.getData()[3] << 8) | (b.getData()[2] & 0xff);
+
+			    if (!World.getWorld().packetHandlers.containsKey(packetID)) {
+				Log.log("Unhandled Packet: " + packetID + " Length: " + b.getData().length);
+			    } else {
+				PacketHandler ph = World.getWorld().packetHandlers.get(packetID);
+				ph.handlePacket(p, b.getData());
+			    }
+			    i.remove();
 			}
-
-			Packet b = i.next();
-			p.crypt.decrypt(b.getData());
-			int packetID = (b.getData()[3] << 8) | (b.getData()[2] & 0xff);
-
-			if (!World.getWorld().packetHandlers.containsKey(packetID)) {
-			    Log.log("Unhandled Packet: " + packetID + " Length: " + b.getData().length);
-			} else {
-			    PacketHandler ph = World.getWorld().packetHandlers.get(packetID);
-			    ph.handlePacket(p, b.getData());
-			}
-			i.remove();
+			if (needsDestroy)
+			    continue;
 		    }
-		    if (needsDestroy)
-			continue;
 		}
 	    }
 	} catch (Exception e) {

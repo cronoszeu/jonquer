@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import jonquer.model.Player;
+import jonquer.model.World;
+import jonquer.util.Formula;
 
 public class WalkHandler implements PacketHandler {
    
@@ -69,8 +71,10 @@ public class WalkHandler implements PacketHandler {
                     break;
                 }
         }
+	player.getCharacter().setDirection(Dir);
 	player.getCharacter().setX((short)(player.getCharacter().getX() + AddX));
 	player.getCharacter().setY((short)(player.getCharacter().getY() + AddY));
+	
     }
 
 }
