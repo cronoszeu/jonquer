@@ -2,7 +2,10 @@ package jonquer.model;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import jonquer.delay.DelayedAbstractEvent;
 import jonquer.game.GameEngine;
@@ -33,7 +36,7 @@ public class World {
      * 
      * @return - the list of Player objects.
      */
-    public ArrayList<Player> getPlayers() {
+    public List<Player> getPlayers() {
 	return this.players;
     }
 
@@ -71,6 +74,16 @@ public class World {
     }
     
     public void updatePosition(Player player, boolean spawn, ByteBuffer data, int prevX, int prevY) {
+	
+	Iterator<Player> playersInView = player.getPlayersInView().iterator();
+	while(playersInView.hasNext()) {
+	    Player pl = playersInView.next();
+	    if(pl.getCharacter().getMap() != player.getCharacter().getMap()) {
+		pl.getPlayersInView().remove(player);
+		playersInView.remove();
+		pl.updateOthersToMe();
+	    }
+	}
 	for(Player p : World.getWorld().getPlayers()) {
 	    if(p != player)
 	    if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
@@ -127,7 +140,7 @@ public class World {
     /**
      * holds all the active Players in the world.
      */
-    private ArrayList<Player> players = new ArrayList<Player>();
+    private List<Player> players = Collections.synchronizedList(new ArrayList<Player>());
     /**
      * the Single instance of this World.
      */

@@ -7,6 +7,7 @@ import java.util.Random;
 import jonquer.game.Constants;
 import jonquer.model.Player;
 import jonquer.model.World;
+import jonquer.util.Log;
 
 import org.apache.mina.common.IoSession;
 
@@ -40,6 +41,20 @@ public class PacketBuilder {
 	bb.putShort(28, (short) port);
 	write(bb);
 	World.getWorld().getKeyPlayers().put(accID, player);
+    }
+
+    public void removeEntity(Player p) {
+	ByteBuffer bb = ByteBuffer.allocate(24);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1010); // packet id
+	bb.putInt(4, (int)System.currentTimeMillis());
+	bb.putInt(8, p.getCharacter().getID());
+	bb.putInt(12, 0); 
+	bb.putShort(16, (short)0);
+	bb.putShort(18, (short)0);
+	bb.putShort(22, (short)132);
+	write(bb);
     }
 
     public void sendHeroInfo() {
@@ -128,7 +143,6 @@ public class PacketBuilder {
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 
 	int model = Integer.parseInt(hero.getAvatar() + "" + (hero.isDead() ? "1099" : hero.getModel()));
-	System.out.println(hero.getID());
 	bb.putShort(0, (short) bb.limit());
 	bb.putShort(2, (short) 0x3f6);
 	bb.putInt(4, hero.getID());
@@ -156,21 +170,25 @@ public class PacketBuilder {
     }
 
     public void sendUpdatePacket(int updateType, int value) {
-        ByteBuffer bb = ByteBuffer.allocate(20);
-        bb.order(ByteOrder.LITTLE_ENDIAN);
-        bb.putShort(0, (short) 20);
-        bb.putShort(2, (short) 1017);
-        bb.putInt(4, player.getCharacter().getID());
-        bb.put(8, (byte) 1);
-        bb.putInt(12, updateType);
-        bb.putInt(16, value);
-        write(bb);
+	ByteBuffer bb = ByteBuffer.allocate(20);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) 20);
+	bb.putShort(2, (short) 1017);
+	bb.putInt(4, player.getCharacter().getID());
+	bb.put(8, (byte) 1);
+	bb.putInt(12, updateType);
+	bb.putInt(16, value);
+	write(bb);
     }
 
     public void write(ByteBuffer b) {
 	byte[] buff = b.array();
-	player.crypt.encrypt(buff);
-	player.getSession().write(org.apache.mina.common.ByteBuffer.wrap(buff));
+	if(buff != null && b != null && buff.length > 4) {
+	    player.crypt.encrypt(buff);
+	    player.getSession().write(org.apache.mina.common.ByteBuffer.wrap(buff));
+	} else {
+	    Log.error("Not enuff data to send!111!!!");
+	}
     }
 
     /**

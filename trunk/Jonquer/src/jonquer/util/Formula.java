@@ -4,7 +4,7 @@ import jonquer.model.Player;
 import jonquer.model.Character;
 
 public class Formula {
-    
+
     public static final int HITPOINTS_UPDATE_TYPE = 0;
     public static final int MAX_HITPOINTS_UPDATE_TYPE = 1;
     public static final int MANA_UPDATE_TYPE = 2;
@@ -51,6 +51,9 @@ public class Formula {
     public static final int JOB_INTERN_WARRIOR = 20;
     public static final int JOB_INTERN_ARCHER = 40;
     public static final int JOB_INTERN_TAOIST = 100;
+    
+    public static final int VIEW_RADIUS = 23;
+    public static final int FAR_VIEW_RADIUS = 30;
 
     /**
      * Calculates the Total Health.
@@ -65,38 +68,39 @@ public class Formula {
     }
 
     public static void createCharacter(Player p) {
-	if(p.getCharacter().getProfession() == JOB_INTERN_TROJAN) {
-	    p.getCharacter().setVitality((short)3);
-	    p.getCharacter().setSpirit((short)0);
-	    p.getCharacter().setAgility((short)2);
-	    p.getCharacter().setStrength((short)5);
-	} else if(p.getCharacter().getProfession() == JOB_INTERN_WARRIOR) {
-	    p.getCharacter().setVitality((short)3);
-	    p.getCharacter().setSpirit((short)0);
-	    p.getCharacter().setAgility((short)2);
-	    p.getCharacter().setStrength((short)5);
-	} else if(p.getCharacter().getProfession() == JOB_INTERN_ARCHER) {
-	    p.getCharacter().setVitality((short)1);
-	    p.getCharacter().setSpirit((short)0);
-	    p.getCharacter().setAgility((short)7);
-	    p.getCharacter().setStrength((short)2);
-	} else if(p.getCharacter().getProfession() == JOB_INTERN_TAOIST) {
-	    p.getCharacter().setVitality((short)3);
-	    p.getCharacter().setSpirit((short)5);
-	    p.getCharacter().setAgility((short)2);
-	    p.getCharacter().setStrength((short)0);
+	Character character = p.getCharacter();
+	if(character.getProfession() == JOB_INTERN_TROJAN) {
+	    character.setVitality((short)3);
+	    character.setSpirit((short)0);
+	    character.setAgility((short)2);
+	    character.setStrength((short)5);
+	} else if(character.getProfession() == JOB_INTERN_WARRIOR) {
+	    character.setVitality((short)3);
+	    character.setSpirit((short)0);
+	    character.setAgility((short)2);
+	    character.setStrength((short)5);
+	} else if(character.getProfession() == JOB_INTERN_ARCHER) {
+	    character.setVitality((short)1);
+	    character.setSpirit((short)0);
+	    character.setAgility((short)7);
+	    character.setStrength((short)2);
+	} else if(character.getProfession() == JOB_INTERN_TAOIST) {
+	    character.setVitality((short)3);
+	    character.setSpirit((short)5);
+	    character.setAgility((short)2);
+	    character.setStrength((short)0);
 	} 
 
-	p.getCharacter().setConquerPoints(0);
-	p.getCharacter().setMoney(100);
-	p.getCharacter().setLevel((byte)1);
-	p.getCharacter().setMap(1002);
-	p.getCharacter().setX((short)438);
-	p.getCharacter().setY((short)377);
-	p.getCharacter().setStats((short)0);
-	p.getCharacter().setManaPoints((short)0); // ill fix mana up later
-	p.getCharacter().setSpouse("None");
-	p.getCharacter().setHealthPoints((short)getHealth(p.getCharacter().getVitality(), p.getCharacter().getStrength(), p.getCharacter().getSpirit(), p.getCharacter().getAgility()));
+	character.setConquerPoints(0);
+	character.setMoney(100);
+	character.setLevel((byte)1);
+	character.setMap(1002);
+	character.setX((short)438);
+	character.setY((short)377);
+	character.setStats((short)0);
+	character.setManaPoints((short)0); // ill fix mana up later
+	character.setSpouse("None");
+	character.setHealthPoints((short)getHealth(character.getVitality(), character.getStrength(), character.getSpirit(), character.getAgility()));
 
     }
 
@@ -107,11 +111,19 @@ public class Formula {
      * @return
      */
     public static boolean inView(Character you, Character them) {
-	return Math.abs(you.getX() - them.getX()) <= 17 && Math.abs(you.getY() - them.getY()) <= 17;
+	return Math.abs(you.getX() - them.getX()) <= VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= VIEW_RADIUS;
     }
     
+    public static boolean inFarView(Character you, Character them) {
+	return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;
+    }
+
     public static boolean inView(int oldx, int oldy, int newx, int newy) {
-	return Math.abs(oldy - newy) <= 17 && Math.abs(oldx - newx) <= 17;
+	return Math.abs(oldy - newy) <= VIEW_RADIUS && Math.abs(oldx - newx) <= VIEW_RADIUS;
+    }
+    
+    public static boolean inFarView(int oldx, int oldy, int newx, int newy) {
+	return Math.abs(oldy - newy) <= VIEW_RADIUS && Math.abs(oldx - newx) <= VIEW_RADIUS;
     }
 
 
