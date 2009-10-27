@@ -20,7 +20,6 @@ public class ChatHandler implements PacketHandler {
 	ByteBuffer bb = ByteBuffer.wrap(packet);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	int type = bb.getShort(8);
-
 	int pos = 26;
 	String from = new String(bb.array(), pos, bb.get(25));
 	pos+=from.length();

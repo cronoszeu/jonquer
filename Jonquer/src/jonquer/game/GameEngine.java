@@ -87,14 +87,29 @@ public class GameEngine {
 
 			    Packet b = i.next();
 			    p.crypt.decrypt(b.getData());
-			    int packetID = (b.getData()[3] << 8) | (b.getData()[2] & 0xff);
+                            //TODO-fixme: Make this better.
+                            if(b.getData().length > 1) {
+                                int packetLen = (b.getData()[1] << 8) | (b.getData()[0] & 0xff);
+                            
+                                if(packetLen == b.getData().length) {
+                                    int packetID = (b.getData()[3] << 8) | (b.getData()[2] & 0xff);
 
-			    if (!World.getWorld().packetHandlers.containsKey(packetID)) {
-				Log.log("Unhandled Packet: " + packetID + " Length: " + b.getData().length);
-			    } else {
-				PacketHandler ph = World.getWorld().packetHandlers.get(packetID);
-				ph.handlePacket(p, b.getData());
-			    }
+                                    if (!World.getWorld().packetHandlers.containsKey(packetID)) {
+                                        Log.log("Unhandled Packet: " + packetID + " Length: " + b.getData().length);
+                                    } else {
+                                        PacketHandler ph = World.getWorld().packetHandlers.get(packetID);
+                                        ph.handlePacket(p, b.getData());
+                                    }
+                                } else {
+                                    Log.log("Invalid Packet: "
+                                            + new String(b.getData())
+                                            + " Length: " + packetLen);
+                                }
+                            } else {
+                                Log.log("Invalid Packet: "
+                                        + new String(b.getData())
+                                        + " Length: " + b.getData().length);
+                            }
 			    i.remove();
 			}
 			if (needsDestroy)
