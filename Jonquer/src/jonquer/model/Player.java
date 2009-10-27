@@ -8,6 +8,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import jonquer.game.Constants;
@@ -81,6 +82,19 @@ public class Player {
     public IoSession getSession() {
 	return this.session;
     }
+    
+    public void save() {
+	ObjectOutputStream oos;
+	try {
+	    oos = new ObjectOutputStream(new FileOutputStream(Constants.SAVED_GAME_DIRECTORY + getCharacter().getAccountName() + ".cfg"));
+	    oos.writeObject(getCharacter());
+	    oos.close();
+	} catch (FileNotFoundException e) {
+	    e.printStackTrace();
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+    }
 
     /**
      * Called when a player disconnects, gets kicked or needs to leave the
@@ -88,22 +102,20 @@ public class Player {
      */
     public void destroy() {
 
-	ObjectOutputStream oos;
-	try {
-	    oos = new ObjectOutputStream(new FileOutputStream(Constants.SAVED_GAME_DIRECTORY + getCharacter().getAccountName() + ".cfg"));
-	    oos.writeObject(getCharacter());
-	    oos.close();
-	} catch (FileNotFoundException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	for(Player p : World.getWorld().getPlayers()) {
+	    if(p.getPlayersInView().contains(this)) {
+		p.getPlayersInView().remove(this);
+		p.getActionSender().removeEntity(this);
+	    }
 	}
-
-	crypt = null;
+	getPlayersInView().clear();
+	try {
+	    world.getPlayers().remove(this);
+	} catch(ConcurrentModificationException cme) { }
+	save();
 	Log.debug(this.getIP() + " has Left the server");
 	getSession().close();
+	crypt = null;
     }
 
     /**
@@ -126,8 +138,15 @@ public class Player {
     public void updatePosition(Player p) {
 	updatePosition(p, true, null, -1 , -1);
     }
+    
+
 
     public void updatePosition(Player p, boolean spawn, ByteBuffer data, int prevX, int prevY) {
+	
+	if(Formula.inFarView(p.getCharacter(), getCharacter()) && !spawn) {
+	  //  getActionSender().sendSpawnPacket(p.getCharacter());
+	   // getActionSender().write(data);
+	}
 
 	if(Formula.inView(prevX, prevY, getCharacter().getX(), getCharacter().getY())) {
 	    if(!Formula.inView(p.getCharacter(), getCharacter())) { // leaving/left
@@ -139,7 +158,9 @@ public class Player {
 		}
 		else {
 		    p.updateMeToOthers();
-		    updateMeToOthers();   
+		    updateMeToOthers();  
+		    p.getActionSender().removeEntity(this);
+		    getActionSender().removeEntity(p);
 		}
 	    } else {
 		if(!spawn) {
@@ -154,16 +175,19 @@ public class Player {
 	    }
 	} else { // not in view
 	    if(Formula.inView(p.getCharacter(), getCharacter())) { // going in
-		getPlayersInView().add(p);
-		p.getPlayersInView().add(this);
+		if(!getPlayersInView().contains(p))
+		    getPlayersInView().add(p);
+		if(!p.getPlayersInView().contains(this))
+		    p.getPlayersInView().add(this);
 		if(!spawn) {
 		    updateOthersToMe(); // ---
-		    updateMeToOthers();
+		   // updateMeToOthers();
+		    p.updateOthersToMe();
 		    getActionSender().write(data);
 		}
 		else {
 		    p.updateMeToOthers();
-		    updateMeToOthers();   
+		    updateMeToOthers(); 
 		}
 	    } else {
 		if(!spawn)
@@ -279,11 +303,20 @@ public class Player {
 	return character;
     }
 
+    public void setLocked(boolean locked) {
+	this.locked = locked;
+    }
+
+    public boolean isLocked() {
+	return locked;
+    }
+
     /**
      * List of players in your view area.
      */
     private ArrayList<Player> playersInView = new ArrayList<Player>();
     public static final World world = World.getWorld();
+    private boolean locked = false;
     public Crypto crypt;
     private Character character;
     private List<Packet> incomingPackets = Collections.synchronizedList(new ArrayList<Packet>());

@@ -41,6 +41,7 @@ public class Server {
 	    IoAcceptorConfig config = new SocketAcceptorConfig();
 	    config.setDisconnectOnUnbind(true);
 	    ((SocketSessionConfig) config.getSessionConfig()).setReuseAddress(true);
+	    ((SocketSessionConfig)config.getSessionConfig()).setTcpNoDelay(true); // disable nagles algorithm
 	    acceptor.bind(new InetSocketAddress(Constants.AUTH_HOST, Constants.AUTH_PORT), new AuthConnectionHandler(), config);
 	    acceptor.bind(new InetSocketAddress(Constants.GAME_HOST, Constants.GAME_PORT), new GameConnectionHandler(), config);
 	    GameEngine ge = new GameEngine();
