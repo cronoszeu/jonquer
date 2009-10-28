@@ -181,6 +181,42 @@ public class PacketBuilder {
 	write(bb);
     }
 
+    public void sendNpcSpawn(int id, int x, int y,
+            int type, int direction, int flag) {
+        ByteBuffer bb = ByteBuffer.allocate(0x14);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+        bb.putShort(0, (short) bb.limit());
+        bb.putShort(2, (short) 0x7ee);
+        bb.putInt(4, id);
+        bb.putShort(8, (short) x);
+        bb.putShort(10, (short) y);
+        bb.putShort(12, (short) type);
+        bb.put(14, (byte) direction);
+        bb.putInt(16, flag);
+    }
+
+    public void sendMonsterSpawn(int id, int mesh, int x, int y, String name,
+            int health, int level, int direction) {
+        ByteBuffer bb = ByteBuffer.allocate(85 + name.length());
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+        bb.putShort(0, (short) bb.limit());
+        bb.putShort(2, (short) 1014);
+        bb.putInt(4, id);
+        bb.putInt(8, mesh);
+        bb.putShort(48, (short) health);
+        bb.putShort(50, (short) level);
+        bb.putShort(52, (short) x);
+        bb.putShort(54, (short) y);
+        bb.put(58, (byte) direction);
+        bb.put(59, (byte) 100);
+        bb.put(80, (byte) 1);
+        bb.put(81, (byte) name.length());
+        for(int i = 0; i < name.length(); i++) {
+            bb.put(82 + i, (byte) name.charAt(i));
+        }
+        write(bb);
+    }
+
     public void write(ByteBuffer b) {
 	byte[] buff = b.array();
 	if(buff != null && b != null && buff.length > 4) {
