@@ -15,29 +15,29 @@ public class CommandHandler {
 	command = cmdd;
 
 
-	if (Command("/dc", "/disconnect", "/exit")) {
+	if (command("/dc", "/disconnect", "/exit")) {
 	    player.destroy();
 	    return;
-	} else if (Command("/who", "/inview")) {
+	} else if (command("/who", "/inview")) {
 	    System.out.println("Count: " + player.getPlayersInView().size());
 	    for (Player p : player.getPlayersInView()) {
 		System.out.println(p.getCharacter().getName());
 	    }
-	} else if (Command("/refresh", "/update")) {
+	} else if (command("/refresh", "/update")) {
 	    player.updateMeToOthers();
 	    player.updateOthersToMe();
 	    World.getWorld().updatePosition(player);
-	} else if (Command("/uplev", "/lvl", "/lv")) {
+	} else if (command("/uplev", "/lvl", "/lv")) {
 	    int level = ((byte) Integer.parseInt(args[1])) & 0xff;
 	    if (level >= 1 && level <= 150) {
 		player.getCharacter().setLevel(level);
 		player.getActionSender().sendUpdatePacket(Formula.LEVEL_UPDATE_TYPE, level);
 	    }
-	} else if (Command("/pro", "/prof")) {
+	} else if (command("/pro", "/prof")) {
 	    player.getCharacter().setProfession((byte) Integer.parseInt(args[1]));
 	    player.getActionSender().sendUpdatePacket(Formula.PROFESSION_UPDATE_TYPE,
 	    player.getCharacter().getProfession() & 0xff);
-	} else if (Command("/cngmap", "/map")) {
+	} else if (command("/cngmap", "/map")) {
 	    int map = Integer.parseInt(args[1]);
 	    short x = Short.parseShort(args[2]);
 	    short y = Short.parseShort(args[3]);
@@ -46,28 +46,46 @@ public class CommandHandler {
 	    player.getCharacter().setY(y);
 	    World.getWorld().updatePosition(player);
 	    player.getActionSender().sendLocation();
-	} else if (Command("/tele", "/fly")) {
+	} else if (command("/tele", "/fly")) {
 	    short x = Short.parseShort(args[1]);
 	    short y = Short.parseShort(args[2]);
 	    player.getCharacter().setX(x);
 	    player.getCharacter().setY(y);
 	    player.getActionSender().sendLocation();
-	} else if (Command("/broadcast", "/say")) {
+	} else if (command("/broadcast", "/say")) {
 	    for (Player p : World.getWorld().getPlayers()) {
 		p.getActionSender().sendMessage(0xffffff,Formula.CENTER_MESSAGE_TYPE,"SYSTEM","ALLUSERS", cmd.substring(command.length() + 1));
 	    }
-	} else if (Command("/saveall")) {
+	} else if (command("/saveall")) {
 	    for (Player p : World.getWorld().getPlayers()) {
 		p.save();
 	    }
-	} else if (Command("/kickall")) {
+	} else if (command("/kickall")) {
 	    for (Player p : World.getWorld().getPlayers()) {
 		p.destroy();
 	    }
-	}
+	} else if (command("/mob")) {
+            int id = Integer.parseInt(args[1]);
+            int mesh = Integer.parseInt(args[2]);
+            int x = Integer.parseInt(args[3]);
+            int y = Integer.parseInt(args[4]);
+            String name = args[5];
+            int health = Integer.parseInt(args[6]);
+            int level = Integer.parseInt(args[7]);
+            int pos = Integer.parseInt(args[8]);
+            player.getActionSender().sendMonsterSpawn(id, mesh, x, y, name, health, level, pos);
+        } else if (command("/npc")) {
+            int id = Integer.parseInt(args[1]);
+            int x = Integer.parseInt(args[2]);
+            int y = Integer.parseInt(args[3]);
+            int type = Integer.parseInt(args[4]);
+            int direction = Integer.parseInt(args[5]);
+            int flag = Integer.parseInt(args[6]);
+            player.getActionSender().sendNpcSpawn(id, x, y, type, direction, flag);
+        }
     }
 
-    public static boolean Command(String... s) {
+    public static boolean command(String... s) {
 	for(String txt : s) {
 	    if(txt.equalsIgnoreCase(command))
 		return true;
