@@ -28,9 +28,13 @@ public class Constants {
      */
     public static final int GAME_PORT = 5816;
     /**
+     * User directory.
+     */
+    public static final String USER_DIR = System.getProperty("user.dir");
+    /**
      * the Path String to the Logging text file.
      */
-    public static final String LOG_FILE = System.getProperty("user.dir") + File.separator + "log" + File.separator + "ServerLog.txt";
+    public static final String LOG_FILE = USER_DIR + File.separator + "log" + File.separator + "ServerLog.txt";
     /**
      * the Status of the server.
      */
@@ -55,7 +59,7 @@ public class Constants {
     /**
      * Directory to the Player-Save files.
      */
-    public static String SAVED_GAME_DIRECTORY = System.getProperty("user.dir") + File.separator + "players" + File.separator;
+    public static String SAVED_GAME_DIRECTORY = USER_DIR + File.separator + "players" + File.separator;
     /**
      * Prints extra data, helpful for debugging etc.
      */

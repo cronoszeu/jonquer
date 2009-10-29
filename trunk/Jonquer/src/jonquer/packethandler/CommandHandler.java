@@ -37,7 +37,7 @@ public class CommandHandler {
 	    player.getCharacter().setProfession((byte) Integer.parseInt(args[1]));
 	    player.getActionSender().sendUpdatePacket(Formula.PROFESSION_UPDATE_TYPE,
 	    player.getCharacter().getProfession() & 0xff);
-	} else if (command("/cngmap", "/map")) {
+	} else if (command("/chngmap", "/map")) {
 	    int map = Integer.parseInt(args[1]);
 	    short x = Short.parseShort(args[2]);
 	    short y = Short.parseShort(args[3]);
