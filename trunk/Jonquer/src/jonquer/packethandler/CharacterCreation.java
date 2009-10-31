@@ -17,7 +17,7 @@ public class CharacterCreation implements PacketHandler {
     }
 
     @Override
-    public void handlePacket(Player player, byte[] packet) {
+    public void handlePacket(Player player, byte[] packet) throws Exception {
 	ByteBuffer bb = ByteBuffer.wrap(packet);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	byte job = bb.get(0x36);

@@ -25,7 +25,7 @@ public class GameLogin implements PacketHandler {
 	return 0x41c;
     }
 
-    public void handlePacket(Player player, byte[] packet) {
+    public void handlePacket(Player player, byte[] packet) throws Exception {
 	int pid = StaticPacketBuilder.getInt(packet, 4);
 	int key = StaticPacketBuilder.getInt(packet, 8);
 	player.crypt.generateKeys(pid, key);
@@ -52,6 +52,7 @@ public class GameLogin implements PacketHandler {
 	    Log.debug("Logged In: " + player.getCharacter().getName());
 	    player.getActionSender().sendHeroInfo();
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "ANSWER_OK");
+	    player.getActionSender().sendInventory();
 	}
     }
 
