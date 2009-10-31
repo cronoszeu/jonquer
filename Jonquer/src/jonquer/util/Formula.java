@@ -1,9 +1,13 @@
 package jonquer.util;
 
+import java.util.Random;
+
 import jonquer.model.Player;
 import jonquer.model.Character;
 
 public class Formula {
+    
+    public static Random random = new Random();
 
     public static final int HITPOINTS_UPDATE_TYPE = 0;
     public static final int MAX_HITPOINTS_UPDATE_TYPE = 1;
@@ -28,6 +32,19 @@ public class Formula {
     public static final int RAISE_FLAG_UPDATE_TYPE = 26;
     public static final int LUCKY_TIME_UPDATE_TYPE = 29;
     public static final int HAIR_STYLE_UPDATE_TYPE = 31;
+    
+    /**
+     * Qualities of Armor/Weps.
+     */
+    public static final int FIXED = 0;
+    public static final int NORMAL1 = 3;
+    public static final int NORMAL2 = 4;
+    public static final int NORMAL3 = 5;
+    public static final int REFINED = 6;
+    public static final int UNIQUE = 7;
+    public static final int ELITE = 8;
+    public static final int SUPER = 9;
+    
 
 
     public static final short TALK_MESSAGE_TYPE = 2000;
@@ -52,7 +69,7 @@ public class Formula {
     public static final int JOB_INTERN_ARCHER = 40;
     public static final int JOB_INTERN_TAOIST = 100;
     
-    public static final int VIEW_RADIUS = 23;
+    public static final int VIEW_RADIUS = 18;
     public static final int FAR_VIEW_RADIUS = 30;
 
     /**

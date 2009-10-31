@@ -20,7 +20,7 @@ public class AuthLogin implements PacketHandler {
 	return 0x41b;
     }
 
-    public void handlePacket(Player player, byte[] packet) {
+    public void handlePacket(Player player, byte[] packet) throws Exception {
 	try {
 
 	    String username = new String(packet, 4, 15).trim();
