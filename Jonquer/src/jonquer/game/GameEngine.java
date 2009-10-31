@@ -87,7 +87,7 @@ public class GameEngine {
 			Packet b = i.next();
 			p.crypt.decrypt(b.getData());
 			//TODO-fixme: Make this better.
-			if(b.getData().length > 1) {
+			if(b.getData().length > 3) {
 			    int packetID = (b.getData()[3] << 8) | (b.getData()[2] & 0xff);
 
 			    if (!World.getWorld().packetHandlers.containsKey(packetID)) {
@@ -102,7 +102,7 @@ public class GameEngine {
 				}
 			    }
 			} else {
-			    Log.log("Invalid Packet: " + new String(b.getData())+ " Length: ?");
+			   // Log.log("Invalid Packet: " + new String(b.getData())+ " Length: ?");
 			}
 
 			i.remove();
@@ -114,6 +114,7 @@ public class GameEngine {
 
 	} catch(ConcurrentModificationException cme) {
 
+	
 	} catch (Exception e) {
 	    e.printStackTrace();
 	} 
