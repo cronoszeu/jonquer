@@ -19,9 +19,7 @@ public class DataPacket implements PacketHandler {
         switch (bb.getShort(22)) {
 
             case 74:
-                player.getCharacter().setX((short) 459);
-                player.getCharacter().setY((short) 330);
-                player.getActionSender().sendLocation();
+        	player.getActionSender().sendLocation();
                 break;
 
             case 76:
@@ -38,7 +36,7 @@ public class DataPacket implements PacketHandler {
                     if (p != player) {
                         if (p.getCharacter().getMap() == player.getCharacter().getMap()) {
                             if (Formula.inView(p.getCharacter(), player.getCharacter())) {
-                                p.getActionSender().write(bb);
+                                p.getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
                             }
                         }
                     }
@@ -75,15 +73,7 @@ public class DataPacket implements PacketHandler {
                 break;
                 
             case 130: // Complete login.
-                player.getActionSender().sendNpcDialogPacket("Hey xEnt! " +
-                        "How are you? I've implemented Npc spawns and Npc " +
-                        "dialogs, as well as Npc loading. " +
-                        "It's up to you if you want to add/change anything." +
-                        "\nHave a good day!!\n\nI'll leave you to ponder this code:\n" +
-                        "while(true) {\n    goFuckYourself();\n}");
-                player.getActionSender().sendNpcDialogFacePacket(31);
-                player.getActionSender().sendNpcDialogOptionPacket("You're so awesome s.bat! (Lol, I know!)", -1);
-                player.getActionSender().sendNpcDialogCompletePacket();
+               
                 break;
 
             case 133: // jump
