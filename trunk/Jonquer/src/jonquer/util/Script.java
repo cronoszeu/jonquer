@@ -105,8 +105,8 @@ public class Script {
 	    }	
 	}
 	if(toRemove != null) {
+	    player.getActionSender().removeItem(toRemove);
 	    player.getCharacter().getInventory().removeItem(toRemove);
-	    player.getActionSender().sendInventory();
 	}
     }
 
