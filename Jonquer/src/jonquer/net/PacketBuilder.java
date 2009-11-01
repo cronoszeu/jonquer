@@ -45,6 +45,18 @@ public class PacketBuilder {
 	World.getWorld().getKeyPlayers().put(accID, player);
     }
     
+    public void removeItem(Item i) {
+	ByteBuffer bb = ByteBuffer.allocate(20);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1009); // packet id
+	bb.putInt(4, i.getUID());
+	bb.putInt(8, 0);
+	bb.putInt(12, 3);
+	write(bb);
+	
+    }
+    
     public void removeEntity(Player p, int prevX, int prevY) {
 	ByteBuffer bb = ByteBuffer.allocate(24);
 	bb.order(ByteOrder.LITTLE_ENDIAN);

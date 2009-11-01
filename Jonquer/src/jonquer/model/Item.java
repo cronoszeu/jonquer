@@ -109,9 +109,13 @@ public class Item implements Serializable {
 	return durability;
     }
     
+    public boolean isNormal() {
+	return durability == -1 && plus == 0 && bless == 0 && enchant == 0 && soc1 == 0 && soc2 == 0;
+    }
+    
     // for arrows.
     private int arrowAmount = 50;
-    private int durability = 0;
+    private int durability = -1;
     private int id = 0;
     private int plus = 0;
     private int bless = 0;
