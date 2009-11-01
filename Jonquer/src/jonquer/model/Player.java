@@ -16,9 +16,12 @@ import jonquer.net.PacketBuilder;
 import jonquer.util.Crypto;
 import jonquer.util.Formula;
 import jonquer.util.Log;
+import jonquer.util.Script;
 import jonquer.util.StaticData;
 
 import org.apache.mina.common.IoSession;
+
+import bsh.Interpreter;
 
 /**
  * All Player variables/properties will be held here. Each instance represents 1
@@ -277,9 +280,45 @@ public class Player {
 	return locked;
     }
 
+    public void setLastOption(int lastOption) {
+	this.lastOption = lastOption;
+    }
+
+    public int getLastOption() {
+	return lastOption;
+    }
+
+    /**
+     * Dispatches a thread to run this NpcScript.
+     * @param id - the NPC ID.
+     */
+    public void runScript(final int id) {
+	final Player p = this;
+	    new Thread(new Runnable() {
+		public void run() {
+		    script = new Script(p, StaticData.npcScripts.get(id));
+		}
+	    }).start();
+    }
+
+    public Script getScript() {
+	return script;
+    }
+
+    public void setInterpreter(Interpreter interpreter) {
+	this.interpreter = interpreter;
+    }
+
+    public Interpreter getInterpreter() {
+	return interpreter;
+    }
+
     /**
      * List of players in your view area.
      */
+    private int lastOption = -1;
+    private Script script = null;
+    private Interpreter interpreter = new Interpreter();
     private ArrayList<Player> playersInView = new ArrayList<Player>();
     public static final World world = World.getWorld();
     private boolean locked = false;

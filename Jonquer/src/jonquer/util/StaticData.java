@@ -1,5 +1,6 @@
 package jonquer.util;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import jonquer.model.Npc;
@@ -9,6 +10,7 @@ import jonquer.model.def.COItemDef;
  * Contains any type of easy-to-access data.
  * 
  * @author xEnt
+ * @author s.bat
  * 
  */
 public class StaticData {
@@ -25,6 +27,10 @@ public class StaticData {
      * Contains Item definitions for Conquer Online. Pulled by the ItemID.
      */
     public static HashMap<Integer, COItemDef> itemDefs = new HashMap<Integer, COItemDef>();
+    /**
+     * a Hashmap containing all the NPC Script files, pulled by the NPC ID.
+     */
+    public static HashMap<Integer, File> npcScripts = new HashMap<Integer, File>();
     /**
      * All NPC definitions, @todo needs work
      */

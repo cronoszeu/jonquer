@@ -8,6 +8,7 @@ import jonquer.game.Constants;
 import jonquer.model.Item;
 import jonquer.model.Player;
 import jonquer.model.World;
+import jonquer.util.Formula;
 import jonquer.util.Log;
 
 import org.apache.mina.common.IoSession;
@@ -58,6 +59,10 @@ public class PacketBuilder {
 	bb.putShort(20, (short) 0);
 	bb.putShort(22, (short) 132);
 	write(bb);
+    }
+    
+    public void sendSystemMessage(String msg) {
+	sendMessage(0xffff, Formula.TOP_LEFT_MESSAGE_TYPE, "SYSTEM", "ALL", msg);
     }
 
     public void removeEntity(Player p) {
@@ -257,8 +262,8 @@ public class PacketBuilder {
 	bb.putShort(8, (short) x);
 	bb.putShort(10, (short) y);
 	bb.putShort(12, (short) type);
-	bb.put(14, (byte) direction);
-	bb.putInt(16, flag);
+	bb.putShort(14, (short) flag);
+	bb.put(16, (byte)direction);
 	write(bb);
     }
 

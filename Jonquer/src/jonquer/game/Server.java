@@ -73,8 +73,29 @@ public class Server {
 	loadPacketHandlers();
 	loadNpcs();
 	loadItems();
+	loadScripts();
 	System.out.printf("%n");
 	Log.log("Data loaded in " + (System.currentTimeMillis() - now) + "ms (" + finishMeasure() + "kb Allocated Memory)");
+    }
+
+    /**
+     * Sets up the NPC Scripts
+     */
+    public void loadScripts() {
+	try {
+	    int count = 0;
+	    for(File f : new File(Constants.USER_DIR + "/plugins/npcscripts/").listFiles()) {
+		if(f.isDirectory() || !f.getName().endsWith(".bsh"))
+		    continue;
+		int id = Integer.parseInt(f.getName().substring(0, f.getName().indexOf("-")).trim());
+		StaticData.npcScripts.put(id, f);
+		count++;
+	    }
+	    System.out.printf("Loaded " + count + " NPC-Scripts...  ");
+	} catch(Exception e) {
+	    Log.error(e);
+	}
+
     }
 
     /**
@@ -108,7 +129,7 @@ public class Server {
 
 		    item.setProfLevelReq(Integer.parseInt(args[2]));
 		    item.setLevelReq(Integer.parseInt(args[3]));
-		    
+
 		    // 4 args is just some garments with higher rarity
 		    item.setReqStrength(Integer.parseInt(args[5]));
 		    item.setReqAgility(Integer.parseInt(args[6]));
@@ -123,7 +144,7 @@ public class Server {
 		    item.setCp(Integer.parseInt(args[15]));
 		    if(item.getLevelReq() > 1)
 			item.setMaxDurability(40);
-		    
+
 		    item.setQuality(Integer.parseInt(("" + id).substring(("" + id).length() - 1))); // figured this out, and how getting quality works server-side
 		    StaticData.itemDefs.put(id, item);
 		}
@@ -231,7 +252,7 @@ public class Server {
 		    } catch(NumberFormatException nfe) {
 			itemid = 0;
 		    }
-		  
+
 		    if (name == null || datastr == null) {
 			throw new Exception("Invalid Npc data.");
 		    }

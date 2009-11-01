@@ -1,10 +1,5 @@
 package jonquer.packethandler;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-
-import jonquer.game.Constants;
 import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.net.StaticPacketBuilder;
