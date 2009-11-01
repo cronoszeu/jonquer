@@ -55,7 +55,14 @@ public class DataPacket implements PacketHandler {
                 break;
 
             case 114: // get surroundings
-                World.getWorld().updatePosition(player);
+                for(Player p : World.getWorld().getPlayers()) {
+                    if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+                	if(p != player) {
+                	    p.getActionSender().sendSpawnPacket(player.getCharacter());
+                	    player.getActionSender().sendSpawnPacket(p.getCharacter());
+                	}
+                    }
+                }
                 for (Npc npc : StaticData.npcs) {
                     if (npc.getMapid() == player.getCharacter().getMap()) {
                         if (Formula.inFarView(player.getCharacter().getX(), player.getCharacter().getY(), npc.getCellx(), npc.getCelly())) {
@@ -94,17 +101,7 @@ public class DataPacket implements PacketHandler {
                         player.getCharacter().setX(nextX);
                         player.getCharacter().setY(nextY);
                         player.getCharacter().setAction(100);
-
-                        World.getWorld().updatePosition(player, false, bb, prevX, prevY);
-
-
-                        for (Npc npc : StaticData.npcs) {
-                            if (npc.getMapid() == player.getCharacter().getMap()) {
-                                if (Formula.inFarView(player.getCharacter().getX(), player.getCharacter().getY(), npc.getCellx(), npc.getCelly())) {
-                                    player.getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
-                                }
-                            }
-                        }
+                        player.move(prevX, prevY, bb);
                     }
                 }
                 break;

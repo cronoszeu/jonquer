@@ -4,12 +4,15 @@ import jonquer.game.Constants;
 import jonquer.model.Packet;
 import jonquer.model.Player;
 import jonquer.util.Crypto;
+import jonquer.util.Formula;
 import jonquer.util.Log;
 
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
+
 
 /**
  * the MINA incoming packet handler for the port game port stream.
@@ -49,14 +52,14 @@ public class GameConnectionHandler implements IoHandler {
 	 */
 	public void sessionClosed(IoSession arg0) throws Exception {
 		Player player = (Player) arg0.getAttachment();
-		player.destroy(true);
+		player.destroy();
 	}
 
 	/**
 	 * Notification that a session has been Created.
 	 */
 	public void sessionCreated(IoSession arg0) throws Exception {
-
+	  arg0.getFilterChain().addFirst("protocolFilter", new ProtocolCodecFilter(new JonquerCodecFactory()));
 	}
 
 	/**
@@ -73,7 +76,7 @@ public class GameConnectionHandler implements IoHandler {
 	 */
 	public void sessionOpened(IoSession session) throws Exception {
 		Constants.PEAK_PLAYER_COUNT++;
-		Player p = new Player(session, 1000001 + Constants.PEAK_PLAYER_COUNT);
+		Player p = new Player(session, Formula.random.nextInt(1000001));
 		session.setAttachment(p);
 		session.setIdleTime(IdleStatus.BOTH_IDLE, 10);
 		session.setWriteTimeout(30);

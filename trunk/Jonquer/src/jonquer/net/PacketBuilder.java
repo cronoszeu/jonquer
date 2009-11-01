@@ -43,6 +43,22 @@ public class PacketBuilder {
 	write(bb);
 	World.getWorld().getKeyPlayers().put(accID, player);
     }
+    
+    public void removeEntity(Player p, int prevX, int prevY) {
+	ByteBuffer bb = ByteBuffer.allocate(24);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1010); // packet id
+	bb.putInt(4, (int) System.currentTimeMillis());
+	bb.putInt(8, p.getCharacter().getID());
+	bb.putShort(12, (short)prevX);
+	bb.putShort(14, (short)prevY);
+	bb.putShort(16, (short) 0);
+	bb.putShort(18, (short) 0);
+	bb.putShort(20, (short) 0);
+	bb.putShort(22, (short) 132);
+	write(bb);
+    }
 
     public void removeEntity(Player p) {
 	ByteBuffer bb = ByteBuffer.allocate(24);
@@ -75,9 +91,8 @@ public class PacketBuilder {
 	if(i.getDef().isArrows()) {
 	    bb.putShort(12, (short)i.getArrowAmount());
 	    bb.put(14, (byte)1); // leave
-
 	} else {
-	    if(i.getDurability() != -1) { // sets durability (if possible)
+	    if(i.hasDurability()) { // sets durability (if possible)
 		bb.putShort(12, (short)(i.getDurability() * 100)); 
 		bb.putShort(14, (short)(i.getDef().getMaxDurability() * 100));
 	    }
@@ -89,6 +104,22 @@ public class PacketBuilder {
 	bb.put(28, (byte)i.getPlus());
 	bb.put(29, (byte)i.getBless());
 	bb.put(30, (byte)i.getEnchant());
+	write(bb);
+    }
+    
+    public void sendJump(int x, int y, int prevX, int prevY, int id) {
+	ByteBuffer bb = ByteBuffer.allocate(28);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1010); // packet id
+	bb.putInt(4, (int)System.currentTimeMillis());
+	bb.putInt(8, id);
+	bb.putShort(12, (short)x);
+	bb.putShort(14, (short)y);
+	bb.putShort(16, (short)prevX);
+	bb.putShort(18, (short)0);
+	bb.putShort(20, (short)133);
+	bb.putInt(22, 0);
 	write(bb);
     }
 

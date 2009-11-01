@@ -10,7 +10,6 @@ import java.io.File;
  * 
  */
 public class Constants {
-
     /**
      * the IP string for the Game host.
      */
@@ -28,7 +27,7 @@ public class Constants {
      */
     public static final int GAME_PORT = 5816;
     /**
-     * User directory.
+     * the Directory this application launches in.
      */
     public static final String USER_DIR = System.getProperty("user.dir");
     /**
@@ -47,11 +46,7 @@ public class Constants {
     /**
      * the rolling milliseconds to run a major update in the game-engine loop
      */
-    public static final int MAJOR_UPDATE_TIME_LOOP = 20;
-    /**
-     * the rolling milliseconds to run a minor update in the game-engine loop
-     */
-    public static final int MINOR_UPDATE_TIME_LOOP = 500;
+    public static final int GAME_ENGINE_TICK_TIME = 20;
     /**
      * the amount of players this server has had since online
      */

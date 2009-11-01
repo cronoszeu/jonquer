@@ -70,15 +70,6 @@ public class WalkHandler implements PacketHandler {
         int y = player.getCharacter().getY();
         player.getCharacter().setX((short) (player.getCharacter().getX() + AddX));
         player.getCharacter().setY((short) (player.getCharacter().getY() + AddY));
-
-        World.getWorld().updatePosition(player, false, bb, x, y);
-
-        for (Npc npc : StaticData.npcs) {
-            if (npc.getMapid() == player.getCharacter().getMap()) {
-                if (Formula.inFarView(player.getCharacter().getX(), player.getCharacter().getY(), npc.getCellx(), npc.getCelly())) {
-                    player.getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
-                }
-            }
-        }
+        player.move(x, y, bb);
     }
 }

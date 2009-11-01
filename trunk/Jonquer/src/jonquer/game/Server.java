@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Properties;
+import java.util.concurrent.Executors;
 
 import jonquer.model.Npc;
 import jonquer.model.World;
@@ -22,6 +23,7 @@ import jonquer.util.Tools;
 
 import org.apache.mina.common.IoAcceptor;
 import org.apache.mina.common.IoAcceptorConfig;
+import org.apache.mina.common.ThreadModel;
 import org.apache.mina.transport.socket.nio.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 import org.apache.mina.transport.socket.nio.SocketSessionConfig;
@@ -42,11 +44,14 @@ public class Server {
 	    loadConfig();
 	    Log.log("Auth Server Listening on " + Constants.AUTH_PORT);
 	    Log.log("Game Server Listening on " + Constants.GAME_PORT);
-	    acceptor = new SocketAcceptor();
+	    acceptor = new SocketAcceptor(Runtime.getRuntime().availableProcessors(), Executors.newCachedThreadPool());
+	    org.apache.mina.common.ByteBuffer.allocate(500);
 	    IoAcceptorConfig config = new SocketAcceptorConfig();
 	    config.setDisconnectOnUnbind(true);
+	    config.setThreadModel(ThreadModel.MANUAL);
 	    ((SocketSessionConfig) config.getSessionConfig()).setReuseAddress(true);
-	    ((SocketSessionConfig) config.getSessionConfig()).setTcpNoDelay(true); // disable nagles algorithm
+	    ((SocketSessionConfig) config.getSessionConfig()).setReceiveBufferSize(30000);
+	    ((SocketSessionConfig) config.getSessionConfig()).setTcpNoDelay(true);
 	    acceptor.bind(new InetSocketAddress(Constants.AUTH_HOST, Constants.AUTH_PORT), new AuthConnectionHandler(), config);
 	    acceptor.bind(new InetSocketAddress(Constants.GAME_HOST, Constants.GAME_PORT), new GameConnectionHandler(), config);
 	    GameEngine ge = new GameEngine();

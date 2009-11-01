@@ -30,7 +30,7 @@ public class CommandHandler {
 	} else if (command("/refresh", "/update")) {
 	    player.updateMeToOthers();
 	    player.updateOthersToMe();
-	    World.getWorld().updatePosition(player);
+	  //  World.getWorld().updatePosition(player);
 	} else if (command("/uplev", "/lvl", "/lv")) {
 	    int level = ((byte) Integer.parseInt(args[1])) & 0xff;
 	    if (level >= 1 && level <= 150) {
@@ -41,14 +41,39 @@ public class CommandHandler {
 	    player.getCharacter().setProfession((byte) Integer.parseInt(args[1]));
 	    player.getActionSender().sendUpdatePacket(Formula.PROFESSION_UPDATE_TYPE,
 		    player.getCharacter().getProfession() & 0xff);
-	} else if (command("/chngmap", "/map")) {
+	} else if(command("/test1")) {
+	    for(Player p : World.getWorld().getPlayers()) {
+                if(p != player)
+                if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+                    p.getActionSender().sendSpawnPacket(player.getCharacter());
+                }
+	    }
+	} else if(command("/test2")) {
+	    for(Player p : World.getWorld().getPlayers()) {
+                if(p != player)
+                if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+                    player.getActionSender().sendSpawnPacket(p.getCharacter());
+                }
+	    }
+	}
+	 else if(command("/test3")) {
+		    for(Player p : World.getWorld().getPlayers()) {
+	                if(p != player)
+	                if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+	                    player.getActionSender().removeEntity(p);
+	                    player.getActionSender().sendSpawnPacket(p.getCharacter());
+	                }
+		    }
+		}
+	
+	else if (command("/chngmap", "/map")) {
 	    int map = Integer.parseInt(args[1]);
 	    short x = Short.parseShort(args[2]);
 	    short y = Short.parseShort(args[3]);
 	    player.getCharacter().setMap(map);
 	    player.getCharacter().setX(x);
 	    player.getCharacter().setY(y);
-	    World.getWorld().updatePosition(player);
+	    //World.getWorld().updatePosition(player);
 	    player.getActionSender().sendLocation();
 	} else if (command("/tele", "/fly")) {
 	    short x = Short.parseShort(args[1]);
