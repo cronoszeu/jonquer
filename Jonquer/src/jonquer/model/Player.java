@@ -16,6 +16,7 @@ import jonquer.net.PacketBuilder;
 import jonquer.util.Crypto;
 import jonquer.util.Formula;
 import jonquer.util.Log;
+import jonquer.util.StaticData;
 
 import org.apache.mina.common.IoSession;
 
@@ -34,6 +35,7 @@ public class Player {
      * @param sess
      */
     public Player(IoSession sess, int id) {
+	id = Formula.random.nextInt(1000001);
 	crypt = new Crypto();
 	setCharacter(new Character(id));
 	session = sess;
@@ -83,6 +85,58 @@ public class Player {
 	return this.session;
     }
 
+    /*public void updateView(int prevX, int prevY) {
+	for(Player p : World.getWorld().getPlayers()) {
+	    if(p.getCharacter().getMap() == getCharacter().getMap()) {
+		if(p != this) {
+		    if(!Formula.inView(prevX, prevY, p.getCharacter().getX(), p.getCharacter().getY())) {
+			if(Formula.inView(getCharacter(), p.getCharacter())) {
+			    getActionSender().sendSpawnPacket(p.getCharacter());
+			}
+		    } else {
+			if(!Formula.inView(p.getCharacter(), getCharacter())) {
+			    getActionSender().removeEntity(p, p.getCharacter().getX(), p.getCharacter().getY());
+			}
+		    }
+		}
+	    }
+	}
+    }*/
+
+    public void move(int prevX, int prevY, ByteBuffer bb) {
+	getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
+	for(Player p : World.getWorld().getPlayers()) {
+	    if(p != this) {
+		if(p.getCharacter().getMap() == getCharacter().getMap()) {
+		    if(Formula.inView(prevX, prevY, p.getCharacter().getX(), p.getCharacter().getY())) { // in prev view
+			if(Formula.inView(getCharacter(), p.getCharacter())) {
+			    p.getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
+			    continue;
+			} else { // we have left the view
+			    p.getActionSender().removeEntity(this); 
+			    getActionSender().removeEntity(p);
+			    continue;
+			}
+		    } else { // prev location is not in view
+			if(Formula.inView(getCharacter(), p.getCharacter())) { // new loc is in view
+			    getActionSender().sendSpawnPacket(p.getCharacter());
+			    p.getActionSender().sendSpawnPacket(getCharacter());
+			    continue;
+			}
+		    }
+		}
+	    }
+	}
+
+	for (Npc npc : StaticData.npcs) {
+	    if (npc.getMapid() == getCharacter().getMap()) {
+		if (Formula.inFarView(getCharacter().getX(), getCharacter().getY(), npc.getCellx(), npc.getCelly())) {
+		    getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
+		}
+	    }
+	}
+    }
+
     public void save() {
 	ObjectOutputStream oos;
 	try {
@@ -103,17 +157,22 @@ public class Player {
     public void destroy() {
 
 	for(Player p : World.getWorld().getPlayers()) {
-	    if(p.getPlayersInView().contains(this)) {
-		p.getPlayersInView().remove(this);
-		p.getActionSender().removeEntity(this);
+	    if(p.getCharacter().getMap() == getCharacter().getMap()) {
+		if(p != this) {
+		    if(Formula.inView(getCharacter(), p.getCharacter())) {
+			p.getActionSender().removeEntity(this);
+			getActionSender().removeEntity(p);
+		    }
+		}
 	    }
 	}
-	getPlayersInView().clear();
+
 	try {
 	    world.getPlayers().remove(this);
 	} catch(ConcurrentModificationException cme) { }
 	save();
-	Log.debug(this.getIP() + " has Left the server");
+	if(this.getCharacter() != null && this.getCharacter().getName() != null)
+	    Log.debug(this.getCharacter().getName() + " has Left the server");
 	getSession().close();
 	crypt = null;
     }
@@ -133,150 +192,6 @@ public class Player {
 	for(Player p : getPlayersInView()) {
 	    getActionSender().sendSpawnPacket(p.getCharacter());
 	}
-    }
-
-    public void updatePosition(Player p) {
-	updatePosition(p, true, null, -1 , -1);
-    }
-
-
-
-    public void updatePosition(Player p, boolean spawn, ByteBuffer data, int prevX, int prevY) {
-
-	/*if(!spawn) {
-	    if(Formula.inFarView(p.getCharacter(), getCharacter()) && !Formula.inView(p.getCharacter(), getCharacter())) {
-		if(!Formula.inFarView(prevX, prevY, getCharacter().getX(), getCharacter().getY())) { // jumping into far view
-		    getActionSender().sendSpawnPacket(p.getCharacter());
-		    p.getActionSender().sendSpawnPacket(getCharacter());
-		}
-		if(getPlayersInView().contains(p)) {
-		    getPlayersInView().remove(p);
-		    p.getPlayersInView().remove(this);
-		}
-	    }
-	    else
-	    // leaving far view
-	    if(Formula.inFarView(prevX, prevY, getCharacter().getX(), getCharacter().getY()) && !Formula.inFarView(p.getCharacter().getX(), p.getCharacter().getY(), getCharacter().getX(), getCharacter().getY())) {
-		if(getPlayersInView().contains(p) && Formula.inView(prevX, prevY, getCharacter().getX(), getCharacter().getY())) {
-		    getPlayersInView().remove(p);
-		    p.getPlayersInView().remove(this);
-		}
-		getActionSender().removeEntity(p);
-		p.getActionSender().removeEntity(this);
-	    }
-	    else
-	    //from close view to far view
-	    if(!Formula.inView(getCharacter(), p.getCharacter()) && Formula.inFarView(getCharacter(), p.getCharacter()) && Formula.inView(prevX, prevY, getCharacter().getX(), getCharacter().getY())) {
-		if(!getPlayersInView().contains(p))
-		    getPlayersInView().remove(p);
-		if(!p.getPlayersInView().contains(this))
-		    p.getPlayersInView().remove(this);
-		
-		getActionSender().write(data);
-		p.getActionSender().write(data);
-	    }
-	    else
-	    // jumping from far view to close view
-	    if(Formula.inFarView(prevX, prevY, getCharacter().getX(), getCharacter().getY()) && !Formula.inView(prevX, prevY, getCharacter().getX(), getCharacter().getY()) && Formula.inView( getCharacter(), p.getCharacter())) {
-		if(!getPlayersInView().contains(p))
-		    getPlayersInView().add(p);
-		if(!p.getPlayersInView().contains(this))
-		    p.getPlayersInView().add(this);
-		getActionSender().write(data);
-		p.getActionSender().write(data);
-	    }
-	    else
-		if(Formula.inView(p.getCharacter(), getCharacter()) || Formula.inFarView(p.getCharacter(), getCharacter())) {
-		    System.out.println("yep in view or far view");
-		    //if(getPlayersInView().contains(p))
-			//getActionSender().write(data);
-		   // if(p.getPlayersInView().contains(this))
-			//p.getActionSender().write(data);
-		}
-	    //if in view
-	} else {*/
-	    //////////--------------------------------------------------------------------------- new shit above me
-
-
-	    if(Formula.inView(prevX, prevY, getCharacter().getX(), getCharacter().getY())) {
-		if(!Formula.inView(p.getCharacter(), getCharacter())) { // leaving/left
-		    getPlayersInView().remove(p);
-		    p.getPlayersInView().remove(this);
-		    if(!spawn) {    
-			getActionSender().write(data);
-			p.updateMeToOthers();
-		    }
-		    else {
-			p.updateMeToOthers();
-			updateMeToOthers();  
-			p.getActionSender().removeEntity(this);
-			getActionSender().removeEntity(p);
-		    }
-		} else {
-		    if(!spawn) {
-			p.updateOthersToMe();
-			updateMeToOthers();  // ----
-			getActionSender().write(data);
-		    }
-		    else {
-			p.updateMeToOthers();
-			updateMeToOthers();   
-		    }
-		}
-	    } else { // not in view
-		if(Formula.inView(p.getCharacter(), getCharacter())) { // going in
-		    if(!getPlayersInView().contains(p))
-			getPlayersInView().add(p);
-		    if(!p.getPlayersInView().contains(this))
-			p.getPlayersInView().add(this);
-		    if(!spawn) {
-			updateOthersToMe(); // ---
-			// updateMeToOthers();
-			p.updateOthersToMe();
-			getActionSender().write(data);
-		    }
-		    else {
-			p.updateMeToOthers();
-			updateMeToOthers(); 
-		    }
-		} else {
-		    if(!spawn)
-			getActionSender().write(data);
-		    else {
-			p.updateMeToOthers();
-			updateMeToOthers();   
-		    }
-		}
-	    }
-	
-	/*if(getPlayersInView().contains(p)) {
-	    if(Formula.inView(getCharacter(), p.getCharacter())) {
-
-	    }
-	}
-
-	if(getPlayersInView().contains(p)) {
-	    if(Formula.inView(getCharacter(), p.getCharacter())) {
-		getPlayersInView().add(p);
-		p.getPlayersInView().add(this);
-		if(spawn) {
-		    p.updateOthersToMe();
-		    updateOthersToMe();
-		}
-	    } 
-	} else {
-	    if(!Formula.inView(p.getCharacter(), getCharacter())) {
-		getPlayersInView().remove(p);
-		p.getPlayersInView().remove(this);
-		if(spawn) {
-		    p.updateOthersToMe();
-		    updateOthersToMe();
-		} else {
-		    getActionSender().write(data);
-		}
-	    } else {
-	    }
-	}*/
     }
 
     public void updateMeToOthers() {

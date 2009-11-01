@@ -10,6 +10,7 @@ import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
 
 /**
  * the MINA incoming packet handler for the port auth port stream.
@@ -56,7 +57,7 @@ public class AuthConnectionHandler implements IoHandler {
 	 * Notification that a session has been Created.
 	 */
 	public void sessionCreated(IoSession arg0) throws Exception {
-
+	    arg0.getFilterChain().addFirst("protocolFilter", new ProtocolCodecFilter(new JonquerCodecFactory()));
 	}
 
 	/**

@@ -15,19 +15,6 @@ public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
         
-    // for arrows.
-    private int arrowAmount = 50;
-    
-    private int durability = 0;
-    
-    private int id = 0;
-    private int plus = 0;
-    private int bless = 0;
-    private int enchant = 0;
-    private int soc1 = 0;
-    private int soc2 = 0;
-    private int UID = 0;
-    
     public Item(int id, int plus, int bless, int enchant, int soc1, int soc2) {
 	setID(id);
 	setPlus(plus);
@@ -40,6 +27,10 @@ public class Item implements Serializable {
 	else
 	    setDurability(getDef().getMaxDurability());
 	setUID(Formula.random.nextInt(Integer.MAX_VALUE));
+    }
+    
+    public boolean hasDurability() {
+	return durability != -1;
     }
     
     public void setID(int id) {
@@ -117,4 +108,15 @@ public class Item implements Serializable {
     public int getDurability() {
 	return durability;
     }
+    
+    // for arrows.
+    private int arrowAmount = 50;
+    private int durability = 0;
+    private int id = 0;
+    private int plus = 0;
+    private int bless = 0;
+    private int enchant = 0;
+    private int soc1 = 0;
+    private int soc2 = 0;
+    private int UID = 0;
 }

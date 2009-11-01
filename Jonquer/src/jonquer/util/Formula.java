@@ -46,7 +46,6 @@ public class Formula {
     public static final int SUPER = 9;
     
 
-
     public static final short TALK_MESSAGE_TYPE = 2000;
     public static final short WHISPER_MESSAGE_TYPE = 2001;
     public static final short TEAM_MESSAGE_TYPE = 2003;
@@ -69,7 +68,7 @@ public class Formula {
     public static final int JOB_INTERN_ARCHER = 40;
     public static final int JOB_INTERN_TAOIST = 100;
     
-    public static final int VIEW_RADIUS = 18;
+    public static final int VIEW_RADIUS = 15;
     public static final int FAR_VIEW_RADIUS = 30;
 
     /**

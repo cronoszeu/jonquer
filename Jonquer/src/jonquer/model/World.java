@@ -11,6 +11,7 @@ import jonquer.delay.DelayedAbstractEvent;
 import jonquer.game.GameEngine;
 import jonquer.game.Server;
 import jonquer.packethandler.PacketHandler;
+import jonquer.util.Formula;
 
 /**
  * the singleton World class, should be able to access most of the server from
@@ -69,31 +70,19 @@ public class World {
 	    gameengine = (GameEngine) inst;
     }
     
-    public void updatePosition(Player player) {
-	updatePosition(player, true, null, -1, -1);
-    }
-    
-    public void updatePosition(Player player, boolean spawn, ByteBuffer data, int prevX, int prevY) {
-	
-	Iterator<Player> playersInView = player.getPlayersInView().iterator();
-	while(playersInView.hasNext()) {
-	    Player pl = playersInView.next();
-	    if(pl.getCharacter().getMap() != player.getCharacter().getMap()) {
-		pl.getPlayersInView().remove(player);
-		playersInView.remove();
-		pl.updateOthersToMe();
-	    }
-	}
-	for(Player p : World.getWorld().getPlayers()) {
+    public void playerMove(Player player, ByteBuffer data, int prevX, int prevY) {
+	byte[] buff = data.array().clone();
+	for(Player p : getPlayers()) {
 	    if(p != player)
 	    if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
-		p.updatePosition(player, spawn, data, prevX, prevY);
+		if(Formula.inFarView(p.getCharacter(), player.getCharacter())) {
+		    System.out.println(buff[5]);
+		    p.getActionSender().write(ByteBuffer.wrap(buff));
+		}
 	    }
 	}
     }
     
-    
-
     /**
      * 
      * @return - the DelayedAbstractEvent queue of awaiting entries
