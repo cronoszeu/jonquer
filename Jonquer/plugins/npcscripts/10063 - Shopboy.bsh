@@ -1,0 +1,30 @@
+/**
+*
+* 10063 - Shopboy
+* @author xEnt
+*
+*/
+
+
+SetText("Would you like a free meteor");
+	option = AddOptions("Sure", "No, thats for noobs");
+	if(option == 1) {
+	    SetText("What do you say first?");
+	    option = AddOptions("Please", "Just gimmie it now idiot");
+	    if(option == 1) {
+		if(CanHold(1)) {
+		    AddItem(1088001);
+		    SetText("There you go, enjoy");
+		    AddOptions("Thanks man!");
+		} else {
+		    SetText("It seems you don't have enough space to hold it");
+		    AddOptions("Ill come back when later");
+		}
+	    } else {
+		SetText("Don't speak to me with that attitude, now run along kid");
+		AddOptions("Damn!");
+	    }
+	} else if(option == 2) {
+	    SetText("Suit yourself");
+	    option = AddOptions("I will");
+	}
