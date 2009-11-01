@@ -5,6 +5,7 @@ import java.io.File;
 import jonquer.model.Inventory;
 import jonquer.model.Item;
 import jonquer.model.Player;
+import jonquer.model.World;
 
 /**
  * a Script class, thats given to each script to take advantage of the simplified methods.
@@ -76,8 +77,68 @@ public class Script {
 	player.getActionSender().sendInventory();
     }
 
+    public void AddItem(int itemid, int amount) {
+	for(int i=0; i < amount; i++)
+	    player.getCharacter().getInventory().addItem(new Item(itemid, 0, 0, 0, 0, 0));
+	player.getActionSender().sendInventory();
+    }
+
     public boolean CanHold(int amount) {
 	return amount <= (Inventory.MAX_SIZE - player.getCharacter().getInventory().getItems().size());
+    }
+    
+    public boolean HasItem(int id) {
+	for(Item i : player.getCharacter().getInventory().getItems()) {
+	    if(i.getID() == id && i.isNormal()) {
+		return true;
+	    }
+	}
+	return false;
+    }
+    
+    public void RemoveItem(int itemid) {
+	Item toRemove = null;
+	for(Item i : player.getCharacter().getInventory().getItems()) {
+	    if(i.getID() == itemid && i.isNormal()) {
+		toRemove = i;
+		break;
+	    }	
+	}
+	if(toRemove != null) {
+	    player.getCharacter().getInventory().removeItem(toRemove);
+	    player.getActionSender().sendInventory();
+	}
+    }
+
+    public void Teleport(int x, int y) {
+	Teleport(player.getCharacter().getMap(), x, y);
+    }
+
+    public void Teleport(int map, int x, int y) {
+	for(Player p : World.getWorld().getPlayers()) {
+	    if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+		if(p != player) {
+		    if(Formula.inView(p.getCharacter(), player.getCharacter())) {
+			p.getActionSender().removeEntity(player);
+			player.getActionSender().removeEntity(p);
+		    }
+		}
+	    } 
+	}
+	player.getCharacter().setMap(map);
+	player.getCharacter().setX((short)x);
+	player.getCharacter().setY((short)y);
+	player.getActionSender().sendLocation();
+	for(Player p : World.getWorld().getPlayers()) {
+	    if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+		if(p != player) {
+		    if(Formula.inView(p.getCharacter(), player.getCharacter())) {
+			p.getActionSender().sendSpawnPacket(player.getCharacter());
+			player.getActionSender().sendSpawnPacket(p.getCharacter());
+		    }
+		}
+	    } 
+	}
     }
 
     public void Wait(int ms) {
