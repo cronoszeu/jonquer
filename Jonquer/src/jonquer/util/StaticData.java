@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import jonquer.model.Npc;
 import jonquer.model.def.COItemDef;
+import jonquer.model.def.COMonsterDef;
+import jonquer.model.def.COMonsterSpawnDef;
 
 /**
  * Contains any type of easy-to-access data.
@@ -31,6 +33,14 @@ public class StaticData {
      * a Hashmap containing all the NPC Script files, pulled by the NPC ID.
      */
     public static HashMap<Integer, File> npcScripts = new HashMap<Integer, File>();
+    /**
+     * Stored all the monster def's.
+     */
+    public static HashMap<Integer, COMonsterDef> monsterDefs = new HashMap<Integer, COMonsterDef>();
+    /**
+     * Stored all the monster spawn def's.
+     */
+    public static HashMap<Integer, COMonsterSpawnDef> monsterSpawnDefs = new HashMap<Integer, COMonsterSpawnDef>();
     /**
      * All NPC definitions, @todo needs work
      */

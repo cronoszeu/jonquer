@@ -48,7 +48,7 @@ public class Crypto {
 	for (int i = 0; i < packet.length; i++) {
 	    packet[i] = (byte) ((packet[i] & 0xff) ^ 0xab);
 	    packet[i] = (byte) (((packet[i] & 0xff) << 4) | ((packet[i] & 0xff) >> 4));
-	    packet[i] = (byte) (cryptKey2[out >> 8] ^ (packet[i] & 0xff));
+	    packet[i] = (byte) (cryptKey2[out >> 8] ^ (byte)(packet[i] & 0xff));
 	    packet[i] = (byte) (cryptKey1[out & 0xff] ^ (packet[i] & 0xff));
 	    out++;
 	}

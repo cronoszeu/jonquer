@@ -6,25 +6,29 @@
 */
 
 
-SetText("Would you like a free meteor");
-	option = AddOptions("Sure", "No, thats for noobs");
+SetText("Please, Pick an option");
+	option = AddOptions("Free Meteor", "Remove Meteor", "Teleport to Twin City");
 	if(option == 1) {
-	    SetText("What do you say first?");
-	    option = AddOptions("Please", "Just gimmie it now idiot");
-	    if(option == 1) {
-		if(CanHold(1)) {
-		    AddItem(1088001);
-		    SetText("There you go, enjoy");
-		    AddOptions("Thanks man!");
-		} else {
-		    SetText("It seems you don't have enough space to hold it");
-		    AddOptions("Ill come back when later");
-		}
+	    if(CanHold(1)) {
+		AddItem(460003);
 	    } else {
-		SetText("Don't speak to me with that attitude, now run along kid");
+		SetText("Your inventory is full, sorry");
 		AddOptions("Damn!");
 	    }
-	} else if(option == 2) {
-	    SetText("Suit yourself");
-	    option = AddOptions("I will");
+	}
+	
+	if(option == 2) {
+	    SetText("Are you sure you want to destroy a Meteor");
+	    option = AddOptions("Yes", "No");
+	    if(option == 1) {
+		if(HasItem(460003, 4)) {
+		    RemoveItem(460003, 4);
+		} else {
+		    SetText("Come back when you have a Meteor");
+		    AddOptions("Ok..");
+		}
+	    }
+	}
+	if(option == 3) {
+	    Teleport(1002, 400, 400);
 	}

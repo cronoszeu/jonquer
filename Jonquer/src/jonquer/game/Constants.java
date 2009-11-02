@@ -59,4 +59,8 @@ public class Constants {
      * Prints extra data, helpful for debugging etc.
      */
     public static final boolean VERBOSE_DEBUG_MODE = false;
+    /**
+     * How many mobs the server has.
+     */
+    public static int MOB_COUNT = 0;
 }
