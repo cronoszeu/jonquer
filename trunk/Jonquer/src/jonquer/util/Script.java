@@ -1,6 +1,7 @@
 package jonquer.util;
 
 import java.io.File;
+import java.util.Iterator;
 
 import jonquer.model.Inventory;
 import jonquer.model.Item;
@@ -71,6 +72,11 @@ public class Script {
 	player.setLastOption(-1);
 	return GetOption();
     }
+    
+    public void AddItem(int itemid, int plus, int bless, int enchant, int soc1, int soc2) {
+	player.getCharacter().getInventory().addItem(new Item(itemid, plus, bless, enchant, soc1, soc2));
+	player.getActionSender().sendInventory();
+    }
 
     public void AddItem(int itemid) {
 	player.getCharacter().getInventory().addItem(new Item(itemid, 0, 0, 0, 0, 0));
@@ -86,27 +92,42 @@ public class Script {
     public boolean CanHold(int amount) {
 	return amount <= (Inventory.MAX_SIZE - player.getCharacter().getInventory().getItems().size());
     }
-    
+
     public boolean HasItem(int id) {
 	for(Item i : player.getCharacter().getInventory().getItems()) {
-	    if(i.getID() == id && i.isNormal()) {
+	    if(i.getID() == id) {
 		return true;
 	    }
 	}
 	return false;
     }
     
-    public void RemoveItem(int itemid) {
-	Item toRemove = null;
+    public boolean HasItem(int id, int amount) {
+	int occur = 0;
 	for(Item i : player.getCharacter().getInventory().getItems()) {
-	    if(i.getID() == itemid && i.isNormal()) {
-		toRemove = i;
-		break;
-	    }	
+	    if(i.getID() == id) {
+		occur++;
+	    }
 	}
-	if(toRemove != null) {
-	    player.getActionSender().removeItem(toRemove);
-	    player.getCharacter().getInventory().removeItem(toRemove);
+	return occur >= amount;
+    }
+    
+    public void RemoveItem(int itemid) {
+	RemoveItem(itemid, 1);
+    }
+
+    public void RemoveItem(int itemid, int amount) {
+	int occur = 0;
+	Iterator<Item> iterator = player.getCharacter().getInventory().getItems().iterator();
+	while(iterator.hasNext()) {
+	    Item i = iterator.next();
+	    if(i.getID() == itemid) {
+		player.getActionSender().removeItem(i);
+		iterator.remove();
+		occur++;
+		if(occur == amount)
+		    return;
+	    }	
 	}
     }
 
