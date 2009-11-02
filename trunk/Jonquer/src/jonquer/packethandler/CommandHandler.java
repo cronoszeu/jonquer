@@ -102,7 +102,7 @@ public class CommandHandler {
 	    int health = Integer.parseInt(args[6]);
 	    int level = Integer.parseInt(args[7]);
 	    int pos = Integer.parseInt(args[8]);
-	    player.getActionSender().sendMonsterSpawn(id, mesh, x, y, name, health, level, pos);
+	  //  player.getActionSender().sendMonsterSpawn(id, mesh, x, y, name, health, level, pos);
 	} else if (command("/npc")) {
 	    int id = Integer.parseInt(args[1]);
 	    int x = Integer.parseInt(args[2]);

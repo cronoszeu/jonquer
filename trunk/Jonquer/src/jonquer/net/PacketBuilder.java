@@ -6,6 +6,7 @@ import java.util.Random;
 
 import jonquer.game.Constants;
 import jonquer.model.Item;
+import jonquer.model.Monster;
 import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.util.Formula;
@@ -279,24 +280,28 @@ public class PacketBuilder {
 	write(bb);
     }
 
-    public void sendMonsterSpawn(int id, int mesh, int x, int y, String name,
-	    int health, int level, int direction) {
-	ByteBuffer bb = ByteBuffer.allocate(85 + name.length());
+    public void sendMonsterSpawn(Monster monster) {
+	if(monster.getDef() == null) {
+	    System.out.println("null");
+	    return;
+	}
+	  
+	ByteBuffer bb = ByteBuffer.allocate(85 + monster.getDef().getName().length());
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	bb.putShort(0, (short) bb.limit());
 	bb.putShort(2, (short) 1014);
-	bb.putInt(4, id);
-	bb.putInt(8, mesh);
-	bb.putShort(48, (short) health);
-	bb.putShort(50, (short) level);
-	bb.putShort(52, (short) x);
-	bb.putShort(54, (short) y);
-	bb.put(58, (byte) direction);
+	bb.putInt(4, monster.getUID());
+	bb.putInt(8, monster.getDef().getLookface());;
+	bb.putShort(48, (short) monster.getDef().getLife());
+	bb.putShort(50, (short) monster.getDef().getLevel());
+	bb.putShort(52, (short) monster.getX());
+	bb.putShort(54, (short) monster.getY());
+	bb.put(58, (byte) 0);
 	bb.put(59, (byte) 100);
 	bb.put(80, (byte) 1);
-	bb.put(81, (byte) name.length());
-	for (int i = 0; i < name.length(); i++) {
-	    bb.put(82 + i, (byte) name.charAt(i));
+	bb.put(81, (byte) monster.getDef().getName().length());
+	for (int i = 0; i < monster.getDef().getName().length(); i++) {
+	    bb.put(82 + i, (byte) monster.getDef().getName().charAt(i));
 	}
 	write(bb);
     }

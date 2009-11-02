@@ -82,6 +82,10 @@ public class Formula {
     public static int getHealth(short vit, short str, short agi, short spi) {
 	return (vit * 24) + (str * 3) + (agi * 3) + (spi * 3);
     }
+    
+    public static int Rand(int low, int high) {
+	return low + random.nextInt(high - low);
+    }
 
     public static void createCharacter(Player p) {
 	Character character = p.getCharacter();

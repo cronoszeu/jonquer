@@ -138,6 +138,13 @@ public class Player {
 		}
 	    }
 	}
+	for (Monster monster : World.getWorld().getMonsters()) {
+	    if (monster.getMap() == getCharacter().getMap() && monster != null) {
+		if (Formula.inView(getCharacter().getX(), getCharacter().getY(), monster.getX(), monster.getY())) {
+		    getActionSender().sendMonsterSpawn(monster);
+		}
+	    }
+	}
     }
 
     public void save() {

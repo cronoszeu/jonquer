@@ -10,9 +10,12 @@ import java.net.InetSocketAddress;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 
+import jonquer.model.Monster;
 import jonquer.model.Npc;
 import jonquer.model.World;
 import jonquer.model.def.COItemDef;
+import jonquer.model.def.COMonsterDef;
+import jonquer.model.def.COMonsterSpawnDef;
 import jonquer.model.def.COItemDef.ClassRequired;
 import jonquer.net.AuthConnectionHandler;
 import jonquer.net.GameConnectionHandler;
@@ -42,6 +45,7 @@ public class Server {
     public void startServer() {
 	try {
 	    loadConfig();
+	    World.getWorld().spawnNpcs();
 	    Log.log("Auth Server Listening on " + Constants.AUTH_PORT);
 	    Log.log("Game Server Listening on " + Constants.GAME_PORT);
 	    acceptor = new SocketAcceptor(Runtime.getRuntime().availableProcessors(), Executors.newCachedThreadPool());
@@ -72,10 +76,119 @@ public class Server {
 	prepareAccounts();
 	loadPacketHandlers();
 	loadNpcs();
+	loadMonsters();
+	loadMonsterDefs();
 	loadItems();
 	loadScripts();
 	System.out.printf("%n");
 	Log.log("Data loaded in " + (System.currentTimeMillis() - now) + "ms (" + finishMeasure() + "kb Allocated Memory)");
+    }
+    
+    public void loadMonsterDefs() {
+	Properties properties = new Properties();
+	int count = 0;
+	for(File f : new File(Constants.USER_DIR + "/data/cq_generator/").listFiles()) {
+	    if(f.isDirectory())
+		continue;
+	    FileInputStream in = null;
+	    try {
+		in = new FileInputStream(f);
+		properties.load(in);
+		COMonsterSpawnDef def = new COMonsterSpawnDef();
+		def.setId(Integer.parseInt(properties.getProperty("id")));
+		def.setMapid(Integer.parseInt(properties.getProperty("mapid")));
+		def.setRespawnTime(Integer.parseInt(properties.getProperty("max_per_gen")));
+		def.setMaxNpcs(Integer.parseInt(properties.getProperty("maxnpc")));
+		def.setNpctype(Integer.parseInt(properties.getProperty("npctype")));
+		def.setRest_secs(Integer.parseInt(properties.getProperty("rest_secs")));
+		def.setBound_cx(Integer.parseInt(properties.getProperty("bound_cx")));
+		def.setBound_cy(Integer.parseInt(properties.getProperty("bould_cy")));
+		def.setBound_x(Integer.parseInt(properties.getProperty("bound_x")));
+		def.setBound_y(Integer.parseInt(properties.getProperty("bound_y")));
+		StaticData.monsterSpawnDefs.put(def.getId(), def);
+		in.close();
+		count++;
+		
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    } catch(Exception e) {
+		System.out.println("Skipped: " + f.getName());
+		continue;
+	    }
+	}
+	System.out.println("Loaded " + count + " MonsterSpawnDefinitions...  ");
+    }
+
+    public void loadMonsters() {
+	Properties properties = new Properties();
+	int count = 0;
+	for(File f : new File(Constants.USER_DIR + "/data/cq_monstertype/").listFiles()) {
+	    if(f.isDirectory())
+		continue;
+	    FileInputStream in = null;
+	    try {
+		in = new FileInputStream(f);
+		properties.load(in);
+		COMonsterDef def = new COMonsterDef();
+		def.setId(Integer.parseInt(properties.getProperty("id")));
+		def.setName(properties.getProperty("name"));
+		def.setType(Integer.parseInt(properties.getProperty("type")));
+		def.setLookface(Integer.parseInt(properties.getProperty("lookface")));
+		def.setLife(Integer.parseInt(properties.getProperty("life")));
+		def.setMana(Integer.parseInt(properties.getProperty("mana")));
+		def.setMaxAttack(Integer.parseInt(properties.getProperty("attack_max")));
+		def.setMinAttack(Integer.parseInt(properties.getProperty("attack_min")));
+		def.setDefence(Integer.parseInt(properties.getProperty("defence")));
+		def.setDexterity(Integer.parseInt(properties.getProperty("dexterity")));
+		def.setDodge(Integer.parseInt(properties.getProperty("dodge")));
+		def.setHelmet_type(Integer.parseInt(properties.getProperty("helmet_type")));
+		def.setArmor_type(Integer.parseInt(properties.getProperty("armor_type")));
+		def.setWeapon_left(Integer.parseInt(properties.getProperty("weaponl_type")));
+		def.setWeapon_right(Integer.parseInt(properties.getProperty("weaponr_type")));
+		def.setAttack_range(Integer.parseInt(properties.getProperty("attack_range")));
+		def.setView_range(Integer.parseInt(properties.getProperty("view_range")));
+		def.setEscape_life(Integer.parseInt(properties.getProperty("escape_life")));
+		def.setAttack_speed(Integer.parseInt(properties.getProperty("attack_speed")));
+		def.setMovement_speed(Integer.parseInt(properties.getProperty("move_speed")));
+		def.setLevel(Integer.parseInt(properties.getProperty("level")));
+		def.setAttack_user(Integer.parseInt(properties.getProperty("attack_user")));
+		def.setDrop_money(Integer.parseInt(properties.getProperty("drop_money")));
+		def.setDrop_itemtype(Integer.parseInt(properties.getProperty("drop_itemtype")));
+		def.setSize_add(Integer.parseInt(properties.getProperty("size_add")));
+		def.setAction(Integer.parseInt(properties.getProperty("action")));
+		def.setRun_speed(Integer.parseInt(properties.getProperty("run_speed")));
+		def.setDrop_garment(Integer.parseInt(properties.getProperty("drop_armet")));
+		def.setDrop_necklace(Integer.parseInt(properties.getProperty("drop_necklace")));
+		def.setDrop_armor(Integer.parseInt(properties.getProperty("drop_armor")));
+		def.setDrop_ring(Integer.parseInt(properties.getProperty("drop_ring")));
+		def.setDrop_shield(Integer.parseInt(properties.getProperty("drop_shield")));
+		def.setDrop_weapon(Integer.parseInt(properties.getProperty("drop_weapon")));
+		def.setDrop_shoes(Integer.parseInt(properties.getProperty("drop_shoes")));
+		def.setDrop_hp(Integer.parseInt(properties.getProperty("drop_hp")));
+		def.setDrop_mp(Integer.parseInt(properties.getProperty("drop_mp")));
+		def.setMagic_type(Integer.parseInt(properties.getProperty("magic_type")));
+		def.setMagic_def(Integer.parseInt(properties.getProperty("magic_def")));
+		def.setMagic_hitrate(Integer.parseInt(properties.getProperty("magic_hitrate")));
+		def.setAi_type(Integer.parseInt(properties.getProperty("ai_type")));
+		def.setDefense2(Integer.parseInt(properties.getProperty("defence2")));
+		def.setStc_type(Integer.parseInt(properties.getProperty("stc_type")));
+		def.setAnti_monster(Integer.parseInt(properties.getProperty("anti_monster")));
+		def.setExtra_battlelev(Integer.parseInt(properties.getProperty("extra_battlelev")));
+		def.setExtra_exp(Integer.parseInt(properties.getProperty("extra_exp")));
+		def.setExtra_damage(Integer.parseInt(properties.getProperty("extra_damage")));
+		StaticData.monsterDefs.put(def.getId(), def);
+		if(def.getName().contains("Lapid"))
+		    System.out.println(def.getId());
+		in.close();
+		count++;
+		
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
+
+
+	}
+	System.out.println("Loaded " + count + " MonsterDefinitions...  ");
     }
 
     /**
@@ -91,7 +204,7 @@ public class Server {
 		StaticData.npcScripts.put(id, f);
 		count++;
 	    }
-	    System.out.printf("Loaded " + count + " NPC-Scripts...  ");
+	    System.out.println("Loaded " + count + " NPC-Scripts...  ");
 	} catch(Exception e) {
 	    Log.error(e);
 	}
@@ -151,7 +264,7 @@ public class Server {
 		count++;
 	    }
 	    in.close();
-	    System.out.printf("Loaded " + count + " ItemDefinitions...  ");
+	    System.out.println("Loaded " + count + " ItemDefinitions...  ");
 	} catch (Exception e) {
 	    Log.error(e);
 	}
@@ -181,14 +294,14 @@ public class Server {
 		    World.getWorld().packetHandlers.put(ph.getPacketID(), ph);
 		}
 	    }
-	    System.out.printf("Loaded " + count + " PacketHandlers...   %n");
+	    System.out.println("Loaded " + count + " PacketHandlers...   ");
 	} catch (Exception e) {
 	    Log.error(e);
 	}
     }
 
     public void loadNpcs() {
-	File npcDirectory = new File(Constants.USER_DIR + File.separator + "cq_npc");
+	File npcDirectory = new File(Constants.USER_DIR + File.separator + "/data/cq_npc");
 	Properties properties = new Properties();
 	int count = 0;
 	for (File file : npcDirectory.listFiles()) {
@@ -273,7 +386,7 @@ public class Server {
 		e.printStackTrace();
 	    }
 	}
-	System.out.printf("Loaded " + count + " Npcs...  ");
+	System.out.println("Loaded " + count + " Npcs...  ");
     }
 
     /**
@@ -317,7 +430,7 @@ public class Server {
 		}
 		count++;
 	    }
-	    System.out.printf("Loaded " + count + " Accounts...  ");
+	    System.out.println("Loaded " + count + " Accounts...  ");
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
