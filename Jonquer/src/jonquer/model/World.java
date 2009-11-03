@@ -71,7 +71,7 @@ public class World {
 	if (inst instanceof GameEngine)
 	    gameengine = (GameEngine) inst;
     }
-    
+
     public Monster getMonster(int uid) {
 	for(Monster m : getMonsters()) {
 	    if(m.getUID() == uid) {
@@ -80,42 +80,39 @@ public class World {
 	}
 	return null;
     }
-    
+
     public void spawnNpcs() {
 	for(COMonsterSpawnDef spawndef : StaticData.monsterSpawnDefs.values()) {
-	  
-	    int count = spawndef.getMaxNpcs();
-	  
+	    int count = spawndef.getMaxNpcs();  
 	    for(int i=0; i < count; i++) {
-		//System.out.println(spawndef.getBound_x() + "  " + spawndef.getBound_cx());
 		int x;
 		if(spawndef.getBound_cx() > 0)
-		 x = Formula.Rand(spawndef.getBound_x(), spawndef.getBound_x() + spawndef.getBound_cx());
+		    x = Formula.Rand(spawndef.getBound_x(), spawndef.getBound_x() + spawndef.getBound_cx());
 		else
 		    x = spawndef.getBound_x();
 		int y;
 		if(spawndef.getBound_cy() > 0)
-		  y = Formula.Rand(spawndef.getBound_y(), spawndef.getBound_y() + spawndef.getBound_cy());
+		    y = Formula.Rand(spawndef.getBound_y(), spawndef.getBound_y() + spawndef.getBound_cy());
 		else
 		    y = spawndef.getBound_y();
 		getMonsters().add(new Monster(spawndef.getNpctype(), x, y, spawndef.getMapid(), spawndef.getId()));
 	    }
 	}
     }
-    
+
     public void playerMove(Player player, ByteBuffer data, int prevX, int prevY) {
 	byte[] buff = data.array().clone();
 	for(Player p : getPlayers()) {
 	    if(p != player)
-	    if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
-		if(Formula.inFarView(p.getCharacter(), player.getCharacter())) {
-		    System.out.println(buff[5]);
-		    p.getActionSender().write(ByteBuffer.wrap(buff));
+		if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+		    if(Formula.inFarView(p.getCharacter(), player.getCharacter())) {
+			System.out.println(buff[5]);
+			p.getActionSender().write(ByteBuffer.wrap(buff));
+		    }
 		}
-	    }
 	}
     }
-    
+
     /**
      * 
      * @return - the DelayedAbstractEvent queue of awaiting entries
@@ -140,6 +137,14 @@ public class World {
 	return monsters;
     }
 
+    public void setMaps(HashMap<Integer, Map> maps) {
+	this.maps = maps;
+    }
+
+    public HashMap<Integer, Map> getMaps() {
+	return maps;
+    }
+
     /**
      * When the auth server sends the key off to the client, it also stores it's
      * Player object here, with the key, the client can retain it's old Player
@@ -158,6 +163,10 @@ public class World {
      * HashMap holding all the IDS and classes that implement PacketHandler.
      */
     public HashMap<Integer, PacketHandler> packetHandlers = new HashMap<Integer, PacketHandler>();
+    /**
+     * Contains all the Maps loaded on the server.
+     */
+    private HashMap<Integer, Map> maps = new HashMap<Integer, Map>();
     /**
      * the Server object.
      */

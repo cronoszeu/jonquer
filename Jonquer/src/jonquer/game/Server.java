@@ -7,10 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 
-import jonquer.model.Monster;
+import jonquer.model.Map;
 import jonquer.model.Npc;
 import jonquer.model.World;
 import jonquer.model.def.COItemDef;
@@ -80,10 +83,74 @@ public class Server {
 	loadMonsterDefs();
 	loadItems();
 	loadScripts();
-	System.out.printf("%n");
+	loadMaps();
+	Runtime.getRuntime().gc();
 	Log.log("Data loaded in " + (System.currentTimeMillis() - now) + "ms (" + finishMeasure() + "kb Allocated Memory)");
     }
-    
+
+    public void loadMaps() {
+	try {
+	    int count = 0;
+	    ArrayList<String> maps = new ArrayList<String>();
+	    ArrayList<Integer> mapids = new ArrayList<Integer>();
+	    FileInputStream in = new FileInputStream(Constants.USER_DIR + "/data/GameMap.dat");
+	    byte buff[] = new byte[in.available()];
+	    in.read(buff, 0, buff.length); 
+	    ByteBuffer bb = ByteBuffer.wrap(buff);
+	    bb.order(ByteOrder.LITTLE_ENDIAN);
+	    int amount = bb.get() & 0xff;
+	    int index = 4;
+	    for(int i=0; i <amount; i++) {
+		int mapid = bb.getShort(index);
+		index+=4;
+		int nameLen = (bb.getShort(index) & 0xff) + 2;
+		index+=4;
+		byte[] name = new byte[nameLen];
+		System.arraycopy(bb.array(), index, name, 0, nameLen);
+		maps.add(new String(name, "UTF-8"));
+		mapids.add(mapid);
+		index+=nameLen;
+		index+=4;
+	    }
+	    in.close();
+	    int mapcount = 0;
+	    for(int c=0; c < maps.size(); c++) {
+		File file = new File(Constants.USER_DIR + "/" + maps.get(c));
+		if(!file.exists())
+		    continue;
+		in = new FileInputStream(file);
+		buff = new byte[in.available()];
+		in.read(buff, 0, buff.length); 
+		bb = ByteBuffer.wrap(buff);
+		bb.order(ByteOrder.LITTLE_ENDIAN);
+		index = 268;
+		int xCount = bb.getInt(index);
+		index+=4;
+		int yCount = bb.getInt(index);
+		index+=4;
+		int mapid = mapids.get(c);
+		Map map = new Map(mapid, xCount, yCount);
+		for(int y=0; y < yCount; y++) {
+		    for(int x=0; x < xCount; x++) {
+			map.getData()[x][y] = bb.get(index);
+			index+=6;		
+		    }
+		    index+=4;
+		}
+		World.getWorld().getMaps().put(mapid, map);
+		count++;
+		mapcount++;
+		in.close();
+	    }
+	    System.out.println("Loaded " + maps.size() + " Maps...");
+	    maps.clear();
+	    mapids.clear();
+
+	} catch(Exception e) {
+	    Log.error(e);
+	}
+    }
+
     public void loadMonsterDefs() {
 	Properties properties = new Properties();
 	int count = 0;
@@ -108,7 +175,7 @@ public class Server {
 		StaticData.monsterSpawnDefs.put(def.getId(), def);
 		in.close();
 		count++;
-		
+
 	    } catch (IOException e) {
 		e.printStackTrace();
 	    } catch(Exception e) {
@@ -177,11 +244,9 @@ public class Server {
 		def.setExtra_exp(Integer.parseInt(properties.getProperty("extra_exp")));
 		def.setExtra_damage(Integer.parseInt(properties.getProperty("extra_damage")));
 		StaticData.monsterDefs.put(def.getId(), def);
-		if(def.getName().contains("Lapid"))
-		    System.out.println(def.getId());
 		in.close();
 		count++;
-		
+
 	    } catch (IOException e) {
 		e.printStackTrace();
 	    }
