@@ -2,8 +2,9 @@ package jonquer.util;
 
 import java.util.Random;
 
-import jonquer.model.Player;
 import jonquer.model.Character;
+import jonquer.model.Player;
+import jonquer.model.World;
 
 public class Formula {
     
@@ -73,14 +74,13 @@ public class Formula {
 
     /**
      * Calculates the Total Health.
-     * @param vit
-     * @param str
-     * @param agi
-     * @param spi
-     * @return
      */
     public static int getHealth(short vit, short str, short agi, short spi) {
 	return (vit * 24) + (str * 3) + (agi * 3) + (spi * 3);
+    }
+    
+    public static boolean isTileBlocked(int map, int x, int y) {
+	return World.getWorld().getMaps().get(map).getData()[x][y] == (byte)1;
     }
     
     public static int Rand(int low, int high) {

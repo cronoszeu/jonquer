@@ -18,7 +18,14 @@ public class CommandHandler {
 	String cmdd = args[0];
 	command = cmdd;
 
-
+	if(command("/blocked")) {
+	    if(Formula.isTileBlocked(player.getCharacter().getMap(), Integer.parseInt(args[1]), Integer.parseInt(args[2]))) {
+		player.getActionSender().sendSystemMessage("Yeah, blocked");
+	    } else {
+		player.getActionSender().sendSystemMessage("Nope, not blocked");
+	    }
+		
+	}
 	if (command("/dc", "/disconnect", "/exit")) {
 	    player.destroy();
 	    return;

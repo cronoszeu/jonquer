@@ -3,6 +3,7 @@ package jonquer.packethandler;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import jonquer.model.Monster;
 import jonquer.model.Npc;
 import jonquer.model.Player;
 import jonquer.model.World;
@@ -68,7 +69,13 @@ public class DataPacket implements PacketHandler {
                         }
                     }
                 }
-                //player.updateSurroundings();
+                for (Monster monster : World.getWorld().getMonsters()) {
+        	    if (monster.getMap() == player.getCharacter().getMap() && monster != null) {
+        		if (Formula.inView(player.getCharacter().getX(), player.getCharacter().getY(), monster.getX(), monster.getY())) {
+        		    player.getActionSender().sendMonsterSpawn(monster);
+        		}
+        	    }
+        	}
                 player.getActionSender().write(bb);
                 break;
                 
@@ -81,7 +88,7 @@ public class DataPacket implements PacketHandler {
                 short prevY = bb.getShort(0x12);
                 short nextX = bb.getShort(0xc);
                 short nextY = bb.getShort(0xe);
-                Log.log(prevX + " - " + prevY);
+                Log.debug(prevX + " - " + prevY);
                 if (prevX != player.getCharacter().getX() || prevY != player.getCharacter().getY()) {
                     Log.hack(player.getCharacter().getName() + " sent invalid old coordinates (From X: " + prevX + ", Y: " + prevY + "  To X: " + nextX + ", Y: " + nextY + ")");
                 } else {
