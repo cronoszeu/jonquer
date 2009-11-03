@@ -2,6 +2,7 @@ package jonquer.model;
 
 import jonquer.game.Constants;
 import jonquer.model.def.COMonsterDef;
+import jonquer.model.def.COMonsterSpawnDef;
 import jonquer.util.StaticData;
 
 public class Monster {
@@ -14,14 +15,21 @@ public class Monster {
     private boolean dead = false;
     private long deathTime = 0;
     private int id;
+    private int spawnDefId = 0;
     
-    public Monster(int id, int x, int y, int map) {
+    public Monster(int id, int x, int y, int map, int spawnDefId) {
+	this.spawnDefId = spawnDefId;
 	this.setId(id);
 	this.x = x;
 	this.y = y;
 	this.map = map;
 	this.UID = 400000 + Constants.MOB_COUNT;
 	Constants.MOB_COUNT++;
+	World.getWorld().getMonsters().add(this);
+    }
+    
+    public COMonsterSpawnDef getSpawnDef() {
+	return StaticData.monsterSpawnDefs.get(spawnDefId);
     }
     
     public COMonsterDef getDef() {
@@ -77,6 +85,14 @@ public class Monster {
 
     public int getId() {
 	return id;
+    }
+
+    public void setSpawnDefId(int spawnDefId) {
+	this.spawnDefId = spawnDefId;
+    }
+
+    public int getSpawnDefId() {
+	return spawnDefId;
     }
 
 }
