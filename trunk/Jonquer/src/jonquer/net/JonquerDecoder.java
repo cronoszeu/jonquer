@@ -31,7 +31,7 @@ public class JonquerDecoder extends CumulativeProtocolDecoder {
         player.crypt.decrypt(in);
         int offset = buffer.length;
         buffer = Arrays.copyOf(buffer, buffer.length + in.limit());
-        byte[] buf = new byte[in.limit()];
+        byte[] buf = new byte[in.remaining()];
         in.get(buf);
         System.arraycopy(buf, 0, buffer, offset, buf.length);
         if (buffer.length > 2) {

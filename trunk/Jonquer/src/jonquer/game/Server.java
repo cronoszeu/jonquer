@@ -55,7 +55,7 @@ public class Server {
 	    config.setThreadModel(ThreadModel.MANUAL);
 	    ((SocketSessionConfig) config.getSessionConfig()).setReuseAddress(true);
 	    ((SocketSessionConfig) config.getSessionConfig()).setReceiveBufferSize(30000);
-	    ((SocketSessionConfig) config.getSessionConfig()).setTcpNoDelay(true);
+	    ((SocketSessionConfig) config.getSessionConfig()).setTcpNoDelay(false);
 	    acceptor.bind(new InetSocketAddress(Constants.AUTH_HOST, Constants.AUTH_PORT), new AuthConnectionHandler(), config);
 	    acceptor.bind(new InetSocketAddress(Constants.GAME_HOST, Constants.GAME_PORT), new GameConnectionHandler(), config);
 	    GameEngine ge = new GameEngine();

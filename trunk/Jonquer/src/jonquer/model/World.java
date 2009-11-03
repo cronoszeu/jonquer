@@ -72,6 +72,15 @@ public class World {
 	    gameengine = (GameEngine) inst;
     }
     
+    public Monster getMonster(int uid) {
+	for(Monster m : getMonsters()) {
+	    if(m.getUID() == uid) {
+		return m;
+	    }
+	}
+	return null;
+    }
+    
     public void spawnNpcs() {
 	for(COMonsterSpawnDef spawndef : StaticData.monsterSpawnDefs.values()) {
 	  
@@ -89,7 +98,7 @@ public class World {
 		  y = Formula.Rand(spawndef.getBound_y(), spawndef.getBound_y() + spawndef.getBound_cy());
 		else
 		    y = spawndef.getBound_y();
-		getMonsters().add(new Monster(spawndef.getId(), x, y, spawndef.getMapid()));
+		getMonsters().add(new Monster(spawndef.getNpctype(), x, y, spawndef.getMapid(), spawndef.getId()));
 	    }
 	}
     }

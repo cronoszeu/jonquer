@@ -282,7 +282,7 @@ public class PacketBuilder {
 
     public void sendMonsterSpawn(Monster monster) {
 	if(monster.getDef() == null) {
-	    System.out.println("null");
+	    System.out.println("why are some monster spawns getting nulled??");
 	    return;
 	}
 	  
