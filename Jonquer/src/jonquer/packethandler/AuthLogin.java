@@ -42,7 +42,7 @@ public class AuthLogin implements PacketHandler {
 		}
 
 	    } else {
-		player.getCharacter().setAccountName(username);
+		player.getCharacter().setAccount(username);
 		player.getCharacter().setPassword(pass);
 
 		Tools.saveChar(player);
@@ -57,7 +57,7 @@ public class AuthLogin implements PacketHandler {
     }
 
     public void login(Player player) {
-	Log.debug("Sucessful Login for " + player.getCharacter().getAccountName());
+	Log.debug("Sucessful Login for " + player.getCharacter().getAccount());
 	player.getPacketSender().sendAuthInfo();
     }
 }

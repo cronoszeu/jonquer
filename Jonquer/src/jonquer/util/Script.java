@@ -132,28 +132,28 @@ public class Script {
     }
 
     public void Teleport(int x, int y) {
-	Teleport(player.getCharacter().getMap(), x, y);
+	Teleport(player.getCharacter().getMapid(), x, y);
     }
 
     public void Teleport(int map, int x, int y) {
 	for(Player p : World.getWorld().getPlayers()) {
-	    if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+	    if(p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
 		if(p != player) {
-		    if(Formula.inView(p.getCharacter(), player.getCharacter())) {
+		    if(Formula.inview(p.getCharacter(), player.getCharacter())) {
 			p.getActionSender().removeEntity(player);
 			player.getActionSender().removeEntity(p);
 		    }
 		}
 	    } 
 	}
-	player.getCharacter().setMap(map);
+	player.getCharacter().setMapid(map);
 	player.getCharacter().setX((short)x);
 	player.getCharacter().setY((short)y);
 	player.getActionSender().sendLocation();
 	for(Player p : World.getWorld().getPlayers()) {
-	    if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+	    if(p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
 		if(p != player) {
-		    if(Formula.inView(p.getCharacter(), player.getCharacter())) {
+		    if(Formula.inview(p.getCharacter(), player.getCharacter())) {
 			p.getActionSender().sendSpawnPacket(player.getCharacter());
 			player.getActionSender().sendSpawnPacket(p.getCharacter());
 		    }

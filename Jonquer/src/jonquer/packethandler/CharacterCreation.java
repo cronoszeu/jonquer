@@ -48,8 +48,8 @@ public class CharacterCreation implements PacketHandler {
 
 	    StaticData.getCharacters().add(name.toLowerCase());
 	    player.getCharacter().setName(name);
-	    player.getCharacter().setModel(model);
-	    player.getCharacter().setAvatar((short)avatar);
+	    player.getCharacter().setLook(model);
+	    player.getCharacter().setFace((short)avatar);
 	    player.getCharacter().setProfession(job);
 
 	    Formula.createCharacter(player);

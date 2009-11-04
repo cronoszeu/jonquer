@@ -30,7 +30,7 @@ public class Tools {
     public static void saveChar(Player player) {
 	ObjectOutputStream oos;
 	try {
-	    oos = new ObjectOutputStream(new FileOutputStream(Constants.SAVED_GAME_DIRECTORY + player.getCharacter().getAccountName().toLowerCase() + ".cfg"));
+	    oos = new ObjectOutputStream(new FileOutputStream(Constants.SAVED_GAME_DIRECTORY + player.getCharacter().getAccount().toLowerCase() + ".cfg"));
 	    oos.writeObject(player.getCharacter());
 	    oos.close();
 	} catch(Exception e) {

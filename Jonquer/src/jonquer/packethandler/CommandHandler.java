@@ -19,7 +19,7 @@ public class CommandHandler {
 	command = cmdd;
 
 	if(command("/blocked")) {
-	    if(Formula.isTileBlocked(player.getCharacter().getMap(), Integer.parseInt(args[1]), Integer.parseInt(args[2]))) {
+	    if(Formula.isTileBlocked(player.getCharacter().getMapid(), Integer.parseInt(args[1]), Integer.parseInt(args[2]))) {
 		player.getActionSender().sendSystemMessage("Yeah, blocked");
 	    } else {
 		player.getActionSender().sendSystemMessage("Nope, not blocked");
@@ -51,14 +51,14 @@ public class CommandHandler {
 	} else if(command("/test1")) {
 	    for(Player p : World.getWorld().getPlayers()) {
                 if(p != player)
-                if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+                if(p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
                     p.getActionSender().sendSpawnPacket(player.getCharacter());
                 }
 	    }
 	} else if(command("/test2")) {
 	    for(Player p : World.getWorld().getPlayers()) {
                 if(p != player)
-                if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+                if(p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
                     player.getActionSender().sendSpawnPacket(p.getCharacter());
                 }
 	    }
@@ -66,7 +66,7 @@ public class CommandHandler {
 	 else if(command("/test3")) {
 		    for(Player p : World.getWorld().getPlayers()) {
 	                if(p != player)
-	                if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
+	                if(p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
 	                    player.getActionSender().removeEntity(p);
 	                    player.getActionSender().sendSpawnPacket(p.getCharacter());
 	                }
@@ -77,7 +77,7 @@ public class CommandHandler {
 	    int map = Integer.parseInt(args[1]);
 	    short x = Short.parseShort(args[2]);
 	    short y = Short.parseShort(args[3]);
-	    player.getCharacter().setMap(map);
+	    player.getCharacter().setMapid(map);
 	    player.getCharacter().setX(x);
 	    player.getCharacter().setY(y);
 	    //World.getWorld().updatePosition(player);

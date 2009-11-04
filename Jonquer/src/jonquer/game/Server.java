@@ -46,233 +46,237 @@ public class Server {
      * this will initialize the server.
      */
     public void startServer() {
-	try {
-	    loadConfig();
-	    World.getWorld().spawnNpcs();
-	    Log.log("Auth Server Listening on " + Constants.AUTH_PORT);
-	    Log.log("Game Server Listening on " + Constants.GAME_PORT);
-	    acceptor = new SocketAcceptor(Runtime.getRuntime().availableProcessors(), Executors.newCachedThreadPool());
-	    org.apache.mina.common.ByteBuffer.allocate(500);
-	    IoAcceptorConfig config = new SocketAcceptorConfig();
-	    config.setDisconnectOnUnbind(true);
-	    config.setThreadModel(ThreadModel.MANUAL);
-	    ((SocketSessionConfig) config.getSessionConfig()).setReuseAddress(true);
-	    ((SocketSessionConfig) config.getSessionConfig()).setReceiveBufferSize(30000);
-	    ((SocketSessionConfig) config.getSessionConfig()).setTcpNoDelay(false);
-	    acceptor.bind(new InetSocketAddress(Constants.AUTH_HOST, Constants.AUTH_PORT), new AuthConnectionHandler(), config);
-	    acceptor.bind(new InetSocketAddress(Constants.GAME_HOST, Constants.GAME_PORT), new GameConnectionHandler(), config);
-	    GameEngine ge = new GameEngine();
-	    World.getWorld().addInstance(ge);
-	    ge.loop();
-	} catch (Exception e) {
-	    Log.error(e);
-	}
+        try {
+            loadConfig();
+            World.getWorld().spawnNpcs();
+            Log.log("Auth Server Listening on " + Constants.AUTH_PORT);
+            Log.log("Game Server Listening on " + Constants.GAME_PORT);
+            acceptor = new SocketAcceptor(Runtime.getRuntime().availableProcessors(), Executors.newCachedThreadPool());
+            org.apache.mina.common.ByteBuffer.allocate(500);
+            IoAcceptorConfig config = new SocketAcceptorConfig();
+            config.setDisconnectOnUnbind(true);
+            config.setThreadModel(ThreadModel.MANUAL);
+            ((SocketSessionConfig) config.getSessionConfig()).setReuseAddress(true);
+            ((SocketSessionConfig) config.getSessionConfig()).setReceiveBufferSize(30000);
+            ((SocketSessionConfig) config.getSessionConfig()).setTcpNoDelay(false);
+            acceptor.bind(new InetSocketAddress(Constants.AUTH_HOST, Constants.AUTH_PORT), new AuthConnectionHandler(), config);
+            acceptor.bind(new InetSocketAddress(Constants.GAME_HOST, Constants.GAME_PORT), new GameConnectionHandler(), config);
+            GameEngine ge = new GameEngine();
+            World.getWorld().addInstance(ge);
+            ge.loop();
+        } catch (Exception e) {
+            Log.error(e);
+        }
     }
 
     /**
      * Loads all data needed for the server
      */
     public void loadConfig() {
-	long now = System.currentTimeMillis();
-	Log.log("Loading Data..");
-	startMeasure();
-	prepareAccounts();
-	loadPacketHandlers();
-	loadNpcs();
-	loadMonsters();
-	loadMonsterDefs();
-	loadItems();
-	loadScripts();
-	loadMaps();
-	Runtime.getRuntime().gc();
-	Log.log("Data loaded in " + (System.currentTimeMillis() - now) + "ms (" + finishMeasure() + "kb Allocated Memory)");
+        long now = System.currentTimeMillis();
+        Log.log("Loading Data..");
+        startMeasure();
+        prepareAccounts();
+        loadPacketHandlers();
+        loadNpcs();
+        loadMonsters();
+        loadMonsterDefs();
+        loadItems();
+        loadScripts();
+        loadMaps();
+        Runtime.getRuntime().gc();
+        Log.log("Data loaded in " + (System.currentTimeMillis() - now) + "ms (" + finishMeasure() + "kb Allocated Memory)");
     }
 
     public void loadMaps() {
-	try {
-	    int count = 0;
-	    ArrayList<String> maps = new ArrayList<String>();
-	    ArrayList<Integer> mapids = new ArrayList<Integer>();
-	    FileInputStream in = new FileInputStream(Constants.USER_DIR + "/data/GameMap.dat");
-	    byte buff[] = new byte[in.available()];
-	    in.read(buff, 0, buff.length); 
-	    ByteBuffer bb = ByteBuffer.wrap(buff);
-	    bb.order(ByteOrder.LITTLE_ENDIAN);
-	    int amount = bb.get() & 0xff;
-	    int index = 4;
-	    for(int i=0; i <amount; i++) {
-		int mapid = bb.getShort(index);
-		index+=4;
-		int nameLen = (bb.getShort(index) & 0xff) + 2;
-		index+=4;
-		byte[] name = new byte[nameLen];
-		System.arraycopy(bb.array(), index, name, 0, nameLen);
-		maps.add(new String(name, "UTF-8"));
-		mapids.add(mapid);
-		index+=nameLen;
-		index+=4;
-	    }
-	    in.close();
-	    int mapcount = 0;
-	    for(int c=0; c < maps.size(); c++) {
-		File file = new File(Constants.USER_DIR + "/" + maps.get(c));
-		if(!file.exists())
-		    continue;
-		in = new FileInputStream(file);
-		buff = new byte[in.available()];
-		in.read(buff, 0, buff.length); 
-		bb = ByteBuffer.wrap(buff);
-		bb.order(ByteOrder.LITTLE_ENDIAN);
-		index = 268;
-		int xCount = bb.getInt(index);
-		index+=4;
-		int yCount = bb.getInt(index);
-		index+=4;
-		int mapid = mapids.get(c);
-		Map map = new Map(mapid, xCount, yCount);
-		for(int y=0; y < yCount; y++) {
-		    for(int x=0; x < xCount; x++) {
-			map.getData()[x][y] = bb.get(index);
-			index+=6;		
-		    }
-		    index+=4;
-		}
-		World.getWorld().getMaps().put(mapid, map);
-		count++;
-		mapcount++;
-		in.close();
-	    }
-	    System.out.println("Loaded " + maps.size() + " Maps...");
-	    maps.clear();
-	    mapids.clear();
+        try {
+            int count = 0;
+            ArrayList<String> maps = new ArrayList<String>();
+            ArrayList<Integer> mapids = new ArrayList<Integer>();
+            FileInputStream in = new FileInputStream(Constants.USER_DIR + "/data/GameMap.dat");
+            byte buff[] = new byte[in.available()];
+            in.read(buff, 0, buff.length);
+            ByteBuffer bb = ByteBuffer.wrap(buff);
+            bb.order(ByteOrder.LITTLE_ENDIAN);
+            int amount = bb.get() & 0xff;
+            int index = 4;
+            for (int i = 0; i < amount; i++) {
+                int mapid = bb.getShort(index);
+                index += 4;
+                int nameLen = (bb.getShort(index) & 0xff) + 2;
+                index += 4;
+                byte[] name = new byte[nameLen];
+                System.arraycopy(bb.array(), index, name, 0, nameLen);
+                maps.add(new String(name, "UTF-8"));
+                mapids.add(mapid);
+                index += nameLen;
+                index += 4;
+            }
+            in.close();
+            int mapcount = 0;
+            for (int c = 0; c < maps.size(); c++) {
+                File file = new File(Constants.USER_DIR + "/" + maps.get(c));
+                if (!file.exists()) {
+                    continue;
+                }
+                in = new FileInputStream(file);
+                buff = new byte[in.available()];
+                in.read(buff, 0, buff.length);
+                bb = ByteBuffer.wrap(buff);
+                bb.order(ByteOrder.LITTLE_ENDIAN);
+                index = 268;
+                int xCount = bb.getInt(index);
+                index += 4;
+                int yCount = bb.getInt(index);
+                index += 4;
+                int mapid = mapids.get(c);
+                Map map = new Map(mapid, xCount, yCount);
+                for (int y = 0; y < yCount; y++) {
+                    for (int x = 0; x < xCount; x++) {
+                        map.getData()[x][y] = bb.get(index);
+                        index += 6;
+                    }
+                    index += 4;
+                }
+                World.getWorld().getMaps().put(mapid, map);
+                count++;
+                mapcount++;
+                in.close();
+            }
+            System.out.println("Loaded " + maps.size() + " Maps...");
+            maps.clear();
+            mapids.clear();
 
-	} catch(Exception e) {
-	    Log.error(e);
-	}
+        } catch (Exception e) {
+            Log.error(e);
+        }
     }
 
     public void loadMonsterDefs() {
-	Properties properties = new Properties();
-	int count = 0;
-	for(File f : new File(Constants.USER_DIR + "/data/cq_generator/").listFiles()) {
-	    if(f.isDirectory())
-		continue;
-	    FileInputStream in = null;
-	    try {
-		in = new FileInputStream(f);
-		properties.load(in);
-		COMonsterSpawnDef def = new COMonsterSpawnDef();
-		def.setId(Integer.parseInt(properties.getProperty("id")));
-		def.setMapid(Integer.parseInt(properties.getProperty("mapid")));
-		def.setRespawnTime(Integer.parseInt(properties.getProperty("max_per_gen")));
-		def.setMaxNpcs(Integer.parseInt(properties.getProperty("maxnpc")));
-		def.setNpctype(Integer.parseInt(properties.getProperty("npctype")));
-		def.setRest_secs(Integer.parseInt(properties.getProperty("rest_secs")));
-		def.setBound_cx(Integer.parseInt(properties.getProperty("bound_cx")));
-		def.setBound_cy(Integer.parseInt(properties.getProperty("bould_cy")));
-		def.setBound_x(Integer.parseInt(properties.getProperty("bound_x")));
-		def.setBound_y(Integer.parseInt(properties.getProperty("bound_y")));
-		StaticData.monsterSpawnDefs.put(def.getId(), def);
-		in.close();
-		count++;
+        Properties properties = new Properties();
+        int count = 0;
+        for (File f : new File(Constants.USER_DIR + "/data/cq_generator/").listFiles()) {
+            if (f.isDirectory()) {
+                continue;
+            }
+            FileInputStream in = null;
+            try {
+                in = new FileInputStream(f);
+                properties.load(in);
+                COMonsterSpawnDef def = new COMonsterSpawnDef();
+                def.setId(Integer.parseInt(properties.getProperty("id")));
+                def.setMapid(Integer.parseInt(properties.getProperty("mapid")));
+                def.setRespawnTime(Integer.parseInt(properties.getProperty("max_per_gen")));
+                def.setMaxNpcs(Integer.parseInt(properties.getProperty("maxnpc")));
+                def.setNpctype(Integer.parseInt(properties.getProperty("npctype")));
+                def.setRest_secs(Integer.parseInt(properties.getProperty("rest_secs")));
+                def.setBound_cx(Integer.parseInt(properties.getProperty("bound_cx")));
+                def.setBound_cy(Integer.parseInt(properties.getProperty("bould_cy")));
+                def.setBound_x(Integer.parseInt(properties.getProperty("bound_x")));
+                def.setBound_y(Integer.parseInt(properties.getProperty("bound_y")));
+                StaticData.monsterSpawnDefs.put(def.getId(), def);
+                in.close();
+                count++;
 
-	    } catch (IOException e) {
-		e.printStackTrace();
-	    } catch(Exception e) {
-		System.out.println("Skipped: " + f.getName());
-		continue;
-	    }
-	}
-	System.out.println("Loaded " + count + " MonsterSpawnDefinitions...  ");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                System.out.println("Skipped: " + f.getName());
+                continue;
+            }
+        }
+        System.out.println("Loaded " + count + " MonsterSpawnDefinitions...  ");
     }
 
     public void loadMonsters() {
-	Properties properties = new Properties();
-	int count = 0;
-	for(File f : new File(Constants.USER_DIR + "/data/cq_monstertype/").listFiles()) {
-	    if(f.isDirectory())
-		continue;
-	    FileInputStream in = null;
-	    try {
-		in = new FileInputStream(f);
-		properties.load(in);
-		COMonsterDef def = new COMonsterDef();
-		def.setId(Integer.parseInt(properties.getProperty("id")));
-		def.setName(properties.getProperty("name"));
-		def.setType(Integer.parseInt(properties.getProperty("type")));
-		def.setLookface(Integer.parseInt(properties.getProperty("lookface")));
-		def.setLife(Integer.parseInt(properties.getProperty("life")));
-		def.setMana(Integer.parseInt(properties.getProperty("mana")));
-		def.setMaxAttack(Integer.parseInt(properties.getProperty("attack_max")));
-		def.setMinAttack(Integer.parseInt(properties.getProperty("attack_min")));
-		def.setDefence(Integer.parseInt(properties.getProperty("defence")));
-		def.setDexterity(Integer.parseInt(properties.getProperty("dexterity")));
-		def.setDodge(Integer.parseInt(properties.getProperty("dodge")));
-		def.setHelmet_type(Integer.parseInt(properties.getProperty("helmet_type")));
-		def.setArmor_type(Integer.parseInt(properties.getProperty("armor_type")));
-		def.setWeapon_left(Integer.parseInt(properties.getProperty("weaponl_type")));
-		def.setWeapon_right(Integer.parseInt(properties.getProperty("weaponr_type")));
-		def.setAttack_range(Integer.parseInt(properties.getProperty("attack_range")));
-		def.setView_range(Integer.parseInt(properties.getProperty("view_range")));
-		def.setEscape_life(Integer.parseInt(properties.getProperty("escape_life")));
-		def.setAttack_speed(Integer.parseInt(properties.getProperty("attack_speed")));
-		def.setMovement_speed(Integer.parseInt(properties.getProperty("move_speed")));
-		def.setLevel(Integer.parseInt(properties.getProperty("level")));
-		def.setAttack_user(Integer.parseInt(properties.getProperty("attack_user")));
-		def.setDrop_money(Integer.parseInt(properties.getProperty("drop_money")));
-		def.setDrop_itemtype(Integer.parseInt(properties.getProperty("drop_itemtype")));
-		def.setSize_add(Integer.parseInt(properties.getProperty("size_add")));
-		def.setAction(Integer.parseInt(properties.getProperty("action")));
-		def.setRun_speed(Integer.parseInt(properties.getProperty("run_speed")));
-		def.setDrop_garment(Integer.parseInt(properties.getProperty("drop_armet")));
-		def.setDrop_necklace(Integer.parseInt(properties.getProperty("drop_necklace")));
-		def.setDrop_armor(Integer.parseInt(properties.getProperty("drop_armor")));
-		def.setDrop_ring(Integer.parseInt(properties.getProperty("drop_ring")));
-		def.setDrop_shield(Integer.parseInt(properties.getProperty("drop_shield")));
-		def.setDrop_weapon(Integer.parseInt(properties.getProperty("drop_weapon")));
-		def.setDrop_shoes(Integer.parseInt(properties.getProperty("drop_shoes")));
-		def.setDrop_hp(Integer.parseInt(properties.getProperty("drop_hp")));
-		def.setDrop_mp(Integer.parseInt(properties.getProperty("drop_mp")));
-		def.setMagic_type(Integer.parseInt(properties.getProperty("magic_type")));
-		def.setMagic_def(Integer.parseInt(properties.getProperty("magic_def")));
-		def.setMagic_hitrate(Integer.parseInt(properties.getProperty("magic_hitrate")));
-		def.setAi_type(Integer.parseInt(properties.getProperty("ai_type")));
-		def.setDefense2(Integer.parseInt(properties.getProperty("defence2")));
-		def.setStc_type(Integer.parseInt(properties.getProperty("stc_type")));
-		def.setAnti_monster(Integer.parseInt(properties.getProperty("anti_monster")));
-		def.setExtra_battlelev(Integer.parseInt(properties.getProperty("extra_battlelev")));
-		def.setExtra_exp(Integer.parseInt(properties.getProperty("extra_exp")));
-		def.setExtra_damage(Integer.parseInt(properties.getProperty("extra_damage")));
-		StaticData.monsterDefs.put(def.getId(), def);
-		in.close();
-		count++;
+        Properties properties = new Properties();
+        int count = 0;
+        for (File f : new File(Constants.USER_DIR + "/data/cq_monstertype/").listFiles()) {
+            if (f.isDirectory()) {
+                continue;
+            }
+            FileInputStream in = null;
+            try {
+                in = new FileInputStream(f);
+                properties.load(in);
+                COMonsterDef def = new COMonsterDef();
+                def.setId(Integer.parseInt(properties.getProperty("id")));
+                def.setName(properties.getProperty("name"));
+                def.setType(Integer.parseInt(properties.getProperty("type")));
+                def.setLookface(Integer.parseInt(properties.getProperty("lookface")));
+                def.setLife(Integer.parseInt(properties.getProperty("life")));
+                def.setMana(Integer.parseInt(properties.getProperty("mana")));
+                def.setMaxAttack(Integer.parseInt(properties.getProperty("attack_max")));
+                def.setMinAttack(Integer.parseInt(properties.getProperty("attack_min")));
+                def.setDefence(Integer.parseInt(properties.getProperty("defence")));
+                def.setDexterity(Integer.parseInt(properties.getProperty("dexterity")));
+                def.setDodge(Integer.parseInt(properties.getProperty("dodge")));
+                def.setHelmet_type(Integer.parseInt(properties.getProperty("helmet_type")));
+                def.setArmor_type(Integer.parseInt(properties.getProperty("armor_type")));
+                def.setWeapon_left(Integer.parseInt(properties.getProperty("weaponl_type")));
+                def.setWeapon_right(Integer.parseInt(properties.getProperty("weaponr_type")));
+                def.setAttack_range(Integer.parseInt(properties.getProperty("attack_range")));
+                def.setView_range(Integer.parseInt(properties.getProperty("view_range")));
+                def.setEscape_life(Integer.parseInt(properties.getProperty("escape_life")));
+                def.setAttack_speed(Integer.parseInt(properties.getProperty("attack_speed")));
+                def.setMovement_speed(Integer.parseInt(properties.getProperty("move_speed")));
+                def.setLevel(Integer.parseInt(properties.getProperty("level")));
+                def.setAttack_user(Integer.parseInt(properties.getProperty("attack_user")));
+                def.setDrop_money(Integer.parseInt(properties.getProperty("drop_money")));
+                def.setDrop_itemtype(Integer.parseInt(properties.getProperty("drop_itemtype")));
+                def.setSize_add(Integer.parseInt(properties.getProperty("size_add")));
+                def.setAction(Integer.parseInt(properties.getProperty("action")));
+                def.setRun_speed(Integer.parseInt(properties.getProperty("run_speed")));
+                def.setDrop_garment(Integer.parseInt(properties.getProperty("drop_armet")));
+                def.setDrop_necklace(Integer.parseInt(properties.getProperty("drop_necklace")));
+                def.setDrop_armor(Integer.parseInt(properties.getProperty("drop_armor")));
+                def.setDrop_ring(Integer.parseInt(properties.getProperty("drop_ring")));
+                def.setDrop_shield(Integer.parseInt(properties.getProperty("drop_shield")));
+                def.setDrop_weapon(Integer.parseInt(properties.getProperty("drop_weapon")));
+                def.setDrop_shoes(Integer.parseInt(properties.getProperty("drop_shoes")));
+                def.setDrop_hp(Integer.parseInt(properties.getProperty("drop_hp")));
+                def.setDrop_mp(Integer.parseInt(properties.getProperty("drop_mp")));
+                def.setMagic_type(Integer.parseInt(properties.getProperty("magic_type")));
+                def.setMagic_def(Integer.parseInt(properties.getProperty("magic_def")));
+                def.setMagic_hitrate(Integer.parseInt(properties.getProperty("magic_hitrate")));
+                def.setAi_type(Integer.parseInt(properties.getProperty("ai_type")));
+                def.setDefense2(Integer.parseInt(properties.getProperty("defence2")));
+                def.setStc_type(Integer.parseInt(properties.getProperty("stc_type")));
+                def.setAnti_monster(Integer.parseInt(properties.getProperty("anti_monster")));
+                def.setExtra_battlelev(Integer.parseInt(properties.getProperty("extra_battlelev")));
+                def.setExtra_exp(Integer.parseInt(properties.getProperty("extra_exp")));
+                def.setExtra_damage(Integer.parseInt(properties.getProperty("extra_damage")));
+                StaticData.monsterDefs.put(def.getId(), def);
+                in.close();
+                count++;
 
-	    } catch (IOException e) {
-		e.printStackTrace();
-	    }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
-	}
-	System.out.println("Loaded " + count + " MonsterDefinitions...  ");
+        }
+        System.out.println("Loaded " + count + " MonsterDefinitions...  ");
     }
 
     /**
      * Sets up the NPC Scripts
      */
     public void loadScripts() {
-	try {
-	    int count = 0;
-	    for(File f : new File(Constants.USER_DIR + "/plugins/npcscripts/").listFiles()) {
-		if(f.isDirectory() || !f.getName().endsWith(".bsh"))
-		    continue;
-		int id = Integer.parseInt(f.getName().substring(0, f.getName().indexOf("-")).trim());
-		StaticData.npcScripts.put(id, f);
-		count++;
-	    }
-	    System.out.println("Loaded " + count + " NPC-Scripts...  ");
-	} catch(Exception e) {
-	    Log.error(e);
-	}
+        try {
+            int count = 0;
+            for (File f : new File(Constants.USER_DIR + "/plugins/npcscripts/").listFiles()) {
+                if (f.isDirectory() || !f.getName().endsWith(".bsh")) {
+                    continue;
+                }
+                int id = Integer.parseInt(f.getName().substring(0, f.getName().indexOf("-")).trim());
+                StaticData.npcScripts.put(id, f);
+                count++;
+            }
+            System.out.println("Loaded " + count + " NPC-Scripts...  ");
+        } catch (Exception e) {
+            Log.error(e);
+        }
 
     }
 
@@ -280,59 +284,65 @@ public class Server {
      * We parse the items from the file into something useable
      */
     public void loadItems() {
-	try {
-	    int count = 0;
-	    String line = "";
-	    BufferedReader in = new BufferedReader(new FileReader(new File(Constants.USER_DIR + "/data/COItems.txt")));
-	    if (!in.ready())
-		throw new IOException();
-	    while ((line = in.readLine()) != null) {
-		if(count != 0) {
+        try {
+            int count = 0;
+            String line = "";
+            BufferedReader in = new BufferedReader(new FileReader(new File(Constants.USER_DIR + "/data/COItems.txt")));
+            if (!in.ready()) {
+                throw new IOException();
+            }
+            while ((line = in.readLine()) != null) {
+                if (count != 0) {
 
-		    COItemDef item = new COItemDef();
-		    String[] arg = line.split("=");
-		    int id = Integer.parseInt(arg[0]);
-		    item.setID(id);
-		    String[] args = arg[1].split("-");
-		    item.setName(args[0]);
-		    int classid = Integer.parseInt(args[1]);
-		    if(classid == 21)
-			item.setClassReq(ClassRequired.WARRIOR);
-		    if(classid == 11)
-			item.setClassReq(ClassRequired.TROJAN);
-		    if(classid == 45)
-			item.setClassReq(ClassRequired.ARCHER);
-		    if(classid == 190)
-			item.setClassReq(ClassRequired.TAOIST);
+                    COItemDef item = new COItemDef();
+                    String[] arg = line.split("=");
+                    int id = Integer.parseInt(arg[0]);
+                    item.setID(id);
+                    String[] args = arg[1].split("-");
+                    item.setName(args[0]);
+                    int classid = Integer.parseInt(args[1]);
+                    if (classid == 21) {
+                        item.setClassReq(ClassRequired.WARRIOR);
+                    }
+                    if (classid == 11) {
+                        item.setClassReq(ClassRequired.TROJAN);
+                    }
+                    if (classid == 45) {
+                        item.setClassReq(ClassRequired.ARCHER);
+                    }
+                    if (classid == 190) {
+                        item.setClassReq(ClassRequired.TAOIST);
+                    }
 
-		    item.setProfLevelReq(Integer.parseInt(args[2]));
-		    item.setLevelReq(Integer.parseInt(args[3]));
+                    item.setProfLevelReq(Integer.parseInt(args[2]));
+                    item.setLevelReq(Integer.parseInt(args[3]));
 
-		    // 4 args is just some garments with higher rarity
-		    item.setReqStrength(Integer.parseInt(args[5]));
-		    item.setReqAgility(Integer.parseInt(args[6]));
-		    item.setPrice(Integer.parseInt(args[7]));
-		    item.setMinDamage(Integer.parseInt(args[8]));
-		    item.setMaxDamage(Integer.parseInt(args[9]));
-		    item.setDefense(Integer.parseInt(args[10]));
-		    item.setMagicDefence(Integer.parseInt(args[11]));
-		    item.setMagicAttack(Integer.parseInt(args[12]));
-		    item.setBonusDodge(Integer.parseInt(args[13]));
-		    item.setBonusAgility(Integer.parseInt(args[14]));
-		    item.setCp(Integer.parseInt(args[15]));
-		    if(item.getLevelReq() > 1)
-			item.setMaxDurability(40);
+                    // 4 args is just some garments with higher rarity
+                    item.setReqStrength(Integer.parseInt(args[5]));
+                    item.setReqAgility(Integer.parseInt(args[6]));
+                    item.setPrice(Integer.parseInt(args[7]));
+                    item.setMinDamage(Integer.parseInt(args[8]));
+                    item.setMaxDamage(Integer.parseInt(args[9]));
+                    item.setDefense(Integer.parseInt(args[10]));
+                    item.setMagicDefence(Integer.parseInt(args[11]));
+                    item.setMagicAttack(Integer.parseInt(args[12]));
+                    item.setBonusDodge(Integer.parseInt(args[13]));
+                    item.setBonusAgility(Integer.parseInt(args[14]));
+                    item.setCp(Integer.parseInt(args[15]));
+                    if (item.getLevelReq() > 1) {
+                        item.setMaxDurability(40);
+                    }
 
-		    item.setQuality(Integer.parseInt(("" + id).substring(("" + id).length() - 1))); // figured this out, and how getting quality works server-side
-		    StaticData.itemDefs.put(id, item);
-		}
-		count++;
-	    }
-	    in.close();
-	    System.out.println("Loaded " + count + " ItemDefinitions...  ");
-	} catch (Exception e) {
-	    Log.error(e);
-	}
+                    item.setQuality(Integer.parseInt(("" + id).substring(("" + id).length() - 1))); // figured this out, and how getting quality works server-side
+                    StaticData.itemDefs.put(id, item);
+                }
+                count++;
+            }
+            in.close();
+            System.out.println("Loaded " + count + " ItemDefinitions...  ");
+        } catch (Exception e) {
+            Log.error(e);
+        }
     }
 
     /**
@@ -342,123 +352,126 @@ public class Server {
      */
     @SuppressWarnings("unchecked")
     public void loadPacketHandlers() {
-	try {
-	    int count = 0;
-	    for (File f : new File(Constants.USER_DIR + "/src/jonquer/packethandler/").listFiles()) {
-		if (f.getName().equals("PacketHandler.java"))
-		    continue;
+        try {
+            int count = 0;
+            for (File f : new File(Constants.USER_DIR + "/src/jonquer/packethandler/").listFiles()) {
+                if (f.getName().equals("PacketHandler.java")) {
+                    continue;
+                }
 
-		if (f.isDirectory())
-		    continue;
+                if (f.isDirectory()) {
+                    continue;
+                }
 
-		Class c = Class.forName("jonquer.packethandler." + f.getName().replaceAll(".java", ""));
-		Object o = c.newInstance();
-		if (o instanceof PacketHandler) {
-		    count++;
-		    PacketHandler ph = (PacketHandler) o;
-		    World.getWorld().packetHandlers.put(ph.getPacketID(), ph);
-		}
-	    }
-	    System.out.println("Loaded " + count + " PacketHandlers...   ");
-	} catch (Exception e) {
-	    Log.error(e);
-	}
+                Class c = Class.forName("jonquer.packethandler." + f.getName().replaceAll(".java", ""));
+                Object o = c.newInstance();
+                if (o instanceof PacketHandler) {
+                    count++;
+                    PacketHandler ph = (PacketHandler) o;
+                    World.getWorld().packetHandlers.put(ph.getPacketID(), ph);
+                }
+            }
+            System.out.println("Loaded " + count + " PacketHandlers...   ");
+        } catch (Exception e) {
+            Log.error(e);
+        }
     }
 
     public void loadNpcs() {
-	File npcDirectory = new File(Constants.USER_DIR + File.separator + "/data/cq_npc");
-	Properties properties = new Properties();
-	int count = 0;
-	for (File file : npcDirectory.listFiles()) {
-	    if(file.isDirectory())
-		continue;
+        File npcDirectory = new File(Constants.USER_DIR + File.separator + "/data/cq_npc");
+        Properties properties = new Properties();
+        int count = 0;
+        for (File file : npcDirectory.listFiles()) {
+            if (file.isDirectory()) {
+                continue;
+            }
 
-	    FileInputStream in = null;
-	    try {
-		in = new FileInputStream(file);
-		properties.load(in);
-		int id = 0000;
-		int ownerid;
-		int playerid;
-		String name;
-		int type;
-		int lookface;
-		int idxserver;
-		int mapid;
-		int cellx;
-		int celly;
-		int task0, task1, task2, task3, task4, task5, task6, task7;
-		int data0, data1, data2, data3;
-		String datastr;
-		int linkid;
-		int life;
-		int maxlife;
-		int base;
-		int sort;
-		int itemid;
-		try {
-		    id = Integer.parseInt(properties.getProperty("id"));
-		    ownerid = Integer.parseInt(properties.getProperty("ownerid"));
-		    playerid = Integer.parseInt(properties.getProperty("playerid"));
-		    name = properties.getProperty("name");
-		    type = Integer.parseInt(properties.getProperty("type"));
-		    lookface = Integer.parseInt(properties.getProperty("lookface"));
-		    idxserver = Integer.parseInt(properties.getProperty("idxserver"));
-		    mapid = Integer.parseInt(properties.getProperty("mapid"));
-		    cellx = Integer.parseInt(properties.getProperty("cellx"));
-		    celly = Integer.parseInt(properties.getProperty("celly"));
-		    task0 = Integer.parseInt(properties.getProperty("task0"));
-		    task1 = Integer.parseInt(properties.getProperty("task1"));
-		    task2 = Integer.parseInt(properties.getProperty("task2"));
-		    task3 = Integer.parseInt(properties.getProperty("task3"));
-		    task4 = Integer.parseInt(properties.getProperty("task4"));
-		    task5 = Integer.parseInt(properties.getProperty("task5"));
-		    task6 = Integer.parseInt(properties.getProperty("task6"));
-		    task7 = Integer.parseInt(properties.getProperty("task7"));
-		    data0 = Integer.parseInt(properties.getProperty("data0"));
-		    data1 = Integer.parseInt(properties.getProperty("data1"));
-		    data2 = Integer.parseInt(properties.getProperty("data2"));
-		    data3 = Integer.parseInt(properties.getProperty("data3"));
-		    datastr = properties.getProperty("datastr");
-		    linkid = Integer.parseInt(properties.getProperty("linkid"));
-		    life = Integer.parseInt(properties.getProperty("life"));
-		    maxlife = Integer.parseInt(properties.getProperty("maxlife"));
-		    base = Integer.parseInt(properties.getProperty("base"));
-		    sort = Integer.parseInt(properties.getProperty("sort"));
-		    try {
-			itemid = Integer.parseInt(properties.getProperty("itemid"));
-		    } catch(NumberFormatException nfe) {
-			itemid = 0;
-		    }
+            FileInputStream in = null;
+            try {
+                in = new FileInputStream(file);
+                properties.load(in);
+                int id = 0000;
+                int ownerid;
+                int playerid;
+                String name;
+                int type;
+                int lookface;
+                int idxserver;
+                int mapid;
+                int cellx;
+                int celly;
+                int task0, task1, task2, task3, task4, task5, task6, task7;
+                int data0, data1, data2, data3;
+                String datastr;
+                int linkid;
+                int life;
+                int maxlife;
+                int base;
+                int sort;
+                int itemid;
+                try {
+                    id = Integer.parseInt(properties.getProperty("id"));
+                    ownerid = Integer.parseInt(properties.getProperty("ownerid"));
+                    playerid = Integer.parseInt(properties.getProperty("playerid"));
+                    name = properties.getProperty("name");
+                    type = Integer.parseInt(properties.getProperty("type"));
+                    lookface = Integer.parseInt(properties.getProperty("lookface"));
+                    idxserver = Integer.parseInt(properties.getProperty("idxserver"));
+                    mapid = Integer.parseInt(properties.getProperty("mapid"));
+                    cellx = Integer.parseInt(properties.getProperty("cellx"));
+                    celly = Integer.parseInt(properties.getProperty("celly"));
+                    task0 = Integer.parseInt(properties.getProperty("task0"));
+                    task1 = Integer.parseInt(properties.getProperty("task1"));
+                    task2 = Integer.parseInt(properties.getProperty("task2"));
+                    task3 = Integer.parseInt(properties.getProperty("task3"));
+                    task4 = Integer.parseInt(properties.getProperty("task4"));
+                    task5 = Integer.parseInt(properties.getProperty("task5"));
+                    task6 = Integer.parseInt(properties.getProperty("task6"));
+                    task7 = Integer.parseInt(properties.getProperty("task7"));
+                    data0 = Integer.parseInt(properties.getProperty("data0"));
+                    data1 = Integer.parseInt(properties.getProperty("data1"));
+                    data2 = Integer.parseInt(properties.getProperty("data2"));
+                    data3 = Integer.parseInt(properties.getProperty("data3"));
+                    datastr = properties.getProperty("datastr");
+                    linkid = Integer.parseInt(properties.getProperty("linkid"));
+                    life = Integer.parseInt(properties.getProperty("life"));
+                    maxlife = Integer.parseInt(properties.getProperty("maxlife"));
+                    base = Integer.parseInt(properties.getProperty("base"));
+                    sort = Integer.parseInt(properties.getProperty("sort"));
+                    try {
+                        itemid = Integer.parseInt(properties.getProperty("itemid"));
+                    } catch (NumberFormatException nfe) {
+                        itemid = 0;
+                    }
 
-		    if (name == null || datastr == null) {
-			throw new Exception("Invalid Npc data.");
-		    }
-		    count++;
-		    StaticData.npcs.add(new Npc(id, ownerid, playerid, name, type, lookface, idxserver, mapid, cellx, celly, task0, task1, task2, task3, task4, task5, task6, task7, data0, data1, data2, data3, datastr, linkid, life, maxlife, base, sort, itemid));
-		} catch (Exception ex) {
-		    ex.printStackTrace();
-		    Log.log("Npc " + id + " not loaded. Invalid Npc data.");
-		}
-	    } catch (IOException ex) {
-		Log.error(ex);
-	    }
-	    try {
-		in.close();
+                    if (name == null || datastr == null) {
+                        throw new Exception("Invalid Npc data.");
+                    }
+                    count++;
+                    StaticData.npcs.add(new Npc(id, ownerid, playerid, name, type, lookface, idxserver, mapid, cellx, celly, task0, task1, task2, task3, task4, task5, task6, task7, data0, data1, data2, data3, datastr, linkid, life, maxlife, base, sort, itemid));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Log.log("Npc " + id + " not loaded. Invalid Npc data.");
+                }
+            } catch (IOException ex) {
+                Log.error(ex);
+            }
+            try {
+                in.close();
 
-	    } catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
-	}
-	System.out.println("Loaded " + count + " Npcs...  ");
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        System.out.println("Loaded " + count + " Npcs...  ");
     }
 
     /**
      * We start the measurement of how much memory gets used
      */
     public void startMeasure() {
-	curMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+        curMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
     }
 
     /**
@@ -466,7 +479,7 @@ public class Server {
      * memory (ram) from all the loaded data, in Megabytes
      */
     public long finishMeasure() {
-	return ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) - curMemory) / 1000;
+        return ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) - curMemory) / 1000;
     }
 
     /**
@@ -475,39 +488,39 @@ public class Server {
      * @throws FileNotFoundException 
      */
     public void prepareAccounts() {
-	try {
-	    int count = 0;
-	    File folder = new File(Constants.SAVED_GAME_DIRECTORY);
-	    if (!folder.exists()) {
-		folder.mkdir();
-	    }
-	    for (File f : folder.listFiles()) {
-		if (f.isDirectory() || f == null) {
-		    continue;
-		}
-		if (f.getName().endsWith(".cfg")) {
-		    StaticData.getAccounts().add(f.getName().replaceAll(".cfg", "").toLowerCase());
-		    jonquer.model.Character ch = Tools.loadCharacter(f.getName().replaceAll(".cfg", "").toLowerCase());
-		    if (ch != null && ch.getName() != null) {
-			StaticData.getCharacters().add(ch.getName().toLowerCase());
-		    }
+        try {
+            int count = 0;
+            File folder = new File(Constants.SAVED_GAME_DIRECTORY);
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+            for (File f : folder.listFiles()) {
+                if (f.isDirectory() || f == null) {
+                    continue;
+                }
+                if (f.getName().endsWith(".cfg")) {
+                    StaticData.getAccounts().add(f.getName().replaceAll(".cfg", "").toLowerCase());
+                    jonquer.model.Character ch = Tools.loadCharacter(f.getName().replaceAll(".cfg", "").toLowerCase());
+                    if (ch != null && ch.getName() != null) {
+                        StaticData.getCharacters().add(ch.getName().toLowerCase());
+                    }
 
-		}
-		count++;
-	    }
-	    System.out.println("Loaded " + count + " Accounts...  ");
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
+                }
+                count++;
+            }
+            System.out.println("Loaded " + count + " Accounts...  ");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Closes the server.
      */
     public void closeServer() {
-	Constants.serverRunning = false;
-	acceptor.unbindAll();
-	Log.log("Server Closing.. (Forced)");
+        Constants.serverRunning = false;
+        acceptor.unbindAll();
+        Log.log("Server Closing.. (Forced)");
     }
 
     /**
@@ -517,9 +530,9 @@ public class Server {
      *            - the arguments given at launch (which should be none)
      */
     public static void main(String... args) {
-	Server s = new Server();
-	World.getWorld().addInstance(s);
-	s.startServer();
+        Server s = new Server();
+        World.getWorld().addInstance(s);
+        s.startServer();
     }
     /**
      * the Apache MINA Socket acceptor

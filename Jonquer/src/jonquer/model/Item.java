@@ -26,7 +26,7 @@ public class Item implements Serializable {
 	    durability = -1;
 	else
 	    setDurability(getDef().getMaxDurability());
-	setUID(Formula.random.nextInt(Integer.MAX_VALUE));
+	setUID(Formula.rand(0, Integer.MAX_VALUE));
     }
     
     public boolean hasDurability() {

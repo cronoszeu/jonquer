@@ -66,7 +66,7 @@ public class AuthConnectionHandler implements IoHandler {
 	 */
 	public void sessionIdle(IoSession arg0, IdleStatus arg1) throws Exception {
 		Player player = (Player) arg0.getAttachment();
-		Log.debug("Connection Timed Out: " + player.getCharacter().getAccountName());
+		Log.debug("Connection Timed Out: " + player.getCharacter().getAccount());
 		player.destroy();
 	}
 

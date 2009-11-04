@@ -87,12 +87,12 @@ public class World {
 	    for(int i=0; i < count; i++) {
 		int x;
 		if(spawndef.getBound_cx() > 0)
-		    x = Formula.Rand(spawndef.getBound_x(), spawndef.getBound_x() + spawndef.getBound_cx());
+		    x = Formula.rand(spawndef.getBound_x(), spawndef.getBound_x() + spawndef.getBound_cx());
 		else
 		    x = spawndef.getBound_x();
 		int y;
 		if(spawndef.getBound_cy() > 0)
-		    y = Formula.Rand(spawndef.getBound_y(), spawndef.getBound_y() + spawndef.getBound_cy());
+		    y = Formula.rand(spawndef.getBound_y(), spawndef.getBound_y() + spawndef.getBound_cy());
 		else
 		    y = spawndef.getBound_y();
 		getMonsters().add(new Monster(spawndef.getNpctype(), x, y, spawndef.getMapid(), spawndef.getId()));
@@ -104,8 +104,8 @@ public class World {
 	byte[] buff = data.array().clone();
 	for(Player p : getPlayers()) {
 	    if(p != player)
-		if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
-		    if(Formula.inFarView(p.getCharacter(), player.getCharacter())) {
+		if(p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
+		    if(p.getCharacter().inview(player.getCharacter())) {
 			System.out.println(buff[5]);
 			p.getActionSender().write(ByteBuffer.wrap(buff));
 		    }
