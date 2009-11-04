@@ -38,7 +38,7 @@ public class GameLogin implements PacketHandler {
 	    player.destroy(true);
 	}
 	
-	player.setCharacter(Tools.loadCharacter(player.getCharacter().getAccountName()));
+	player.setCharacter(Tools.loadCharacter(player.getCharacter().getAccount()));
 	player.getCharacter().setID(id);
 
 	if(player.getCharacter().getSpouse() == null) {

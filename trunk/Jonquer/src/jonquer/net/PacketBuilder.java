@@ -150,7 +150,7 @@ public class PacketBuilder {
 	bb.putShort(0, (short) bb.limit());
 	bb.putShort(2, (short) 1006); // packet id
 	bb.putInt(4, player.getCharacter().getID()); // id
-	bb.putInt(8, Integer.parseInt("" + player.getCharacter().getAvatar() + "" + player.getCharacter().getModel())); // model
+	bb.putInt(8, Integer.parseInt("" + player.getCharacter().getFace() + "" + player.getCharacter().getLook())); // model
 	bb.putShort(12, (short) player.getCharacter().getHairstyle()); // hairstyle
 	bb.putInt(14, player.getCharacter().getMoney()); // money
 	bb.putInt(18, player.getCharacter().getConquerPoints()); // CP
@@ -159,8 +159,8 @@ public class PacketBuilder {
 	bb.putShort(50, (short) player.getCharacter().getVitality()); // vit
 	bb.putShort(52, (short) player.getCharacter().getSpirit()); // spirit
 	bb.putShort(54, (short) player.getCharacter().getStats()); // stats points?
-	bb.putShort(56, (short) player.getCharacter().getHealthPoints()); // hp
-	bb.putShort(58, (short) player.getCharacter().getManaPoints()); // mp
+	bb.putShort(56, (short) player.getCharacter().getLife()); // hp
+	bb.putShort(58, (short) player.getCharacter().getMana()); // mp
 	bb.put(62, (byte) player.getCharacter().getLevel()); // lvl
 	bb.put(63, (byte) player.getCharacter().getProfession()); // prof
 	bb.put(64, (byte) 5);
@@ -202,7 +202,7 @@ public class PacketBuilder {
     }
 
     public void sendLocation() {
-	ByteBuffer bb = ByteBuffer.wrap(createDataPacket((int) System.currentTimeMillis(), player.getCharacter().getID(), player.getCharacter().getMap(), player.getCharacter().getX(), player.getCharacter().getY(), (short) 0));
+	ByteBuffer bb = ByteBuffer.wrap(createDataPacket((int) System.currentTimeMillis(), player.getCharacter().getID(), player.getCharacter().getMapid(), player.getCharacter().getX(), player.getCharacter().getY(), (short) 0));
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	bb.putShort(22, (short) 74).array();
 	write(bb);
@@ -226,13 +226,13 @@ public class PacketBuilder {
 	ByteBuffer bb = ByteBuffer.allocate(85 + hero.getName().length());
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 
-	int model = Integer.parseInt(hero.getAvatar() + "" + (hero.isDead() ? "1099" : hero.getModel()));
+	int model = Integer.parseInt(hero.getFace() + "" + (hero.isDead() ? "1099" : hero.getLook()));
 	bb.putShort(0, (short) bb.limit());
 	bb.putShort(2, (short) 0x3f6);
 	bb.putInt(4, hero.getID());
 	bb.putInt(8, model);
 	bb.putInt(12, hero.getStats());
-	bb.putShort(48, hero.getHealthPoints());
+	bb.putShort(48, hero.getLife());
 	bb.put(50, (byte) hero.getLevel());
 	//bb.putInt(28, ); head id
 	//bb.putInt(32, ); armor id

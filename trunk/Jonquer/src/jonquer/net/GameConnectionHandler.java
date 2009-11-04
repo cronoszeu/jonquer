@@ -76,7 +76,7 @@ public class GameConnectionHandler implements IoHandler {
 	 */
 	public void sessionOpened(IoSession session) throws Exception {
 		Constants.PEAK_PLAYER_COUNT++;
-		Player p = new Player(session, Formula.random.nextInt(1000001));
+		Player p = new Player(session, Formula.rand(0, 1000001));
 		session.setAttachment(p);
 		session.setIdleTime(IdleStatus.BOTH_IDLE, 10);
 		session.setWriteTimeout(30);

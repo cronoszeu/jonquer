@@ -6,6 +6,7 @@ import java.nio.ByteOrder;
 import jonquer.model.Monster;
 import jonquer.model.Npc;
 import jonquer.model.Player;
+import jonquer.model.Character;
 import jonquer.model.World;
 import jonquer.util.Formula;
 import jonquer.util.Log;
@@ -20,7 +21,7 @@ public class DataPacket implements PacketHandler {
         switch (bb.getShort(22)) {
 
             case 74:
-        	player.getActionSender().sendLocation();
+                player.getActionSender().sendLocation();
                 break;
 
             case 76:
@@ -35,8 +36,8 @@ public class DataPacket implements PacketHandler {
                 player.getCharacter().setAction(bb.get(12));
                 for (Player p : player.getPlayersInView()) {
                     if (p != player) {
-                        if (p.getCharacter().getMap() == player.getCharacter().getMap()) {
-                            if (Formula.inView(p.getCharacter(), player.getCharacter())) {
+                        if (p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
+                            if (Formula.inview(p.getCharacter(), player.getCharacter())) {
                                 p.getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
                             }
                         }
@@ -54,33 +55,33 @@ public class DataPacket implements PacketHandler {
                 break;
 
             case 114: // get surroundings
-                for(Player p : World.getWorld().getPlayers()) {
-                    if(p.getCharacter().getMap() == player.getCharacter().getMap()) {
-                	if(p != player) {
-                	    p.getActionSender().sendSpawnPacket(player.getCharacter());
-                	    player.getActionSender().sendSpawnPacket(p.getCharacter());
-                	}
+                for (Player p : World.getWorld().getPlayers()) {
+                    if (p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
+                        if (p != player) {
+                            p.getActionSender().sendSpawnPacket(player.getCharacter());
+                            player.getActionSender().sendSpawnPacket(p.getCharacter());
+                        }
                     }
                 }
                 for (Npc npc : StaticData.npcs) {
-                    if (npc.getMapid() == player.getCharacter().getMap()) {
-                        if (Formula.inFarView(player.getCharacter().getX(), player.getCharacter().getY(), npc.getCellx(), npc.getCelly())) {
+                    if (npc.getMapid() == player.getCharacter().getMapid()) {
+                        if (Formula.distance(player.getCharacter().getX(), player.getCharacter().getY(), npc.getCellx(), npc.getCelly()) <= Character.VIEW_RANGE) {
                             player.getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
                         }
                     }
                 }
                 for (Monster monster : World.getWorld().getMonsters()) {
-        	    if (monster.getMap() == player.getCharacter().getMap() && monster != null) {
-        		if (Formula.inView(player.getCharacter().getX(), player.getCharacter().getY(), monster.getX(), monster.getY())) {
-        		    player.getActionSender().sendMonsterSpawn(monster);
-        		}
-        	    }
-        	}
+                    if (monster.getMap() == player.getCharacter().getMapid() && monster != null) {
+                        if (Formula.distance(player.getCharacter().getX(), player.getCharacter().getY(), monster.getX(), monster.getY()) <= Character.VIEW_RANGE) {
+                            player.getActionSender().sendMonsterSpawn(monster);
+                        }
+                    }
+                }
                 player.getActionSender().write(bb);
                 break;
-                
+
             case 130: // Complete login.
-               
+
                 break;
 
             case 133: // jump

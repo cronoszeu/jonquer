@@ -2,6 +2,7 @@ package jonquer.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import jonquer.util.Formula;
 
 /**
  * Represents a Character.
@@ -11,259 +12,282 @@ import java.util.ArrayList;
  */
 public class Character implements Serializable {
 
+    public static final int VIEW_RANGE = 16;
     private static final long serialVersionUID = 1L;
 
     public Character(int id) {
-	this.id = id;
+        this.id = id;
+    }
+
+    /**
+     * Tells whether or not the given character is in view of this
+     * character by computing the distance, and checking if it is less than
+     * or equal to the character's view range.
+     *
+     * @param character the character to check.
+     *
+     * @return whether or not the given character is in view.
+     */
+    public boolean inview(Character character) {
+        return Formula.distance(x, y, character.x, character.y) <= VIEW_RANGE;
+    }
+
+    /**
+     * Gets the maximum life of this character.
+     *
+     * @return the maximum life of this character
+     */
+    public short getMaxlife() {
+        return Formula.maxlife(vitality, strength, agility, spirit);
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     public String getPassword() {
-	return password;
+        return password;
     }
 
     public void setPassword(String password) {
-	this.password = password;
+        this.password = password;
     }
 
     public String getSpouse() {
-	return spouse;
+        return spouse;
     }
 
     public void setSpouse(String spouse) {
-	this.spouse = spouse;
+        this.spouse = spouse;
     }
 
-    public int getModel() {
-	return model;
+    public int getLook() {
+        return look;
     }
 
-    public void setModel(int model) {
-	this.model = model;
+    public void setLook(int look) {
+        this.look = look;
     }
 
     public short getHairstyle() {
-	return hairstyle;
+        return hairstyle;
     }
 
     public void setHairstyle(short hairstyle) {
-	this.hairstyle = hairstyle;
+        this.hairstyle = hairstyle;
     }
 
     public int getMoney() {
-	return money;
+        return money;
     }
 
     public void setMoney(int money) {
-	this.money = money;
+        this.money = money;
     }
 
     public int getConquerPoints() {
-	return conquerPoints;
+        return conquerPoints;
     }
 
     public void setConquerPoints(int conquerPoints) {
-	this.conquerPoints = conquerPoints;
+        this.conquerPoints = conquerPoints;
     }
 
     public short getStrength() {
-	return strength;
+        return strength;
     }
 
     public void setStrength(short strength) {
-	this.strength = strength;
+        this.strength = strength;
     }
 
     public short getAgility() {
-	return agility;
+        return agility;
     }
 
     public void setAgility(short agility) {
-	this.agility = agility;
+        this.agility = agility;
     }
 
     public short getVitality() {
-	return vitality;
+        return vitality;
     }
 
     public void setVitality(short vitality) {
-	this.vitality = vitality;
+        this.vitality = vitality;
     }
 
     public short getSpirit() {
-	return spirit;
+        return spirit;
     }
 
     public void setSpirit(short spirit) {
-	this.spirit = spirit;
+        this.spirit = spirit;
     }
 
     public short getStats() {
-	return stats;
+        return stats;
     }
 
     public void setStats(short stats) {
-	this.stats = stats;
+        this.stats = stats;
     }
 
-    public short getHealthPoints() {
-	return healthPoints;
+    public short getLife() {
+        return life;
     }
 
-    public void setHealthPoints(short healthPoints) {
-	this.healthPoints = healthPoints;
+    public void setLife(short life) {
+        this.life = life;
     }
 
-    public short getManaPoints() {
-	return manaPoints;
+    public short getMana() {
+        return mana;
     }
 
-    public void setManaPoints(short manaPoints) {
-	this.manaPoints = manaPoints;
+    public void setMana(short mana) {
+        this.mana = mana;
     }
 
     public int getLevel() {
-	return level;
+        return level;
     }
 
     public void setLevel(int level) {
-	this.level = level;
+        this.level = level;
     }
 
     public int getProfession() {
-	return profession;
+        return profession;
     }
 
     public void setProfession(byte profession) {
-	this.profession = profession;
+        this.profession = profession;
     }
 
     public byte getReborn() {
-	return reborn;
+        return reborn;
     }
 
     public void setReborn(byte reborn) {
-	this.reborn = reborn;
+        this.reborn = reborn;
     }
 
-    public int getMap() {
-	return map;
+    public int getMapid() {
+        return mapid;
     }
 
-    public void setMap(int map) {
-	this.map = map;
+    public void setMapid(int mapid) {
+        this.mapid = mapid;
     }
 
     public short getX() {
-	return x;
+        return x;
     }
 
     public void setX(short x) {
-	this.x = x;
+        this.x = x;
     }
 
     public short getY() {
-	return y;
+        return y;
     }
 
     public void setDirection(byte direction) {
-	this.direction = direction;
+        this.direction = direction;
     }
 
     public byte getDirection() {
-	return direction;
+        return direction;
     }
 
     public void setY(short y) {
-	this.y = y;
+        this.y = y;
     }
 
     public int getID() {
-	return id;
+        return id;
     }
 
     public void setID(int id) {
-	this.id = id;
+        this.id = id;
     }
 
-    public void setAccountName(String accountName) {
-	this.accountName = accountName;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
-    public String getAccountName() {
-	return accountName;
-    }
-    public void setAvatar(short avatar) {
-	this.avatar = avatar;
+    public String getAccount() {
+        return account;
     }
 
-    public short getAvatar() {
-	return avatar;
+    public void setFace(short face) {
+        this.face = face;
+    }
+
+    public short getFace() {
+        return face;
     }
 
     public void setEquipment(Equipment equipment) {
-	this.equipment = equipment;
+        this.equipment = equipment;
     }
 
     public Equipment getEquipment() {
-	return equipment;
+        return equipment;
     }
 
     public void setWarehouse(Warehouse warehouse) {
-	this.warehouse = warehouse;
+        this.warehouse = warehouse;
     }
 
     public Warehouse getWarehouse() {
-	return warehouse;
+        return warehouse;
     }
 
     public void setInventory(Inventory inventory) {
-	this.inventory = inventory;
+        this.inventory = inventory;
     }
 
     public Inventory getInventory() {
-	return inventory;
+        return inventory;
     }
 
     public void setDead(boolean dead) {
-	this.dead = dead;
+        this.dead = dead;
     }
 
     public boolean isDead() {
-	return dead;
+        return dead;
     }
 
     public void setDeathTime(long deathTime) {
-	this.deathTime = deathTime;
+        this.deathTime = deathTime;
     }
 
     public long getDeathTime() {
-	return deathTime;
+        return deathTime;
     }
 
     public void setExp(int exp) {
-	this.exp = exp;
+        this.experience = exp;
     }
 
     public int getExp() {
-	return exp;
+        return experience;
     }
 
     public void setAction(int action) {
-	this.action = action;
+        this.action = action;
     }
 
     public int getAction() {
-	return action;
+        return action;
     }
-
     /**
      * The Character's name
      */
@@ -271,7 +295,7 @@ public class Character implements Serializable {
     /**
      * The account name of this character
      */
-    private String accountName;
+    private String account;
     /**
      * The password to this account
      * 
@@ -291,7 +315,7 @@ public class Character implements Serializable {
     /**
      * Not too sure on this one, model number?
      */
-    private int model;
+    private int look;
     /**
      * Hairstyle ID i guess
      */
@@ -299,7 +323,7 @@ public class Character implements Serializable {
     /**
      * The picture ID when highlighting a person
      */
-    private short avatar;
+    private short face;
     /**
      * The amount of money this character has
      */
@@ -331,11 +355,11 @@ public class Character implements Serializable {
     /**
      * @Todo: figure out of this is current HP, or max HP
      */
-    private short healthPoints;
+    private short life;
     /**
      * @Todo: figure out of this is current Mana, or max Mana
      */
-    private short manaPoints;
+    private short mana;
     /**
      * The characters total level (max 130)
      */
@@ -351,7 +375,7 @@ public class Character implements Serializable {
     /**
      * Map ID this character is on
      */
-    private int map;
+    private int mapid;
     /**
      * The X location of the character on the map
      */
@@ -367,7 +391,7 @@ public class Character implements Serializable {
     /**
      * the amount of Experience this character has
      */
-    private int exp = 0;
+    private int experience = 0;
     /**
      * Your emotion that your using (sit, dance etc)
      */
@@ -392,5 +416,4 @@ public class Character implements Serializable {
      * This character's equipment class
      */
     private Equipment equipment = new Equipment();
-
 }

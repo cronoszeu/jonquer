@@ -13,11 +13,11 @@ public class Constants {
     /**
      * the IP string for the Game host.
      */
-    public static final String GAME_HOST = "127.0.0.1";
+    public static final String GAME_HOST = "70.233.137.72";
     /**
      * the IP string for the Auth host.
      */
-    public static final String AUTH_HOST = "127.0.0.1";
+    public static final String AUTH_HOST = "70.233.137.72";
     /**
      * the Port number for the Auth Server
      */

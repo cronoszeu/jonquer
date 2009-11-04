@@ -38,14 +38,14 @@ public class Player {
      * @param sess
      */
     public Player(IoSession sess, int id) {
-	id = Formula.random.nextInt(1000001);
-	crypt = new Crypto();
-	setCharacter(new Character(id));
-	session = sess;
-	currentIP = ((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress();
-	currentLogin = System.currentTimeMillis();
-	actionSender = new PacketBuilder(this);
-	world.getPlayers().add(this);
+        id = Formula.rand(0, 1000001);
+        crypt = new Crypto();
+        setCharacter(new Character(id));
+        session = sess;
+        currentIP = ((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress();
+        currentLogin = System.currentTimeMillis();
+        actionSender = new PacketBuilder(this);
+        world.getPlayers().add(this);
     }
 
     /**
@@ -53,7 +53,7 @@ public class Player {
      * @return - the Class that sends packets to the client.
      */
     public PacketBuilder getPacketSender() {
-	return this.actionSender;
+        return this.actionSender;
     }
 
     /**
@@ -61,7 +61,7 @@ public class Player {
      * @return - the current IP used in a string.
      */
     public String getIP() {
-	return this.currentIP;
+        return this.currentIP;
     }
 
     /**
@@ -69,7 +69,7 @@ public class Player {
      * @return - the Queue of Incoming packets this Player has sent to server
      */
     public List<Packet> getIncomingPackets() {
-	return this.incomingPackets;
+        return this.incomingPackets;
     }
 
     /**
@@ -77,7 +77,7 @@ public class Player {
      * @return - the Queue of packets ready to be sent to the client.
      */
     public List<Packet> getOutgoingPackets() {
-	return this.outgoingPackets;
+        return this.outgoingPackets;
     }
 
     /**
@@ -85,79 +85,78 @@ public class Player {
      * @return - the MINA session stream
      */
     public IoSession getSession() {
-	return this.session;
+        return this.session;
     }
 
     /*public void updateView(int prevX, int prevY) {
-	for(Player p : World.getWorld().getPlayers()) {
-	    if(p.getCharacter().getMap() == getCharacter().getMap()) {
-		if(p != this) {
-		    if(!Formula.inView(prevX, prevY, p.getCharacter().getX(), p.getCharacter().getY())) {
-			if(Formula.inView(getCharacter(), p.getCharacter())) {
-			    getActionSender().sendSpawnPacket(p.getCharacter());
-			}
-		    } else {
-			if(!Formula.inView(p.getCharacter(), getCharacter())) {
-			    getActionSender().removeEntity(p, p.getCharacter().getX(), p.getCharacter().getY());
-			}
-		    }
-		}
-	    }
-	}
+    for(Player p : World.getWorld().getPlayers()) {
+    if(p.getCharacter().getMap() == getCharacter().getMap()) {
+    if(p != this) {
+    if(!Formula.inView(prevX, prevY, p.getCharacter().getX(), p.getCharacter().getY())) {
+    if(Formula.inView(getCharacter(), p.getCharacter())) {
+    getActionSender().sendSpawnPacket(p.getCharacter());
+    }
+    } else {
+    if(!Formula.inView(p.getCharacter(), getCharacter())) {
+    getActionSender().removeEntity(p, p.getCharacter().getX(), p.getCharacter().getY());
+    }
+    }
+    }
+    }
+    }
     }*/
-
     public void move(int prevX, int prevY, ByteBuffer bb) {
-	getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
-	for(Player p : World.getWorld().getPlayers()) {
-	    if(p != this) {
-		if(p.getCharacter().getMap() == getCharacter().getMap()) {
-		    if(Formula.inView(prevX, prevY, p.getCharacter().getX(), p.getCharacter().getY())) { // in prev view
-			if(Formula.inView(getCharacter(), p.getCharacter())) {
-			    p.getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
-			    continue;
-			} else { // we have left the view
-			    p.getActionSender().removeEntity(this); 
-			    getActionSender().removeEntity(p);
-			    continue;
-			}
-		    } else { // prev location is not in view
-			if(Formula.inView(getCharacter(), p.getCharacter())) { // new loc is in view
-			    getActionSender().sendSpawnPacket(p.getCharacter());
-			    p.getActionSender().sendSpawnPacket(getCharacter());
-			    continue;
-			}
-		    }
-		}
-	    }
-	}
+        getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
+        for (Player p : World.getWorld().getPlayers()) {
+            if (p != this) {
+                if (p.getCharacter().getMapid() == getCharacter().getMapid()) {
+                    if (Formula.distance(prevX, prevY, p.getCharacter().getX(), p.getCharacter().getY()) <= Character.VIEW_RANGE) { // in prev view
+                        if (Formula.inview(getCharacter(), p.getCharacter())) {
+                            p.getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
+                            continue;
+                        } else { // we have left the view
+                            p.getActionSender().removeEntity(this);
+                            getActionSender().removeEntity(p);
+                            continue;
+                        }
+                    } else { // prev location is not in view
+                        if (Formula.inview(getCharacter(), p.getCharacter())) { // new loc is in view
+                            getActionSender().sendSpawnPacket(p.getCharacter());
+                            p.getActionSender().sendSpawnPacket(getCharacter());
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
 
-	for (Npc npc : StaticData.npcs) {
-	    if (npc.getMapid() == getCharacter().getMap()) {
-		if (Formula.inFarView(getCharacter().getX(), getCharacter().getY(), npc.getCellx(), npc.getCelly())) {
-		    getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
-		}
-	    }
-	}
-	for (Monster monster : World.getWorld().getMonsters()) {
-	    if (monster.getMap() == getCharacter().getMap() && monster != null) {
-		if (Formula.inView(getCharacter().getX(), getCharacter().getY(), monster.getX(), monster.getY())) {
-		    getActionSender().sendMonsterSpawn(monster);
-		}
-	    }
-	}
+        for (Npc npc : StaticData.npcs) {
+            if (npc.getMapid() == getCharacter().getMapid()) {
+                if (Formula.distance(getCharacter().getX(), getCharacter().getY(), npc.getCellx(), npc.getCelly()) <= Character.VIEW_RANGE) {
+                    getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
+                }
+            }
+        }
+        for (Monster monster : World.getWorld().getMonsters()) {
+            if (monster.getMap() == getCharacter().getMapid() && monster != null) {
+                if (Formula.distance(getCharacter().getX(), getCharacter().getY(), monster.getX(), monster.getY()) <= Character.VIEW_RANGE) {
+                    getActionSender().sendMonsterSpawn(monster);
+                }
+            }
+        }
     }
 
     public void save() {
-	ObjectOutputStream oos;
-	try {
-	    oos = new ObjectOutputStream(new FileOutputStream(Constants.SAVED_GAME_DIRECTORY + getCharacter().getAccountName() + ".cfg"));
-	    oos.writeObject(getCharacter());
-	    oos.close();
-	} catch (FileNotFoundException e) {
-	    e.printStackTrace();
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
+        ObjectOutputStream oos;
+        try {
+            oos = new ObjectOutputStream(new FileOutputStream(Constants.SAVED_GAME_DIRECTORY + getCharacter().getAccount() + ".cfg"));
+            oos.writeObject(getCharacter());
+            oos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -166,25 +165,27 @@ public class Player {
      */
     public void destroy() {
 
-	for(Player p : World.getWorld().getPlayers()) {
-	    if(p.getCharacter().getMap() == getCharacter().getMap()) {
-		if(p != this) {
-		    if(Formula.inView(getCharacter(), p.getCharacter())) {
-			p.getActionSender().removeEntity(this);
-			getActionSender().removeEntity(p);
-		    }
-		}
-	    }
-	}
+        for (Player p : World.getWorld().getPlayers()) {
+            if (p.getCharacter().getMapid() == getCharacter().getMapid()) {
+                if (p != this) {
+                    if (Formula.inview(getCharacter(), p.getCharacter())) {
+                        p.getActionSender().removeEntity(this);
+                        getActionSender().removeEntity(p);
+                    }
+                }
+            }
+        }
 
-	try {
-	    world.getPlayers().remove(this);
-	} catch(ConcurrentModificationException cme) { }
-	save();
-	if(this.getCharacter() != null && this.getCharacter().getName() != null)
-	    Log.debug(this.getCharacter().getName() + " has Left the server");
-	getSession().close();
-	crypt = null;
+        try {
+            world.getPlayers().remove(this);
+        } catch (ConcurrentModificationException cme) {
+        }
+        save();
+        if (this.getCharacter() != null && this.getCharacter().getName() != null) {
+            Log.debug(this.getCharacter().getName() + " has Left the server");
+        }
+        getSession().close();
+        crypt = null;
     }
 
     /**
@@ -192,26 +193,25 @@ public class Player {
      * server
      */
     public void destroy(boolean nosave) {
-	crypt = null;
-	Log.debug(this.getIP() + " has Left the server");
-	getSession().close();
+        crypt = null;
+        Log.debug(this.getIP() + " has Left the server");
+        getSession().close();
     }
 
-
     public void updateOthersToMe() {
-	for(Player p : getPlayersInView()) {
-	    getActionSender().sendSpawnPacket(p.getCharacter());
-	}
+        for (Player p : getPlayersInView()) {
+            getActionSender().sendSpawnPacket(p.getCharacter());
+        }
     }
 
     public void updateMeToOthers() {
-	for(Player p : getPlayersInView()) {
-	    p.getActionSender().sendSpawnPacket(getCharacter());
-	}
+        for (Player p : getPlayersInView()) {
+            p.getActionSender().sendSpawnPacket(getCharacter());
+        }
     }
 
     public ArrayList<Player> getPlayersInView() {
-	return this.playersInView;
+        return this.playersInView;
     }
 
     /**
@@ -221,78 +221,78 @@ public class Player {
      *            - the old Auth player object
      */
     public void retainObject(Player p, int key) {
-	this.character = p.character;
-	this.currentIP = p.currentIP;
-	World.getWorld().getKeyPlayers().remove(key);
-	p = null;
+        this.character = p.character;
+        this.currentIP = p.currentIP;
+        World.getWorld().getKeyPlayers().remove(key);
+        p = null;
     }
 
     public Crypto getCrypt() {
-	return crypt;
+        return crypt;
     }
 
     public void setCrypt(Crypto crypt) {
-	this.crypt = crypt;
+        this.crypt = crypt;
     }
 
     public String getCurrentIP() {
-	return currentIP;
+        return currentIP;
     }
 
     public void setCurrentIP(String currentIP) {
-	this.currentIP = currentIP;
+        this.currentIP = currentIP;
     }
 
     public long getCurrentLogin() {
-	return currentLogin;
+        return currentLogin;
     }
 
     public void setCurrentLogin(long currentLogin) {
-	this.currentLogin = currentLogin;
+        this.currentLogin = currentLogin;
     }
 
     public PacketBuilder getActionSender() {
-	return actionSender;
+        return actionSender;
     }
 
     public void setActionSender(PacketBuilder actionSender) {
-	this.actionSender = actionSender;
+        this.actionSender = actionSender;
     }
 
     public void setIncomingPackets(List<Packet> incomingPackets) {
-	this.incomingPackets = incomingPackets;
+        this.incomingPackets = incomingPackets;
     }
 
     public void setOutgoingPackets(List<Packet> outgoingPackets) {
-	this.outgoingPackets = outgoingPackets;
+        this.outgoingPackets = outgoingPackets;
     }
 
     public void setSession(IoSession session) {
-	this.session = session;
+        this.session = session;
     }
 
     public void setCharacter(Character character) {
-	this.character = character;
+        this.character = character;
     }
 
     public Character getCharacter() {
-	return character;
+        return character;
     }
 
     public void setLocked(boolean locked) {
-	this.locked = locked;
+        this.locked = locked;
     }
 
     public boolean isLocked() {
-	return locked;
+        return locked;
     }
 
     public void setLastOption(int lastOption) {
-	this.lastOption = lastOption;
+        this.lastOption = lastOption;
     }
 
     public int getLastOption() {
-	return lastOption;
+        return lastOption;
     }
 
     /**
@@ -300,26 +300,26 @@ public class Player {
      * @param id - the NPC ID.
      */
     public void runScript(final int id) {
-	final Player p = this;
-	    new Thread(new Runnable() {
-		public void run() {
-		    script = new Script(p, StaticData.npcScripts.get(id));
-		}
-	    }).start();
+        final Player p = this;
+        new Thread(new Runnable() {
+
+            public void run() {
+                script = new Script(p, StaticData.npcScripts.get(id));
+            }
+        }).start();
     }
 
     public Script getScript() {
-	return script;
+        return script;
     }
 
     public void setInterpreter(Interpreter interpreter) {
-	this.interpreter = interpreter;
+        this.interpreter = interpreter;
     }
 
     public Interpreter getInterpreter() {
-	return interpreter;
+        return interpreter;
     }
-
     /**
      * List of players in your view area.
      */
@@ -337,5 +337,4 @@ public class Player {
     private long currentLogin;
     private PacketBuilder actionSender;
     private IoSession session;
-
 }
