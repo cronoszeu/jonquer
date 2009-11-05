@@ -26,6 +26,9 @@ public class CommandHandler {
 	    }
 		
 	}
+	if(command("/prof")) {    
+	    player.addProfExp(Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+	}
 	if(command("/job")) {
 	    player.getCharacter().setProfession((byte)Integer.parseInt(args[1]));
 	    player.getActionSender().sendHeroInfo();

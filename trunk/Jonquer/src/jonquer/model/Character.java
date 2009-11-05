@@ -287,6 +287,20 @@ public class Character implements Serializable {
     public int getAction() {
         return action;
     }
+    public void setProficiency(int[] proficiency) {
+	this.proficiency = proficiency;
+    }
+
+    public int[] getProficiency() {
+	return proficiency;
+    }
+    public void setProficiency_level(int[] proficiency_level) {
+	this.proficiency_level = proficiency_level;
+    }
+
+    public int[] getProficiency_level() {
+	return proficiency_level;
+    }
     /**
      * The Character's name
      */
@@ -415,4 +429,12 @@ public class Character implements Serializable {
      * This character's equipment class
      */
     private Equipment equipment = new Equipment();
+    /**
+     * Stores the exp of proficiency
+     */
+    private int[] proficiency = new int[20000]; // redo do a hash map/array list
+    /**
+     * Stores the levels of proficiency
+     */
+    private int[] proficiency_level = new int[20000];
 }

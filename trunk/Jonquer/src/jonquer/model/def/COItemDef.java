@@ -176,6 +176,10 @@ public class COItemDef {
 	return type == 21;
     }
     
+   public boolean isTypeShield() {
+       return type == 6;
+   }
+    
     public boolean isTypeHelmet() {
 	return type == 1;
     }

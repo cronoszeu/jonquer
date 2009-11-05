@@ -16,7 +16,7 @@ import jonquer.model.World;
  */
 public class Script {
 
-    private Player player;
+    public Player player;
 
     public Script(Player player, File f) {
 	try {

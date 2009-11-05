@@ -67,4 +67,11 @@ public class Constants {
      * How many mobs the server has.
      */
     public static int MOB_COUNT = 0;
+    
+    
+    
+    /**
+     * the EXP your prof is multiplied by
+     */
+    public static final double PROF_EXP_MULTIPLIER = 1.0;
 }

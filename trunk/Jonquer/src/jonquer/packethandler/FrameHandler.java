@@ -22,6 +22,8 @@ public class FrameHandler implements PacketHandler {
 	    EquipHandler.handlePacket(player, bb);
 	    return;
 	}
+	
+	System.out.println("Frame handler: ID " + id);
     }
 
 }

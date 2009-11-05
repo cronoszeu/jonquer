@@ -4,12 +4,20 @@ import java.awt.Point;
 import java.util.Random;
 
 import jonquer.debug.JonquerError;
-import jonquer.debug.Log;
 import jonquer.model.Character;
 import jonquer.model.Player;
 import jonquer.model.World;
 
 public class Formula {
+
+    /**
+     * Levels 1-20 for weapon prof
+     */
+    public static final int[] PROF_LEVEL_EXP = {
+	1200, 68000, 250000, 640000, 1600000,
+	4000000, 10000000, 22000000, 40000000, 90000000, 95000000, 142500000, 213750000,
+	320625000, 480937500, 721406250, 1082109375, 1623164063, 2100000000, 2100000000
+    };
 
     /** Update type constants. */
     public static final int HITPOINTS_UPDATE_TYPE = 0;
