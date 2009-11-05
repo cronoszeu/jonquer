@@ -28,6 +28,8 @@ public class EquipHandler {
 	    if(!checkItem(player, itemUID, slot, item)) {
 		player.destroy();
 	    }
+	    if(item == null)
+		return;
 
 	    Equipment equips = player.getCharacter().getEquipment();
 
@@ -37,6 +39,7 @@ public class EquipHandler {
 		    removeItem(player, item);
 		} else {
 		    Item old = equips.getHead().clone();
+		    unequipItem(player, old, slot);
 		    equips.setHead(item);
 		    removeItem(player, item);
 		    addItem(player, old);
@@ -51,6 +54,7 @@ public class EquipHandler {
 		    removeItem(player, item);
 		} else {
 		    Item old = equips.getArmor().clone();
+		    unequipItem(player, old, slot);
 		    equips.setHead(item);
 		    removeItem(player, item);
 		    addItem(player, old);
@@ -60,10 +64,14 @@ public class EquipHandler {
 
 	    if(item.getDef().isTypeNecklace()) {
 		if(equips.getNeck() == null) {
-		    equips.setNeck(item);
+		    // unequipItem(player, item, slot);
+		    Item i = item.clone();
+		    equips.setNeck(item.clone());
 		    removeItem(player, item);
+		    equipItem(player, i, slot);
 		} else {
 		    Item old = equips.getNeck().clone();
+		    unequipItem(player, old, slot);
 		    equips.setNeck(item);
 		    removeItem(player, item);
 		    addItem(player, old);
@@ -77,6 +85,7 @@ public class EquipHandler {
 		    removeItem(player, item);
 		} else {
 		    Item old = equips.getRing().clone();
+		    unequipItem(player, old, slot);
 		    equips.setRing(item);
 		    removeItem(player, item);
 		    addItem(player, old);
@@ -90,33 +99,66 @@ public class EquipHandler {
 		    removeItem(player, item);
 		} else {
 		    Item old = equips.getBoots().clone();
+		    unequipItem(player, old, slot);
 		    equips.setBoots(item);
 		    removeItem(player, item);
 		    addItem(player, old);
 		}
 		updateAll(player, item, Formula.BOOT_EQUIP_SLOT, true);
 	    }
-
-	    if(item.getDef().isTypeTwoHand()) {
+	    if(slot == 5) {
 		if(equips.getRight_hand() == null) {
-		    equips.setRight_hand(item);
-		    removeItem(player, item);
-		} else {
-		    Item old = equips.getRight_hand().clone();
-		    equips.setRight_hand(item);
+		    player.getActionSender().sendSystemMessage("Please equip your right hand first");
+		    return;
+		} 
+		if(equips.getRight_hand().getDef().isTypeTwoHand()) {
+		    return;
+		} 
+
+		if(equips.getLeft_hand() != null) {
+		    Item old = equips.getLeft_hand().clone();
+		    unequipItem(player, old, slot);
+		    equips.setLeft_hand(item);
 		    removeItem(player, item);
 		    addItem(player, old);
+		    updateAll(player, item, Formula.LEFT_WEAPON_EQUIP_SLOT, true);
+		} else {
+		    equips.setLeft_hand(item);
+		    removeItem(player, item);
+		    updateAll(player, item, Formula.LEFT_WEAPON_EQUIP_SLOT, true);
 		}
-		updateAll(player, item, Formula.RIGHT_WEAPON_EQUIP_SLOT, true);
+		return;
+
+	    }
+
+	    if(item.getDef().isArrows()) {
+		if(equips.getRight_hand() != null && equips.getRight_hand().getDef().isTypeBow()) {
+		    if(equips.getLeft_hand() != null) {
+			equips.setLeft_hand(item);
+			removeItem(player, item);
+			
+		    } else {
+			Item old = equips.getRight_hand().clone();
+			unequipItem(player, old, slot);
+			equips.setRight_hand(item);
+			removeItem(player, item);
+			addItem(player, old);
+		    }
+		    updateAll(player, item, Formula.LEFT_WEAPON_EQUIP_SLOT, true);
+		}
 	    }
 
 	    if(item.getDef().isTypeBow()) {
 		if(equips.getRight_hand() != null) {
-		    addItem(player, equips.getRight_hand().clone());
+		    Item i = equips.getRight_hand().clone();
+		    unequipItem(player, i, slot);
+		    addItem(player, i);
 		}
-		
+
 		if(equips.getLeft_hand() != null && !equips.getLeft_hand().getDef().isArrows()) {
-		    addItem(player, equips.getLeft_hand().clone());
+		    Item i = equips.getLeft_hand().clone();
+		    unequipItem(player, i, slot);
+		    addItem(player, i);
 		}
 
 		equips.setLeft_hand(item);
@@ -125,12 +167,53 @@ public class EquipHandler {
 		updateAll(player, item, Formula.RIGHT_WEAPON_EQUIP_SLOT, true);
 	    }
 
+	    if(item.getDef().isTypeTwoHand()) {
+		if(checkAndRemoveWeapons(equips, player, item, slot)) {
+		    updateAll(player, item, Formula.RIGHT_WEAPON_EQUIP_SLOT, true);
+		}
+	    } else if(item.getDef().isTypeOneHand()) {
+		if(checkAndRemoveWeapons(equips, player, item, slot)) {
+		    updateAll(player, item, Formula.RIGHT_WEAPON_EQUIP_SLOT, true);
+		}
+	    }
+
 	    // remember to refresh bonuses
 
 	} catch (Exception e) {
 	    Log.error(e);
 	    player.destroy();
 	}
+    }
+
+    public static boolean checkAndRemoveWeapons(Equipment equips, Player player, Item newitem, byte slot) {
+	if(newitem.getDef().isTypeTwoHand() && !newitem.getDef().isTypeBow()) {
+	    if(equips.getLeft_hand() != null) {
+		player.getActionSender().sendSystemMessage("You must un-equip your left-hand first");
+		return false;
+	    } else {
+		if(equips.getRight_hand() != null) {
+		    Item i = equips.getRight_hand().clone();
+		    unequipItem(player, i, slot);
+		    removeItem(player, i);
+		    addItem(player, i);
+		}
+		equips.setRight_hand(newitem);
+		removeItem(player, newitem);
+		return true;
+	    }
+	} else if(newitem.getDef().isTypeOneHand()) {
+	    if(equips.getRight_hand() != null) {
+		Item i = equips.getRight_hand().clone();
+		unequipItem(player, i, slot);
+		removeItem(player, i);
+		addItem(player, i);
+	    }
+	    equips.setRight_hand(newitem);
+	    removeItem(player, newitem);
+	    return true;
+	}
+
+	return false;
     }
 
 
@@ -160,6 +243,14 @@ public class EquipHandler {
     public static void addItem(Player p, Item i) {
 	p.getCharacter().getInventory().addItem(i);
 	p.getActionSender().sendItem(i);
+    }
+
+    public static void equipItem(Player p, Item i, byte slot) {
+	p.getActionSender().sendItem(i, slot);
+    }
+
+    public static void unequipItem(Player p, Item i, byte slot) {
+	p.getActionSender().sendUnequipItem(i, slot);
     }
 
     public static void removeItem(Player p, Item i) {

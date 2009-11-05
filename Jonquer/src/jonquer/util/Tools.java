@@ -21,7 +21,11 @@ public class Tools {
      * @return - if the account exists or not
      */
     public static boolean accountExists(String s) {
-	return StaticData.getAccounts().contains(s.toLowerCase());
+	for(String ss : StaticData.getAccounts()) {
+	    if(s.toLowerCase().equals(ss.toLowerCase()))
+		return true;
+	}
+	return false;
     }
 
     /**

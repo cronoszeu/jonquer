@@ -114,8 +114,12 @@ public class PacketBuilder {
         bb.putInt(12, exp);
         write(bb);
     }
-
+    
     public void sendItem(Item i) {
+	sendItem(i, (byte)0);
+    }
+
+    public void sendItem(Item i, byte pos) {
         ByteBuffer bb = ByteBuffer.allocate(36);
         bb.order(ByteOrder.LITTLE_ENDIAN);
         bb.putShort(0, (short) bb.limit());
@@ -134,7 +138,7 @@ public class PacketBuilder {
             }
         }
 
-        bb.put(18, (byte) 0);
+        bb.put(18, (byte) pos);
         bb.put(24, (byte) i.getSoc1());
         bb.put(25, (byte) i.getSoc2());
         bb.put(28, (byte) i.getPlus());
@@ -405,6 +409,17 @@ public class PacketBuilder {
 	    sendEquippedItem(player.getCharacter().getEquipment().getRight_hand(), Formula.RIGHT_WEAPON_EQUIP_SLOT);
 	}
     }
+    
+    public void sendUnequipItem(Item item, byte slot) {
+	ByteBuffer bb = ByteBuffer.allocate(20);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+        bb.putShort(0, (short) bb.limit());
+        bb.putShort(2, (short) 1009);
+        bb.putInt(4, item.getUID());
+        bb.putInt(8, slot);
+        bb.putInt(12, 6);
+        write(bb);
+    }
 
     public void sendEquippedItem(Item item, byte slot) {
         ByteBuffer bb = ByteBuffer.allocate(36);
@@ -434,7 +449,7 @@ public class PacketBuilder {
 
     public void write(ByteBuffer b) {
         byte[] buff = b.array();
-        if (buff != null && b != null && buff.length > 4) {
+        if (buff != null && b != null && buff.length > 4 || player.crypt != null) {
             player.crypt.encrypt(buff);
             player.getSession().write(org.apache.mina.common.ByteBuffer.wrap(buff));
         } else {

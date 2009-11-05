@@ -114,17 +114,20 @@ public class GameEngine {
 	    world.lists.addAll(world.getDelayedEventHandler());
 	    world.getDelayedEventHandler().clear();
 	}
-	for (DelayedAbstractEvent handler : world.lists) {
+	Iterator<DelayedAbstractEvent> ite = world.lists.iterator();
+	while(ite.hasNext()) {
+	    DelayedAbstractEvent handler = ite.next();
 	    if (System.currentTimeMillis() - handler.startTime > handler.delayTime) {
 		handler.execute();
 		handler.rollingAmount--;
 		if (!handler.rolling || handler.rollingAmount < 1) {
-		    world.lists.remove(handler);
+		    ite.remove();
 		} else {
 		    handler.startTime = System.currentTimeMillis();
 		}
 	    }
 	}
+	
 
     }
 

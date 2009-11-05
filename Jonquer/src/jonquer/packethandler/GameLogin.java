@@ -23,6 +23,8 @@ public class GameLogin implements PacketHandler {
     public void handlePacket(Player player, byte[] packet) throws Exception {
 	int pid = StaticPacketBuilder.getInt(packet, 4);
 	int key = StaticPacketBuilder.getInt(packet, 8);
+	if(player.crypt == null)
+	    return;
 	player.crypt.generateKeys(pid, key);
 	Player p = World.getWorld().getKeyPlayers().get(key);
 	int id = -1;
