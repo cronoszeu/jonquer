@@ -108,6 +108,28 @@ public class Formula {
     public static final int INTERN_TAOIST_PRO = 100;
     public static final int VIEW_RADIUS = 15;
     public static final int FAR_VIEW_RADIUS = 30;
+    
+    /** Prof IDS **/    
+    public static final int PROF_BLADE = 410;
+    public static final int PROF_SWORD = 420;
+    public static final int PROF_BACKSWORD = 421;
+    public static final int PROF_HOOK = 430;
+    public static final int PROF_WHIP = 440;
+    public static final int PROF_AXE = 450;
+    public static final int PROF_HAMMER = 460;
+    public static final int PROF_CLUB = 480;
+    public static final int PROF_SCEPTER = 481;
+    public static final int PROF_DAGGER = 490;
+    public static final int PROF_BOW = 500;
+    public static final int PROF_GLAIVE = 510;
+    public static final int PROF_POLEAXE = 530;
+    public static final int PROF_LONGHAMMER = 540;
+    public static final int PROF_SPEAR = 560;
+    public static final int PROF_WAND = 561;
+    public static final int PROF_HALBERT = 580;
+    
+    
+    
 
     //    public static final int VIEW_RADIUS = 16;
     //    public static final int FAR_VIEW_RADIUS = 30;

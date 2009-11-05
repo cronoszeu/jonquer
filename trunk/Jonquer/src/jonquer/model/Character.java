@@ -301,6 +301,13 @@ public class Character implements Serializable {
     public int[] getProficiency_level() {
 	return proficiency_level;
     }
+    public void setVirtuePoints(int virtuePoints) {
+	this.virtuePoints = virtuePoints;
+    }
+
+    public int getVirtuePoints() {
+	return virtuePoints;
+    }
     /**
      * The Character's name
      */
@@ -417,6 +424,10 @@ public class Character implements Serializable {
      * The time in milliseconds when this person died.
      */
     private transient long deathTime = 0;
+    /**
+     * This characters virtue points
+     */
+    private int virtuePoints = 0;
     /**
      * This character's inventory class
      */

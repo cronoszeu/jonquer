@@ -33,12 +33,22 @@ public class AuthLogin implements PacketHandler {
 	    if (Tools.accountExists(username)) {
 		Log.debug("USER EXISTS! (" + username + ")");
 		Character ch = Tools.loadCharacter(username);
-		if (ch.getPassword().equals(pass)) {
-		    player.setCharacter(ch);
-		    login(player);
+		if(ch != null) {
+		    if (ch.getPassword().equals(pass)) {
+			player.setCharacter(ch);
+			login(player);
+		    } else {
+			Log.debug("Wrong Password for " + username);
+			player.destroy();
+		    }
 		} else {
-		    Log.debug("Wrong Password for " + username);
-		    player.destroy();
+		    player.getCharacter().setAccount(username);
+		    player.getCharacter().setPassword(pass);
+
+		    Tools.saveChar(player);
+		    Log.debug("CREATED ACCOUNT: " + username);
+		    StaticData.getAccounts().add(username.toLowerCase());
+		    login(player);
 		}
 
 	    } else {

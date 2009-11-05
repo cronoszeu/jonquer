@@ -14,7 +14,7 @@ import jonquer.model.World;
  * @author xEnt
  *
  */
-public class Script {
+public class Script extends Formula {
 
     public Player player;
 
@@ -22,6 +22,7 @@ public class Script {
 	try {
 	    this.player = player;
 	    player.getInterpreter().getNameSpace().importObject(this);
+	   // player.getInterpreter().getNameSpace().importObject(Formula.class);
 	    player.getInterpreter().source(f.getAbsolutePath());
 	    player.getInterpreter().getNameSpace().clear();
 	} catch(Exception e) {
