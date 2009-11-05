@@ -6,29 +6,23 @@
 */
 
 
-SetText("Please, Pick an option");
-	option = AddOptions("Free Meteor", "Remove Meteor", "Teleport to Twin City");
-	if(option == 1) {
-	    if(CanHold(1)) {
-		AddItem(460003);
-	    } else {
-		SetText("Your inventory is full, sorry");
-		AddOptions("Damn!");
-	    }
-	}
+SetText("Which class do you want to master?");
+	option = AddOptions("Warrior");
+if(option == 1) {
+
+player.getCharacter().getProficiency_level()[561] = 19;
+player.addProfExp(561, 1);
+player.getCharacter().setStrength((short)200);
+player.getCharacter().setLevel(130);
+player.getCharacter().setProfession((byte)25);
+player.getActionSender().sendHeroInfo();
+
+AddItem(112619, 9, 7, 255, 15, 15);
+AddItem(136999, 9, 7, 255, 15, 15);
+AddItem(561339, 9, 7, 255, 15, 15);
+AddItem(150229, 9, 7, 255, 15, 15);
+AddItem(120229, 9, 7, 255, 15, 15);
+AddItem(112619, 9, 7, 255, 15, 15);
+AddItem(160249, 9, 7, 255, 15, 15);
+}
 	
-	if(option == 2) {
-	    SetText("Are you sure you want to destroy a Meteor");
-	    option = AddOptions("Yes", "No");
-	    if(option == 1) {
-		if(HasItem(460003, 4)) {
-		    RemoveItem(460003, 4);
-		} else {
-		    SetText("Come back when you have a Meteor");
-		    AddOptions("Ok..");
-		}
-	    }
-	}
-	if(option == 3) {
-	    Teleport(1002, 400, 400);
-	}
