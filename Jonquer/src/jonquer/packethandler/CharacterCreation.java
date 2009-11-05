@@ -24,9 +24,9 @@ public class CharacterCreation implements PacketHandler {
 
 	short model = (short)bb.getShort(0x34);
 	int avatar = -1;
-	if (model == Formula.MODEL_SMALL_BOY || model == Formula.MODEL_BIG_BOY)
+	if (model == Formula.SMALL_MALE_LOOK || model == Formula.LARGE_MALE_LOOK)
 	    avatar = 67;
-	else if (model == Formula.MODEL_BIG_GIRL || model == Formula.MODEL_SMALL_GIRL)
+	else if (model == Formula.LARG_FEMALE_LOOK || model == Formula.SMALL_FEMALE_LOOK)
 	    avatar = 201;
 
 	if(avatar == -1) {
