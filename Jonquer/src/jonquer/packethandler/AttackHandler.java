@@ -23,7 +23,6 @@ public class AttackHandler implements PacketHandler {
 	    player.getActionSender().sendSystemMessage("cq_generator ID: " + m.getSpawnDef().getId() + " / " + m.getId());
 	    player.getActionSender().sendSystemMessage("NPC Type: " + m.getDef().getType());
 	}
-	
     }
 
 }

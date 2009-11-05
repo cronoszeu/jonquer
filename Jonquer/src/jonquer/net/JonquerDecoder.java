@@ -1,9 +1,10 @@
 package jonquer.net;
 
 import java.util.Arrays;
+
+import jonquer.debug.Log;
 import jonquer.model.Packet;
 import jonquer.model.Player;
-import jonquer.util.Log;
 
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IoSession;

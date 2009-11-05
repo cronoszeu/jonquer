@@ -2,8 +2,8 @@ package jonquer.packethandler;
 
 import java.nio.ByteBuffer;
 
+import jonquer.debug.Log;
 import jonquer.model.Player;
-import jonquer.util.Log;
 
 public class EquipHandler {
 

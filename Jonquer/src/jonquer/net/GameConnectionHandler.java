@@ -1,11 +1,11 @@
 package jonquer.net;
 
+import jonquer.debug.Log;
 import jonquer.game.Constants;
 import jonquer.model.Packet;
 import jonquer.model.Player;
 import jonquer.util.Crypto;
 import jonquer.util.Formula;
-import jonquer.util.Log;
 
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IdleStatus;

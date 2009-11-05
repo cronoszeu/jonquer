@@ -1,10 +1,10 @@
 package jonquer.packethandler;
 
+import jonquer.debug.Log;
 import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.net.StaticPacketBuilder;
 import jonquer.util.Formula;
-import jonquer.util.Log;
 import jonquer.util.Tools;
 
 /**

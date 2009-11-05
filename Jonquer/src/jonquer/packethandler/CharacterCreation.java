@@ -3,9 +3,9 @@ package jonquer.packethandler;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import jonquer.debug.Log;
 import jonquer.model.Player;
 import jonquer.util.Formula;
-import jonquer.util.Log;
 import jonquer.util.StaticData;
 import jonquer.util.Tools;
 

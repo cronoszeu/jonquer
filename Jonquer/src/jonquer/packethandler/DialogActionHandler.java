@@ -17,7 +17,6 @@ public class DialogActionHandler implements PacketHandler {
 	ByteBuffer bb = ByteBuffer.wrap(packet);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	player.setLastOption(bb.get(10));
-	System.out.println("Option? " + bb.get(10));
     }
 
 }

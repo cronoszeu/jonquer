@@ -3,13 +3,13 @@ package jonquer.packethandler;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import jonquer.debug.Log;
 import jonquer.model.Monster;
 import jonquer.model.Npc;
 import jonquer.model.Player;
 import jonquer.model.Character;
 import jonquer.model.World;
 import jonquer.util.Formula;
-import jonquer.util.Log;
 import jonquer.util.StaticData;
 
 public class DataPacket implements PacketHandler {
@@ -37,7 +37,7 @@ public class DataPacket implements PacketHandler {
                 for (Player p : player.getPlayersInView()) {
                     if (p != player) {
                         if (p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
-                            if (Formula.inview(p.getCharacter(), player.getCharacter())) {
+                            if (Formula.inView(p.getCharacter(), player.getCharacter())) {
                                 p.getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
                             }
                         }

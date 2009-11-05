@@ -13,11 +13,11 @@ public class Constants {
     /**
      * the IP string for the Game host.
      */
-    public static final String GAME_HOST = "70.233.137.72";
+    public static final String GAME_HOST = "127.0.0.1";
     /**
      * the IP string for the Auth host.
      */
-    public static final String AUTH_HOST = "70.233.137.72";
+    public static final String AUTH_HOST = "127.0.0.1";
     /**
      * the Port number for the Auth Server
      */
@@ -59,6 +59,10 @@ public class Constants {
      * Prints extra data, helpful for debugging etc.
      */
     public static final boolean VERBOSE_DEBUG_MODE = false;
+    /**
+     * If a JonquerError gets thrown, enabling this will print a stack trace on the current thread.
+     */
+    public static final boolean THREAD_STACK_DUMP_DEBUGGING = false;
     /**
      * How many mobs the server has.
      */

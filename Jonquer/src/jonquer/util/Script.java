@@ -3,6 +3,7 @@ package jonquer.util;
 import java.io.File;
 import java.util.Iterator;
 
+import jonquer.debug.Log;
 import jonquer.model.Inventory;
 import jonquer.model.Item;
 import jonquer.model.Player;
@@ -139,7 +140,7 @@ public class Script {
 	for(Player p : World.getWorld().getPlayers()) {
 	    if(p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
 		if(p != player) {
-		    if(Formula.inview(p.getCharacter(), player.getCharacter())) {
+		    if(Formula.inView(p.getCharacter(), player.getCharacter())) {
 			p.getActionSender().removeEntity(player);
 			player.getActionSender().removeEntity(p);
 		    }
@@ -153,7 +154,7 @@ public class Script {
 	for(Player p : World.getWorld().getPlayers()) {
 	    if(p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
 		if(p != player) {
-		    if(Formula.inview(p.getCharacter(), player.getCharacter())) {
+		    if(Formula.inView(p.getCharacter(), player.getCharacter())) {
 			p.getActionSender().sendSpawnPacket(player.getCharacter());
 			player.getActionSender().sendSpawnPacket(p.getCharacter());
 		    }

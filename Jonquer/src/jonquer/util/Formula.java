@@ -1,12 +1,16 @@
 package jonquer.util;
 
+import java.awt.Point;
 import java.util.Random;
 
+import jonquer.debug.JonquerError;
+import jonquer.debug.Log;
 import jonquer.model.Character;
 import jonquer.model.Player;
 import jonquer.model.World;
 
 public class Formula {
+
 
     private static Random rand = new Random();
 
@@ -47,7 +51,10 @@ public class Formula {
     public static final int ELITE = 8;
     public static final int SUPER = 9;
 
+
+
     /** Message type constants */
+
     public static final short TALK_MESSAGE_TYPE = 2000;
     public static final short WHISPER_MESSAGE_TYPE = 2001;
     public static final short TEAM_MESSAGE_TYPE = 2003;
@@ -57,6 +64,23 @@ public class Formula {
     public static final short CENTER_MESSAGE_TYPE = 2011;
     public static final short CREATE_ACCOUNT_MESSAGE_TYPE = 2100;
     public static final short DIALOG_MESSAGE_TYPE = 2101;
+
+    
+    /** Equip slot constants. */
+    public static final byte ARMET_EQUIP_SLOT = 1;
+    public static final byte NECKLACE_BAG_EQUIP_SLOT = 2;
+    public static final byte ARMOR_EQUIP_SLOT = 3;
+    public static final byte RIGHT_WEAPON_EQUIP_SLOT = 4;
+    public static final byte LEFT_WEAPON_EQUIP_SLOT = 5;
+    public static final byte RING_EQUIP_SLOT = 6;
+    public static final byte TALISMAN_EQUIP_SLOT = 7;
+    public static final byte BOOT_EQUIP_SLOT = 8;
+    public static final byte GARMENT_EQUIP_SLOT = 9;
+
+
+
+
+
     public static final short MODEL_BIG_GIRL = 2002;
     public static final short MODEL_SMALL_GIRL = 2001;
     public static final short MODEL_BIG_BOY = 1004;
@@ -65,6 +89,11 @@ public class Formula {
     public static final int JOB_INTERN_WARRIOR = 20;
     public static final int JOB_INTERN_ARCHER = 40;
     public static final int JOB_INTERN_TAOIST = 100;
+
+
+    public static final int VIEW_RADIUS = 15;
+    public static final int FAR_VIEW_RADIUS = 30;
+
 
 //    public static final int VIEW_RADIUS = 16;
 //    public static final int FAR_VIEW_RADIUS = 30;
@@ -85,6 +114,31 @@ public class Formula {
 
     public static int rand(int min, int max) {
         return rand.nextInt(max - min + 1) + min;
+    }
+
+    public static Point dirToPoint(int dir) throws JonquerError {
+	switch(dir) {
+
+	case 0: 
+	    return new Point(0, 1);
+	case 1: 
+	    return new Point(-1, 1);
+	case 2: 
+	    return new Point(-1, 0);
+	case 3: 
+	    return new Point(-1, -1);
+	case 4: 
+	    return new Point(0, -1);
+	case 5: 
+	    return new Point(1, -1);
+	case 6: 
+	    return new Point(1, 0);
+	case 7: 
+	    return new Point(1, 1);
+
+	default:
+	    throw new JonquerError("Direction (" + dir + ") is invalid");
+	}
     }
 
     public static void createCharacter(Player p) {
@@ -132,9 +186,14 @@ public class Formula {
      *
      * @return whether or not these two characters are in view of one another.
      */
-    public static boolean inview(Character a, Character b) {
+    public static boolean inView(Character a, Character b) {
         return a.inview(b);
     }
+
+    public static boolean inFarView(Character you, Character them) {
+	return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;
+    }
+
 
 //    public static boolean inFarView(Character you, Character them) {
 //	return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;
@@ -162,4 +221,9 @@ public class Formula {
         y1 -= y2;
         return Math.sqrt(x1 * x1 + y1 * y1);
     }
+
+    public static boolean inFarView(int oldx, int oldy, int newx, int newy) {
+	return Math.abs(oldy - newy) <= VIEW_RADIUS && Math.abs(oldx - newx) <= VIEW_RADIUS;
+    }
+
 }

@@ -2,10 +2,10 @@ package jonquer.packethandler;
 
 import java.nio.ByteOrder;
 
+import jonquer.debug.Log;
 import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.util.Formula;
-import jonquer.util.Log;
 
 import java.nio.ByteBuffer;
 
