@@ -1,4 +1,4 @@
-package jonquer.util;
+package jonquer.debug;
 
 import java.io.BufferedWriter;
 import java.io.File;

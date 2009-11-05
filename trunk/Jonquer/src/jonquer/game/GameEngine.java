@@ -3,12 +3,12 @@ package jonquer.game;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
+import jonquer.debug.Log;
 import jonquer.delay.DelayedAbstractEvent;
 import jonquer.model.Packet;
 import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.packethandler.PacketHandler;
-import jonquer.util.Log;
 
 /**
  * the GameEngine of the entire server.

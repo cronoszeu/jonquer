@@ -11,11 +11,11 @@ import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
+import jonquer.debug.Log;
 import jonquer.game.Constants;
 import jonquer.net.PacketBuilder;
 import jonquer.util.Crypto;
 import jonquer.util.Formula;
-import jonquer.util.Log;
 import jonquer.util.Script;
 import jonquer.util.StaticData;
 
@@ -111,7 +111,7 @@ public class Player {
             if (p != this) {
                 if (p.getCharacter().getMapid() == getCharacter().getMapid()) {
                     if (Formula.distance(prevX, prevY, p.getCharacter().getX(), p.getCharacter().getY()) <= Character.VIEW_RANGE) { // in prev view
-                        if (Formula.inview(getCharacter(), p.getCharacter())) {
+                        if (Formula.inView(getCharacter(), p.getCharacter())) {
                             p.getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
                             continue;
                         } else { // we have left the view
@@ -120,7 +120,7 @@ public class Player {
                             continue;
                         }
                     } else { // prev location is not in view
-                        if (Formula.inview(getCharacter(), p.getCharacter())) { // new loc is in view
+                        if (Formula.inView(getCharacter(), p.getCharacter())) { // new loc is in view
                             getActionSender().sendSpawnPacket(p.getCharacter());
                             p.getActionSender().sendSpawnPacket(getCharacter());
                             continue;
@@ -168,7 +168,7 @@ public class Player {
         for (Player p : World.getWorld().getPlayers()) {
             if (p.getCharacter().getMapid() == getCharacter().getMapid()) {
                 if (p != this) {
-                    if (Formula.inview(getCharacter(), p.getCharacter())) {
+                    if (Formula.inView(getCharacter(), p.getCharacter())) {
                         p.getActionSender().removeEntity(this);
                         getActionSender().removeEntity(p);
                     }

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 
+import jonquer.debug.Log;
 import jonquer.model.Map;
 import jonquer.model.Npc;
 import jonquer.model.World;
@@ -23,7 +24,6 @@ import jonquer.model.def.COItemDef.ClassRequired;
 import jonquer.net.AuthConnectionHandler;
 import jonquer.net.GameConnectionHandler;
 import jonquer.packethandler.PacketHandler;
-import jonquer.util.Log;
 import jonquer.util.StaticData;
 import jonquer.util.Tools;
 

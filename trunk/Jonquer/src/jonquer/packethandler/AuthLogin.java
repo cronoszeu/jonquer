@@ -1,9 +1,9 @@
 package jonquer.packethandler;
 
+import jonquer.debug.Log;
 import jonquer.model.Character;
 import jonquer.model.Player;
 import jonquer.util.Formula;
-import jonquer.util.Log;
 import jonquer.util.StaticData;
 import jonquer.util.Tools;
 

@@ -4,13 +4,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Random;
 
+import jonquer.debug.Log;
 import jonquer.game.Constants;
 import jonquer.model.Item;
 import jonquer.model.Monster;
 import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.util.Formula;
-import jonquer.util.Log;
 
 import org.apache.mina.common.IoSession;
 
