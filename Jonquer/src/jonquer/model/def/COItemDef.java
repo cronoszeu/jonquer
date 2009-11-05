@@ -164,6 +164,55 @@ public class COItemDef {
 	return getID() == Formula.FIXED;
     }
 
+    public boolean isTypeBow() {
+	return type == 22; 
+    }
+    
+    public boolean isTypeOneHand() {
+	return type == 22 || type == 20;
+    }
+    
+    public boolean isTypeTwoHand() {
+	return type == 21;
+    }
+    
+    public boolean isTypeHelmet() {
+	return type == 1;
+    }
+    
+    public boolean isTypeNecklace() {
+	return type == 2;
+    }
+    
+    public boolean isTypeArmor() {
+	return type == 3;
+    }
+    
+    public boolean isTypeRing() {
+	return type == 4;
+    }
+    public boolean isTypeBoots() {
+	return type == 5;
+    }
+
+    public void setWeaponType(int weaponType) {
+	this.weaponType = weaponType;  
+    }
+
+    public int getWeaponType() {
+	return weaponType;
+    }
+    
+    public void setType(int type) {
+	this.type = type;
+    }
+    
+    public int getType() {
+	return this.type;
+    }
+
+    private int weaponType = 0;
+    private int type = 0;
     private int quality = -1;
     private String name = null;
     private int price = 0;
@@ -183,5 +232,6 @@ public class COItemDef {
     private int profLevelReq = 0;
     private int profID = 0;
     private ClassRequired classReq = ClassRequired.ALL;
+
     public static enum ClassRequired {TROJAN, ARCHER, WARRIOR, TAOIST, ALL, NONE}
 }
