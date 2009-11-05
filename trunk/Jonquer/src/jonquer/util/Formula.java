@@ -35,7 +35,7 @@ public class Formula {
     public static final int RAISE_FLAG_UPDATE_TYPE = 26;
     public static final int LUCKY_TIME_UPDATE_TYPE = 29;
     public static final int HAIR_STYLE_UPDATE_TYPE = 31;
-    
+
     /** Item qualities. */
     public static final int FIXED = 0;
     public static final int NORMAL1 = 3;
@@ -56,6 +56,25 @@ public class Formula {
     public static final short CENTER_MESSAGE_TYPE = 2011;
     public static final short CREATE_ACCOUNT_MESSAGE_TYPE = 2100;
     public static final short DIALOG_MESSAGE_TYPE = 2101;
+
+    /** Weapon Type IDS **/
+    public static final int BACKSWORD = 0; // sub of sword
+    public static final int BLADE = 1;
+    public static final int SWORD = 2;
+    public static final int HOOK = 3;
+    public static final int WHIP = 4;
+    public static final int AXE = 5;
+    public static final int HAMMER = 6;
+    public static final int CLUB = 8;
+    public static final int DAGGER = 9;
+    public static final int SCEPTER = 20; // sub of club
+
+    public static final int GLAIVE = 11;
+    public static final int POLEAXE = 13;
+    public static final int LONGHAMMER = 14;
+    public static final int SPEAR = 16;
+    public static final int WAND = 17;
+    public static final int HALBERT = 18;
 
     /** Equip slot constants. */
     public static final byte ARMET_EQUIP_SLOT = 1;
@@ -82,8 +101,8 @@ public class Formula {
     public static final int VIEW_RADIUS = 15;
     public static final int FAR_VIEW_RADIUS = 30;
 
-//    public static final int VIEW_RADIUS = 16;
-//    public static final int FAR_VIEW_RADIUS = 30;
+    //    public static final int VIEW_RADIUS = 16;
+    //    public static final int FAR_VIEW_RADIUS = 30;
     /**
      * A formula to retreive max life with the given stats.
      *
@@ -95,87 +114,81 @@ public class Formula {
      * @return the max life.
      */
     public static short maxlife(short vitality, short strength, short agility, short spirit) {
-        return (short) ((vitality * 24) +
-                (strength * 3) +
-                (agility * 3) +
-                (spirit * 3));
+	return (short) ((vitality * 24) +
+		(strength * 3) +
+		(agility * 3) +
+		(spirit * 3));
     }
 
     public static boolean isTileBlocked(int map, int x, int y) {
-        return World.getWorld().getMaps().get(map).isTileBlocked(x, y);
+	return World.getWorld().getMaps().get(map).isTileBlocked(x, y);
     }
 
     public static int rand(int min, int max) {
-        if (randomNumberGenerator == null) {
-            initRNG();
-        }
-        return randomNumberGenerator.nextInt(max - min + 1) + min;
+	return randomNumberGenerator.nextInt(max - min) + min + 1;
     }
 
-    private static Random randomNumberGenerator;
-    private static void initRNG() {
-        randomNumberGenerator = new Random();
-    }
+    private static Random randomNumberGenerator = new Random();
 
     public static Point dirToPoint(int dir) throws JonquerError {
-        switch (dir) {
+	switch (dir) {
 
-            case 0:
-                return new Point(0, 1);
-            case 1:
-                return new Point(-1, 1);
-            case 2:
-                return new Point(-1, 0);
-            case 3:
-                return new Point(-1, -1);
-            case 4:
-                return new Point(0, -1);
-            case 5:
-                return new Point(1, -1);
-            case 6:
-                return new Point(1, 0);
-            case 7:
-                return new Point(1, 1);
+	case 0:
+	    return new Point(0, 1);
+	case 1:
+	    return new Point(-1, 1);
+	case 2:
+	    return new Point(-1, 0);
+	case 3:
+	    return new Point(-1, -1);
+	case 4:
+	    return new Point(0, -1);
+	case 5:
+	    return new Point(1, -1);
+	case 6:
+	    return new Point(1, 0);
+	case 7:
+	    return new Point(1, 1);
 
-            default:
-                throw new JonquerError("Direction (" + dir + ") is invalid");
-        }
+	default:
+	    throw new JonquerError("Direction (" + dir + ") is invalid");
+	}
     }
 
     public static void createCharacter(Player p) {
-        Character character = p.getCharacter();
-        if (character.getProfession() == INTERN_TROJAN_PRO) {
-            character.setVitality((short) 3);
-            character.setSpirit((short) 0);
-            character.setAgility((short) 2);
-            character.setStrength((short) 5);
-        } else if (character.getProfession() == INTERN_WARRIOR_PRO) {
-            character.setVitality((short) 3);
-            character.setSpirit((short) 0);
-            character.setAgility((short) 2);
-            character.setStrength((short) 5);
-        } else if (character.getProfession() == INTERN_ARCHER_PRO) {
-            character.setVitality((short) 1);
-            character.setSpirit((short) 0);
-            character.setAgility((short) 7);
-            character.setStrength((short) 2);
-        } else if (character.getProfession() == INTERN_TAOIST_PRO) {
-            character.setVitality((short) 3);
-            character.setSpirit((short) 5);
-            character.setAgility((short) 2);
-            character.setStrength((short) 0);
-        }
+	Character character = p.getCharacter();
+	if (character.getProfession() == INTERN_TROJAN_PRO) {
+	    character.setVitality((short) 3);
+	    character.setSpirit((short) 0);
+	    character.setAgility((short) 2);
+	    character.setStrength((short) 5);
+	} else if (character.getProfession() == INTERN_WARRIOR_PRO) {
+	    character.setVitality((short) 3);
+	    character.setSpirit((short) 0);
+	    character.setAgility((short) 2);
+	    character.setStrength((short) 5);
+	} else if (character.getProfession() == INTERN_ARCHER_PRO) {
+	    character.setVitality((short) 1);
+	    character.setSpirit((short) 0);
+	    character.setAgility((short) 7);
+	    character.setStrength((short) 2);
+	} else if (character.getProfession() == INTERN_TAOIST_PRO) {
+	    character.setVitality((short) 3);
+	    character.setSpirit((short) 5);
+	    character.setAgility((short) 2);
+	    character.setStrength((short) 0);
+	}
 
-        character.setConquerPoints(0);
-        character.setMoney(100);
-        character.setLevel((byte) 1);
-        character.setMapid(1002);
-        character.setX((short) 438);
-        character.setY((short) 377);
-        character.setStats((short) 0);
-        character.setMana((short) 0); // ill fix mana up later
-        character.setSpouse("None");
-        character.setLife(character.getMaxlife());
+	character.setConquerPoints(0);
+	character.setMoney(100);
+	character.setLevel((byte) 1);
+	character.setMapid(1002);
+	character.setX((short) 438);
+	character.setY((short) 377);
+	character.setStats((short) 0);
+	character.setMana((short) 0); // ill fix mana up later
+	character.setSpouse("None");
+	character.setLife(character.getMaxlife());
 
     }
 
@@ -188,24 +201,24 @@ public class Formula {
      * @return whether or not these two characters are in view of one another.
      */
     public static boolean inView(Character a, Character b) {
-        return a.inview(b);
+	return a.inview(b);
     }
 
     public static boolean inFarView(Character you, Character them) {
-        return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;
+	return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;
     }
 
-//    public static boolean inFarView(Character you, Character them) {
-//	return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;
-//    }
-//
-//    public static boolean inView(int oldx, int oldy, int newx, int newy) {
-//	return Math.abs(oldy - newy) <= VIEW_RADIUS && Math.abs(oldx - newx) <= VIEW_RADIUS;
-//    }
-//
-//    public static boolean inFarView(int oldx, int oldy, int newx, int newy) {
-//	return Math.abs(oldy - newy) <= VIEW_RADIUS && Math.abs(oldx - newx) <= VIEW_RADIUS;
-//    }
+    //    public static boolean inFarView(Character you, Character them) {
+    //	return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;
+    //    }
+    //
+    //    public static boolean inView(int oldx, int oldy, int newx, int newy) {
+    //	return Math.abs(oldy - newy) <= VIEW_RADIUS && Math.abs(oldx - newx) <= VIEW_RADIUS;
+    //    }
+    //
+    //    public static boolean inFarView(int oldx, int oldy, int newx, int newy) {
+    //	return Math.abs(oldy - newy) <= VIEW_RADIUS && Math.abs(oldx - newx) <= VIEW_RADIUS;
+    //    }
     /**
      * Gets the distance between two points.
      *
@@ -217,12 +230,12 @@ public class Formula {
      * @return the distance between these two points.
      */
     public static double distance(int x1, int y1, int x2, int y2) {
-        x1 -= x2;
-        y1 -= y2;
-        return Math.sqrt(x1 * x1 + y1 * y1);
+	x1 -= x2;
+	y1 -= y2;
+	return Math.sqrt(x1 * x1 + y1 * y1);
     }
 
     public static boolean inFarView(int oldx, int oldy, int newx, int newy) {
-        return Math.abs(oldy - newy) <= VIEW_RADIUS && Math.abs(oldx - newx) <= VIEW_RADIUS;
+	return Math.abs(oldy - newy) <= VIEW_RADIUS && Math.abs(oldx - newx) <= VIEW_RADIUS;
     }
 }

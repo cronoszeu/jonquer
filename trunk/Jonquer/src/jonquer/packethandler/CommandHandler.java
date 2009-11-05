@@ -26,6 +26,10 @@ public class CommandHandler {
 	    }
 		
 	}
+	if(command("/job")) {
+	    player.getCharacter().setProfession((byte)Integer.parseInt(args[1]));
+	    player.getActionSender().sendHeroInfo();
+	}
 	if (command("/dc", "/disconnect", "/exit")) {
 	    player.destroy();
 	    return;
