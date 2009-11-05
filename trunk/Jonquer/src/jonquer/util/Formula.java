@@ -11,9 +11,6 @@ import jonquer.model.World;
 
 public class Formula {
 
-
-    private static Random rand = new Random();
-
     /** Update type constants. */
     public static final int HITPOINTS_UPDATE_TYPE = 0;
     public static final int MAX_HITPOINTS_UPDATE_TYPE = 1;
@@ -38,10 +35,8 @@ public class Formula {
     public static final int RAISE_FLAG_UPDATE_TYPE = 26;
     public static final int LUCKY_TIME_UPDATE_TYPE = 29;
     public static final int HAIR_STYLE_UPDATE_TYPE = 31;
-
-    /**
-     * Qualities of Armor/Weps.
-     */
+    
+    /** Item qualities. */
     public static final int FIXED = 0;
     public static final int NORMAL1 = 3;
     public static final int NORMAL2 = 4;
@@ -51,10 +46,7 @@ public class Formula {
     public static final int ELITE = 8;
     public static final int SUPER = 9;
 
-
-
     /** Message type constants */
-
     public static final short TALK_MESSAGE_TYPE = 2000;
     public static final short WHISPER_MESSAGE_TYPE = 2001;
     public static final short TEAM_MESSAGE_TYPE = 2003;
@@ -65,7 +57,6 @@ public class Formula {
     public static final short CREATE_ACCOUNT_MESSAGE_TYPE = 2100;
     public static final short DIALOG_MESSAGE_TYPE = 2101;
 
-    
     /** Equip slot constants. */
     public static final byte ARMET_EQUIP_SLOT = 1;
     public static final byte NECKLACE_BAG_EQUIP_SLOT = 2;
@@ -77,35 +68,37 @@ public class Formula {
     public static final byte BOOT_EQUIP_SLOT = 8;
     public static final byte GARMENT_EQUIP_SLOT = 9;
 
+    /** Basic character look constants. */
+    public static final short LARG_FEMALE_LOOK = 2002;
+    public static final short SMALL_FEMALE_LOOK = 2001;
+    public static final short LARGE_MALE_LOOK = 1004;
+    public static final short SMALL_MALE_LOOK = 1003;
 
-
-
-
-    public static final short MODEL_BIG_GIRL = 2002;
-    public static final short MODEL_SMALL_GIRL = 2001;
-    public static final short MODEL_BIG_BOY = 1004;
-    public static final short MODEL_SMALL_BOY = 1003;
-    public static final int JOB_INTERN_TROJAN = 10;
-    public static final int JOB_INTERN_WARRIOR = 20;
-    public static final int JOB_INTERN_ARCHER = 40;
-    public static final int JOB_INTERN_TAOIST = 100;
-
-
+    /** Intern character profession constants. */
+    public static final int INTERN_TROJAN_PRO = 10;
+    public static final int INTERN_WARRIOR_PRO = 20;
+    public static final int INTERN_ARCHER_PRO = 40;
+    public static final int INTERN_TAOIST_PRO = 100;
     public static final int VIEW_RADIUS = 15;
     public static final int FAR_VIEW_RADIUS = 30;
 
-
 //    public static final int VIEW_RADIUS = 16;
 //    public static final int FAR_VIEW_RADIUS = 30;
-
     /**
-     * Calculates the Total Health.
+     * A formula to retreive max life with the given stats.
+     *
+     * @param vitality the character's vitality.
+     * @param strength the character's strength.
+     * @param agility the character's agility.
+     * @param spirit the character's spirit.
+     *
+     * @return the max life.
      */
     public static short maxlife(short vitality, short strength, short agility, short spirit) {
         return (short) ((vitality * 24) +
-                        (strength *  3) +
-                        (agility  *  3) +
-                        (spirit   *  3));
+                (strength * 3) +
+                (agility * 3) +
+                (spirit * 3));
     }
 
     public static boolean isTileBlocked(int map, int x, int y) {
@@ -113,52 +106,60 @@ public class Formula {
     }
 
     public static int rand(int min, int max) {
-        return rand.nextInt(max - min + 1) + min;
+        if (randomNumberGenerator == null) {
+            initRNG();
+        }
+        return randomNumberGenerator.nextInt(max - min + 1) + min;
+    }
+
+    private static Random randomNumberGenerator;
+    private static void initRNG() {
+        randomNumberGenerator = new Random();
     }
 
     public static Point dirToPoint(int dir) throws JonquerError {
-	switch(dir) {
+        switch (dir) {
 
-	case 0: 
-	    return new Point(0, 1);
-	case 1: 
-	    return new Point(-1, 1);
-	case 2: 
-	    return new Point(-1, 0);
-	case 3: 
-	    return new Point(-1, -1);
-	case 4: 
-	    return new Point(0, -1);
-	case 5: 
-	    return new Point(1, -1);
-	case 6: 
-	    return new Point(1, 0);
-	case 7: 
-	    return new Point(1, 1);
+            case 0:
+                return new Point(0, 1);
+            case 1:
+                return new Point(-1, 1);
+            case 2:
+                return new Point(-1, 0);
+            case 3:
+                return new Point(-1, -1);
+            case 4:
+                return new Point(0, -1);
+            case 5:
+                return new Point(1, -1);
+            case 6:
+                return new Point(1, 0);
+            case 7:
+                return new Point(1, 1);
 
-	default:
-	    throw new JonquerError("Direction (" + dir + ") is invalid");
-	}
+            default:
+                throw new JonquerError("Direction (" + dir + ") is invalid");
+        }
     }
 
     public static void createCharacter(Player p) {
         Character character = p.getCharacter();
-        if (character.getProfession() == JOB_INTERN_TROJAN) {
+        if (character.getProfession() == INTERN_TROJAN_PRO) {
             character.setVitality((short) 3);
             character.setSpirit((short) 0);
             character.setAgility((short) 2);
             character.setStrength((short) 5);
-        } else if (character.getProfession() == JOB_INTERN_WARRIOR) {
+        } else if (character.getProfession() == INTERN_WARRIOR_PRO) {
             character.setVitality((short) 3);
             character.setSpirit((short) 0);
             character.setAgility((short) 2);
             character.setStrength((short) 5);
-        } else if (character.getProfession() == JOB_INTERN_ARCHER) {
+        } else if (character.getProfession() == INTERN_ARCHER_PRO) {
             character.setVitality((short) 1);
             character.setSpirit((short) 0);
             character.setAgility((short) 7);
             character.setStrength((short) 2);
-        } else if (character.getProfession() == JOB_INTERN_TAOIST) {
+        } else if (character.getProfession() == INTERN_TAOIST_PRO) {
             character.setVitality((short) 3);
             character.setSpirit((short) 5);
             character.setAgility((short) 2);
@@ -191,9 +192,8 @@ public class Formula {
     }
 
     public static boolean inFarView(Character you, Character them) {
-	return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;
+        return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;
     }
-
 
 //    public static boolean inFarView(Character you, Character them) {
 //	return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;
@@ -223,7 +223,6 @@ public class Formula {
     }
 
     public static boolean inFarView(int oldx, int oldy, int newx, int newy) {
-	return Math.abs(oldy - newy) <= VIEW_RADIUS && Math.abs(oldx - newx) <= VIEW_RADIUS;
+        return Math.abs(oldy - newy) <= VIEW_RADIUS && Math.abs(oldx - newx) <= VIEW_RADIUS;
     }
-
 }

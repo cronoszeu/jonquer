@@ -1,7 +1,6 @@
 package jonquer.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import jonquer.util.Formula;
 
 /**
@@ -273,11 +272,11 @@ public class Character implements Serializable {
         return deathTime;
     }
 
-    public void setExp(int exp) {
-        this.experience = exp;
+    public void Experience(int experience) {
+        this.experience = experience;
     }
 
-    public int getExp() {
+    public int getExperience() {
         return experience;
     }
 
