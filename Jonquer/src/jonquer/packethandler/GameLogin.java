@@ -48,6 +48,7 @@ public class GameLogin implements PacketHandler {
 	    player.getActionSender().sendHeroInfo();
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "ANSWER_OK");
 	    player.getActionSender().sendInventory();
+	    player.getActionSender().sendEquippedItems();
 	}
     }
 

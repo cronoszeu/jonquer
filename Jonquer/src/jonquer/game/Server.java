@@ -348,7 +348,7 @@ public class Server {
 			slot = 3;
 		    } else if(item.getID() >= 150000 && item.getID() < 159999) {
 			slot = 4;
-		    } else if(item.getID() >= 160000 && item.getID() < 160000) {
+		    } else if(item.getID() >= 160000 && item.getID() < 169999) {
 			slot = 5;
 		    } else if(item.getID() >= 410000 && item.getID() < 499999) {
 			slot = 20; // 1h
@@ -356,6 +356,8 @@ public class Server {
 			slot = 21; // 2h
 		    } else if(item.getID() >= 500000 && item.getID() < 599999) {
 			slot = 22; // bow
+		    } else if(item.getID() > 900000 && item.getID() < 991000) {
+			slot = 6; // shield
 		    }
 
 		    if(slot == 20) {

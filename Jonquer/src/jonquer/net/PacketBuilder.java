@@ -97,6 +97,23 @@ public class PacketBuilder {
             sendItem(i);
         }
     }
+    
+    public void sendAllProf() {
+	for(int i=0; i < 20; i++)
+	    if(player.getCharacter().getProficiency_level()[i] > 0)
+		sendProf(i, player.getCharacter().getProficiency_level()[i], player.getCharacter().getProficiency()[i]);
+    }
+    
+    public void sendProf(int type, int lv, int exp) {
+	ByteBuffer bb = ByteBuffer.allocate(16);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+        bb.putShort(0, (short) bb.limit());
+        bb.putShort(2, (short) 0x401); // packet id
+        bb.putInt(4, type);
+        bb.putInt(8, lv);
+        bb.putInt(12, exp);
+        write(bb);
+    }
 
     public void sendItem(Item i) {
         ByteBuffer bb = ByteBuffer.allocate(36);
@@ -235,10 +252,14 @@ public class PacketBuilder {
         bb.putInt(12, hero.getStats());
         bb.putShort(48, hero.getLife());
         bb.put(50, (byte) hero.getLevel());
-        //bb.putInt(28, ); head id
-        //bb.putInt(32, ); armor id
-        //bb.putInt(36, ); right hand id
-        //bb.putInt(40, ); left hand id
+        if(hero.getEquipment().getHead() != null)
+            bb.putInt(28, hero.getEquipment().getHead().getID()); //head id
+        if(hero.getEquipment().getArmor() != null)
+            bb.putInt(32, hero.getEquipment().getArmor().getID()); 
+        if(hero.getEquipment().getRight_hand() != null)
+            bb.putInt(36, hero.getEquipment().getRight_hand().getID());
+        if(hero.getEquipment().getLeft_hand() != null)
+            bb.putInt(40, hero.getEquipment().getLeft_hand().getID());
         bb.putShort(52, hero.getX());
         bb.putShort(54, hero.getY());
         bb.putShort(56, (short) hero.getHairstyle()); // hair
@@ -359,6 +380,30 @@ public class PacketBuilder {
         bb.put(10, (byte) 255);
         bb.put(11, (byte) 100);
         write(bb);
+    }
+    
+    public void sendEquippedItems() {
+	if(player.getCharacter().getEquipment().getHead() != null) {
+	    sendEquippedItem(player.getCharacter().getEquipment().getHead(), Formula.ARMET_EQUIP_SLOT);
+	}
+	if(player.getCharacter().getEquipment().getRing() != null) {
+	    sendEquippedItem(player.getCharacter().getEquipment().getRing(), Formula.RIGHT_WEAPON_EQUIP_SLOT);
+	}
+	if(player.getCharacter().getEquipment().getBoots() != null) {
+	    sendEquippedItem(player.getCharacter().getEquipment().getBoots(), Formula.BOOT_EQUIP_SLOT);
+	}
+	if(player.getCharacter().getEquipment().getArmor() != null) {
+	    sendEquippedItem(player.getCharacter().getEquipment().getArmor(), Formula.ARMOR_EQUIP_SLOT);
+	}
+	if(player.getCharacter().getEquipment().getNeck() != null) {
+	    sendEquippedItem(player.getCharacter().getEquipment().getNeck(), Formula.NECKLACE_BAG_EQUIP_SLOT);
+	}
+	if(player.getCharacter().getEquipment().getLeft_hand() != null) {
+	    sendEquippedItem(player.getCharacter().getEquipment().getLeft_hand(), Formula.LEFT_WEAPON_EQUIP_SLOT);
+	}
+	if(player.getCharacter().getEquipment().getRight_hand() != null) {
+	    sendEquippedItem(player.getCharacter().getEquipment().getRight_hand(), Formula.RIGHT_WEAPON_EQUIP_SLOT);
+	}
     }
 
     public void sendEquippedItem(Item item, byte slot) {

@@ -113,6 +113,14 @@ public class Item implements Serializable {
 	return durability == -1 && plus == 0 && bless == 0 && enchant == 0 && soc1 == 0 && soc2 == 0;
     }
     
+    public Item clone() {
+	Item i = new Item(getID(), getPlus(), getBless(), getEnchant(), getSoc1(), getSoc2());
+	i.arrowAmount = arrowAmount;
+	i.durability = durability;
+	i.UID = UID;
+	return i;
+    }
+    
     // for arrows.
     private int arrowAmount = 50;
     private int durability = -1;
