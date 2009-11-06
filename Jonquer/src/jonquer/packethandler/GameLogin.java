@@ -1,8 +1,12 @@
 package jonquer.packethandler;
 
+import java.util.ArrayList;
+
 import jonquer.debug.Log;
 import jonquer.misc.Formula;
 import jonquer.misc.Tools;
+import jonquer.model.Monster;
+import jonquer.model.Npc;
 import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.net.StaticPacketBuilder;
@@ -39,10 +43,12 @@ public class GameLogin implements PacketHandler {
 	    Log.error("Error @ GameLogin 02");
 	    player.destroy(true);
 	}
-	
+
 	player.setCharacter(Tools.loadCharacter(player.getCharacter().getAccount()));
+	player.getCharacter().setNpcsInView(new ArrayList<Npc>());
+	player.getCharacter().setMonstersInView(new ArrayList<Monster>());
 	player.getCharacter().setID(id);
-	
+
 
 	if(player.getCharacter().getSpouse() == null) {
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "NEW_ROLE");
