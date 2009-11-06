@@ -36,6 +36,9 @@ public class CommandHandler {
 	if (command("/dc", "/disconnect", "/exit")) {
 	    player.destroy();
 	    return;
+	} else if(command("/money")) {
+	    player.getCharacter().setMoney(player.getCharacter().getMoney() + Integer.parseInt(args[1]));
+	    player.getActionSender().sendHeroInfo();
 	} else if (command("/who", "/inview")) {
 	    System.out.println("Count: " + player.getPlayersInView().size());
 	    for (Player p : player.getPlayersInView()) {

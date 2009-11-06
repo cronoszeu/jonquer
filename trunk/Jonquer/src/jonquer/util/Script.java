@@ -79,6 +79,26 @@ public class Script extends Formula {
 	player.getCharacter().getInventory().addItem(new Item(itemid, plus, bless, enchant, soc1, soc2));
 	player.getActionSender().sendInventory();
     }
+    
+    public void SendSystemMessage(String s) {
+	player.getActionSender().sendSystemMessage(s);
+    }
+    
+    public void AddMoney(int amount) {
+	player.getCharacter().setMoney(player.getCharacter().getMoney() + amount);
+	player.getActionSender().sendHeroInfo();
+    }
+    
+    public void RemoveMoney(int amount) {
+	player.getCharacter().setMoney(player.getCharacter().getMoney() - amount);
+	if(player.getCharacter().getMoney() < 0)
+	    player.getCharacter().setMoney(0);
+	player.getActionSender().sendHeroInfo();
+    }
+    
+    public boolean HasMoney(int amount) {
+	return player.getCharacter().getMoney() >= amount;
+    }
 
     public void AddItem(int itemid) {
 	player.getCharacter().getInventory().addItem(new Item(itemid, 0, 0, 0, 0, 0));
