@@ -46,8 +46,10 @@ public class Player {
 	currentIP = ((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress();
 	currentLogin = System.currentTimeMillis();
 	actionSender = new PacketBuilder(this);
+	getCharacter().setNpcsInView(new ArrayList<Npc>());
+	getCharacter().setMonstersInView(new ArrayList<Monster>());
 	world.getPlayers().add(this);
-    }//getMapid() == 
+    }
 
     /**
      * 
@@ -109,42 +111,52 @@ public class Player {
 	getActionSender().sendProf(i, getCharacter().getProficiency_level()[i], getCharacter().getProficiency()[i]);
     }
 
+
+
     public void move(int prevX, int prevY, ByteBuffer bb) {
 	getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
 	for (Player p : getMap().getPlayers().values()) {
 	    if (p != this) {
-		
-		    if (Formula.distance(prevX, prevY, p.getCharacter().getX(), p.getCharacter().getY()) <= Character.VIEW_RANGE) { // in prev view
-			if (Formula.inView(getCharacter(), p.getCharacter())) {
-			    p.getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
-			    continue;
-			} else { // we have left the view
-			    p.getActionSender().removeEntity(this);
-			    getActionSender().removeEntity(p);
-			    continue;
-			}
-		    } else { // prev location is not in view
-			if (Formula.inView(getCharacter(), p.getCharacter())) { // new loc is in view
-			    getActionSender().sendSpawnPacket(p.getCharacter());
-			    p.getActionSender().sendSpawnPacket(getCharacter());
-			    continue;
-			}
+		if (Formula.distance(prevX, prevY, p.getCharacter().getX(), p.getCharacter().getY()) <= Character.VIEW_RANGE) { // in prev view
+		    if (Formula.inView(getCharacter(), p.getCharacter())) {
+			p.getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
+			continue;
+		    } else { // we have left the view
+			p.getActionSender().removeEntity(this);
+			getActionSender().removeEntity(p);
+			continue;
 		    }
-		
+		} else { // prev location is not in view
+		    if (Formula.inView(getCharacter(), p.getCharacter())) { // new loc is in view
+			getActionSender().sendSpawnPacket(p.getCharacter());
+			p.getActionSender().sendSpawnPacket(getCharacter());
+			continue;
+		    }
+		}
 	    }
 	}
 
 	for (Npc npc : World.getWorld().getNpcs()) {
 	    if (npc.getMapid() == getCharacter().getMapid()) {
 		if (Formula.distance(getCharacter().getX(), getCharacter().getY(), npc.getCellx(), npc.getCelly()) <= Character.VIEW_RANGE) {
-		    getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
+		    if(!getCharacter().getNpcsInView().contains(npc)) {
+			getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
+			getCharacter().getNpcsInView().add(npc);
+		    }
+		} else if(getCharacter().getNpcsInView().contains(npc)) {
+		    getCharacter().getNpcsInView().remove(npc);
 		}
 	    }
 	}
 	for (Monster monster : getMap().getMonsters().values()) {	   
-		if (Formula.distance(getCharacter().getX(), getCharacter().getY(), monster.getX(), monster.getY()) <= Character.VIEW_RANGE) {
+	    if (Formula.distance(getCharacter().getX(), getCharacter().getY(), monster.getX(), monster.getY()) <= Character.VIEW_RANGE) {
+		if(!getCharacter().getMonstersInView().contains(monster)) {
 		    getActionSender().sendMonsterSpawn(monster);
-		}	    
+		    getCharacter().getMonstersInView().add(monster);
+		}
+	    } else if(getCharacter().getMonstersInView().contains(monster)) {
+		    getCharacter().getMonstersInView().remove(monster);
+		}    
 	}
     }
 
@@ -183,7 +195,7 @@ public class Player {
 	    world.getPlayers().remove(this);
 	    getMap().removePlayer(this);
 	} catch (ConcurrentModificationException cme) { }
-	
+
 	save();
 	if (this.getCharacter() != null && this.getCharacter().getName() != null) {
 	    Log.debug(this.getCharacter().getName() + " has Left the server");

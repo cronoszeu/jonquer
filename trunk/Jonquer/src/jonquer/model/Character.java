@@ -1,8 +1,10 @@
 package jonquer.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import jonquer.misc.Formula;
+import jonquer.misc.SerializedArrayList;
 
 /**
  * Represents a Character.
@@ -190,7 +192,6 @@ public class Character implements Serializable {
 	    }
 	    this.mapid = mapid;
 	} catch (Exception e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
     }
@@ -318,6 +319,20 @@ public class Character implements Serializable {
 
     public int getVirtuePoints() {
 	return virtuePoints;
+    }
+    public void setNpcsInView(ArrayList<Npc> npcsInView) {
+	this.npcsInView = npcsInView;
+    }
+
+    public ArrayList<Npc> getNpcsInView() {
+	return npcsInView;
+    }
+    public void setMonstersInView(ArrayList<Monster> monstersInView) {
+	this.monstersInView = monstersInView;
+    }
+
+    public ArrayList<Monster> getMonstersInView() {
+	return monstersInView;
     }
     /**
      * The Character's name
@@ -463,4 +478,12 @@ public class Character implements Serializable {
       * Stores the levels of proficiency
       */
      private int[] proficiency_level = new int[20000];
+     /**
+      * View'd npcs.
+      */
+     private transient ArrayList<Npc> npcsInView;
+     /**
+      * View'd monsters
+      */
+     private transient ArrayList<Monster> monstersInView;
 }

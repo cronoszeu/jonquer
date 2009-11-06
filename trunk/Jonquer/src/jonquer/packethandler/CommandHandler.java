@@ -44,6 +44,7 @@ public class CommandHandler {
 	    for (Player p : player.getPlayersInView()) {
 		System.out.println(p.getCharacter().getName());
 	    }
+	    System.out.println("NPCS: " + player.getCharacter().getNpcsInView().size() + " / Monsters: " + player.getCharacter().getMonstersInView().size());
 	} else if (command("/refresh", "/update")) {
 	    player.updateMeToOthers();
 	    player.updateOthersToMe();
