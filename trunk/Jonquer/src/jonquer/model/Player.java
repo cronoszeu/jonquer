@@ -12,12 +12,12 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import jonquer.debug.Log;
-import jonquer.game.Constants;
+import jonquer.misc.Constants;
+import jonquer.misc.Crypto;
+import jonquer.misc.Formula;
+import jonquer.misc.Script;
+import jonquer.misc.StaticData;
 import jonquer.net.PacketBuilder;
-import jonquer.util.Crypto;
-import jonquer.util.Formula;
-import jonquer.util.Script;
-import jonquer.util.StaticData;
 
 import org.apache.mina.common.IoSession;
 
@@ -41,12 +41,13 @@ public class Player {
 	id = Formula.rand(0, 1000001);
 	crypt = new Crypto();
 	setCharacter(new Character(id));
+	getCharacter().ourPlayer = this;
 	session = sess;
 	currentIP = ((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress();
 	currentLogin = System.currentTimeMillis();
 	actionSender = new PacketBuilder(this);
 	world.getPlayers().add(this);
-    }
+    }//getMapid() == 
 
     /**
      * 
@@ -88,7 +89,7 @@ public class Player {
 	return this.session;
     }
 
-  
+
 
     public void addProfExp(int i, int exp) {
 	if(getCharacter().getProficiency_level()[i] >= 20)
@@ -110,9 +111,9 @@ public class Player {
 
     public void move(int prevX, int prevY, ByteBuffer bb) {
 	getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
-	for (Player p : World.getWorld().getPlayers()) {
+	for (Player p : getMap().getPlayers().values()) {
 	    if (p != this) {
-		if (p.getCharacter().getMapid() == getCharacter().getMapid()) {
+		
 		    if (Formula.distance(prevX, prevY, p.getCharacter().getX(), p.getCharacter().getY()) <= Character.VIEW_RANGE) { // in prev view
 			if (Formula.inView(getCharacter(), p.getCharacter())) {
 			    p.getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
@@ -129,24 +130,26 @@ public class Player {
 			    continue;
 			}
 		    }
-		}
+		
 	    }
 	}
 
-	for (Npc npc : StaticData.npcs) {
+	for (Npc npc : World.getWorld().getNpcs()) {
 	    if (npc.getMapid() == getCharacter().getMapid()) {
 		if (Formula.distance(getCharacter().getX(), getCharacter().getY(), npc.getCellx(), npc.getCelly()) <= Character.VIEW_RANGE) {
 		    getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
 		}
 	    }
 	}
-	for (Monster monster : World.getWorld().getMonsters()) {
-	    if (monster.getMap() == getCharacter().getMapid() && monster != null) {
+	for (Monster monster : getMap().getMonsters().values()) {	   
 		if (Formula.distance(getCharacter().getX(), getCharacter().getY(), monster.getX(), monster.getY()) <= Character.VIEW_RANGE) {
 		    getActionSender().sendMonsterSpawn(monster);
-		}
-	    }
+		}	    
 	}
+    }
+
+    public Map getMap() {
+	return World.getWorld().getMaps().get(getCharacter().getMapid());
     }
 
     public void save() {
@@ -168,21 +171,19 @@ public class Player {
      */
     public void destroy() {
 
-	for (Player p : World.getWorld().getPlayers()) {
-	    if (p.getCharacter().getMapid() == getCharacter().getMapid()) {
-		if (p != this) {
-		    if (Formula.inView(getCharacter(), p.getCharacter())) {
-			p.getActionSender().removeEntity(this);
-			getActionSender().removeEntity(p);
-		    }
+	for(Player p : getMap().getPlayers().values())
+	    if (p != this) {
+		if (Formula.inView(getCharacter(), p.getCharacter())) {
+		    p.getActionSender().removeEntity(this);
+		    getActionSender().removeEntity(p);
 		}
 	    }
-	}
 
 	try {
 	    world.getPlayers().remove(this);
-	} catch (ConcurrentModificationException cme) {
-	}
+	    getMap().removePlayer(this);
+	} catch (ConcurrentModificationException cme) { }
+	
 	save();
 	if (this.getCharacter() != null && this.getCharacter().getName() != null) {
 	    Log.debug(this.getCharacter().getName() + " has Left the server");
@@ -302,42 +303,42 @@ public class Player {
      * Dispatches a thread to run this NpcScript.
      * @param id - the NPC ID.
      */
-     public void runScript(final int id) {
-	 final Player p = this;
-	 new Thread(new Runnable() {
+    public void runScript(final int id) {
+	final Player p = this;
+	new Thread(new Runnable() {
 
-	     public void run() {
-		 script = new Script(p, StaticData.npcScripts.get(id));
-	     }
-	 }).start();
-     }
+	    public void run() {
+		script = new Script(p, StaticData.npcScripts.get(id));
+	    }
+	}).start();
+    }
 
-     public Script getScript() {
-	 return script;
-     }
+    public Script getScript() {
+	return script;
+    }
 
-     public void setInterpreter(Interpreter interpreter) {
-	 this.interpreter = interpreter;
-     }
+    public void setInterpreter(Interpreter interpreter) {
+	this.interpreter = interpreter;
+    }
 
-     public Interpreter getInterpreter() {
-	 return interpreter;
-     }
-     /**
-      * List of players in your view area.
-      */
-     private int lastOption = -1;
-     private Script script = null;
-     private Interpreter interpreter = new Interpreter();
-     private ArrayList<Player> playersInView = new ArrayList<Player>();
-     public static final World world = World.getWorld();
-     private boolean locked = false;
-     public Crypto crypt;
-     private Character character;
-     private List<Packet> incomingPackets = Collections.synchronizedList(new ArrayList<Packet>());
-     private List<Packet> outgoingPackets = Collections.synchronizedList(new ArrayList<Packet>());
-     private String currentIP;
-     private long currentLogin;
-     private PacketBuilder actionSender;
-     private IoSession session;
+    public Interpreter getInterpreter() {
+	return interpreter;
+    }
+    /**
+     * List of players in your view area.
+     */
+    private int lastOption = -1;
+    private Script script = null;
+    private Interpreter interpreter = new Interpreter();
+    private ArrayList<Player> playersInView = new ArrayList<Player>();
+    public static final World world = World.getWorld();
+    private boolean locked = false;
+    public Crypto crypt;
+    private Character character;
+    private List<Packet> incomingPackets = Collections.synchronizedList(new ArrayList<Packet>());
+    private List<Packet> outgoingPackets = Collections.synchronizedList(new ArrayList<Packet>());
+    private String currentIP;
+    private long currentLogin;
+    private PacketBuilder actionSender;
+    private IoSession session;
 }

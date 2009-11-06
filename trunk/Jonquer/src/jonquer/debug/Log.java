@@ -4,7 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-import jonquer.game.Constants;
+import jonquer.misc.Constants;
 
 /**
  * the Logging class to log events.

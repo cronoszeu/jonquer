@@ -1,6 +1,6 @@
 package jonquer.model.def;
 
-import jonquer.util.Formula;
+import jonquer.misc.Formula;
 
 /**
  * Represents a Conquer Item-Definition.

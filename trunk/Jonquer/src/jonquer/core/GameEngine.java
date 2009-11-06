@@ -1,10 +1,11 @@
-package jonquer.game;
+package jonquer.core;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import jonquer.debug.Log;
-import jonquer.delay.DelayedAbstractEvent;
+import jonquer.event.DelayedAbstractEvent;
+import jonquer.misc.Constants;
 import jonquer.model.Packet;
 import jonquer.model.Player;
 import jonquer.model.World;

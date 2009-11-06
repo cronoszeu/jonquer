@@ -4,11 +4,11 @@ import java.awt.Point;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import jonquer.misc.Formula;
+import jonquer.misc.StaticData;
 import jonquer.model.Npc;
 import jonquer.model.Player;
 import jonquer.model.World;
-import jonquer.util.Formula;
-import jonquer.util.StaticData;
 
 public class WalkHandler implements PacketHandler {
 

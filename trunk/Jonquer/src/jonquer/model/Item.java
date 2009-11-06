@@ -2,9 +2,9 @@ package jonquer.model;
 
 import java.io.Serializable;
 
+import jonquer.misc.Formula;
+import jonquer.misc.StaticData;
 import jonquer.model.def.COItemDef;
-import jonquer.util.Formula;
-import jonquer.util.StaticData;
 
 /**
  * This class represents an Item in Conquer.

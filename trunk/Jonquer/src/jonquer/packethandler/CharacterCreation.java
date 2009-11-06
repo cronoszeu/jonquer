@@ -4,12 +4,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import jonquer.debug.Log;
-import jonquer.delay.Delay;
+import jonquer.event.Delay;
+import jonquer.misc.Formula;
+import jonquer.misc.StaticData;
+import jonquer.misc.Tools;
 import jonquer.model.Player;
 import jonquer.model.World;
-import jonquer.util.Formula;
-import jonquer.util.StaticData;
-import jonquer.util.Tools;
 
 public class CharacterCreation implements PacketHandler {
 
@@ -53,14 +53,11 @@ public class CharacterCreation implements PacketHandler {
 	    player.getCharacter().setLook(model);
 	    player.getCharacter().setFace((short)avatar);
 	    player.getCharacter().setProfession(job);
+	    player.getCharacter().ourPlayer = player;
 
 	    Formula.createCharacter(player);
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.CREATE_ACCOUNT_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "ANSWER_OK");
-	    World.getWorld().getDelayedEventHandler().add(new Delay(1000, player) {
-		public void execute() {
-		    player.destroy();
-		}
-	    });
+
             player.destroy();
 	}
     }

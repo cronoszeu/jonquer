@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import jonquer.debug.JonquerError;
+import jonquer.debug.Log;
 
 public class Map {
 
@@ -48,6 +49,12 @@ public class Map {
 
     public void addPlayer(Player p) throws Exception {
 	    if (!getPlayers().containsValue(p)) {
+		if(getPlayers() == null)
+		    Log.log("null1");
+		if(p == null)
+		    Log.log("null2");
+		if(p.getCharacter() == null)
+		    Log.log("null3");
 		getPlayers().put(p.getCharacter().getID(), p);
 	    } else {
 		throw new JonquerError("Error!! Player already exists in collection");

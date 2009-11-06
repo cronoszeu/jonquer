@@ -3,9 +3,9 @@ package jonquer.packethandler;
 import java.nio.ByteOrder;
 
 import jonquer.debug.Log;
+import jonquer.misc.Formula;
 import jonquer.model.Player;
 import jonquer.model.World;
-import jonquer.util.Formula;
 
 import java.nio.ByteBuffer;
 
@@ -48,8 +48,8 @@ public class ChatHandler implements PacketHandler {
 	    }
 	    // talk
 	    if(type == Formula.TALK_MESSAGE_TYPE) {
-		for(Player p : World.getWorld().getPlayers()) {
-		    if(p.getCharacter().getMapid() == player.getCharacter().getMapid() && p != player) {
+		for(Player p : player.getMap().getPlayers().values()) {
+		    if(p != player) {
 			if(Math.abs(p.getCharacter().getX() - player.getCharacter().getX()) <= 25 && Math.abs(p.getCharacter().getY() - player.getCharacter().getY()) <= 25) {
 			    p.getActionSender().sendMessage(0xFFFFF, Formula.TALK_MESSAGE_TYPE, player.getCharacter().getName(), to, msg);
 			}

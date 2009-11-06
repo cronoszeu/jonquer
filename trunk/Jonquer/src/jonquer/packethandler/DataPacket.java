@@ -4,21 +4,17 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import jonquer.debug.Log;
+import jonquer.misc.Formula;
+import jonquer.misc.StaticData;
 import jonquer.model.Monster;
 import jonquer.model.Npc;
 import jonquer.model.Player;
 import jonquer.model.Character;
 import jonquer.model.World;
-import jonquer.util.Formula;
-import jonquer.util.StaticData;
 
 public class DataPacket implements PacketHandler {
 
     public void handlePacket(Player player, byte[] packet) throws Exception {
-
-
-	
-
 
 	ByteBuffer bb = ByteBuffer.wrap(packet);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
@@ -38,13 +34,13 @@ public class DataPacket implements PacketHandler {
 
 	case 81: // actions
 	    player.getCharacter().setAction(bb.get(12));
-	    for (Player p : player.getPlayersInView()) {
+	    for (Player p : player.getMap().getPlayers().values()) {
 		if (p != player) {
-		    if (p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
+		    
 			if (Formula.inView(p.getCharacter(), player.getCharacter())) {
 			    p.getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
 			}
-		    }
+		    
 		}
 	    }
 	    //player.updateMeToOthers();
@@ -67,15 +63,15 @@ public class DataPacket implements PacketHandler {
 		    }
 		}
 	    }
-	    for (Npc npc : StaticData.npcs) {
+	    for (Npc npc : World.getWorld().getNpcs()) {
 		if (npc.getMapid() == player.getCharacter().getMapid()) {
 		    if (Formula.distance(player.getCharacter().getX(), player.getCharacter().getY(), npc.getCellx(), npc.getCelly()) <= Character.VIEW_RANGE) {
 			player.getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
 		    }
 		}
 	    }
-	    for (Monster monster : World.getWorld().getMonsters()) {
-		if (monster.getMap() == player.getCharacter().getMapid() && monster != null) {
+	    for (Monster monster : player.getMap().getMonsters().values()) {
+		if (monster != null) {
 		    if (Formula.distance(player.getCharacter().getX(), player.getCharacter().getY(), monster.getX(), monster.getY()) <= Character.VIEW_RANGE) {
 			player.getActionSender().sendMonsterSpawn(monster);
 		    }

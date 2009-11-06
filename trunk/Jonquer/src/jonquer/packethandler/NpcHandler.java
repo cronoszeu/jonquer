@@ -3,8 +3,8 @@ package jonquer.packethandler;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import jonquer.misc.StaticData;
 import jonquer.model.Player;
-import jonquer.util.StaticData;
 
 public class NpcHandler implements PacketHandler {
 

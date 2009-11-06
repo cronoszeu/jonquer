@@ -1,11 +1,11 @@
 package jonquer.packethandler;
 
 import jonquer.debug.Log;
+import jonquer.misc.Formula;
+import jonquer.misc.Tools;
 import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.net.StaticPacketBuilder;
-import jonquer.util.Formula;
-import jonquer.util.Tools;
 
 /**
  * the 'language' packet 0x41c
@@ -42,11 +42,14 @@ public class GameLogin implements PacketHandler {
 	
 	player.setCharacter(Tools.loadCharacter(player.getCharacter().getAccount()));
 	player.getCharacter().setID(id);
+	
 
 	if(player.getCharacter().getSpouse() == null) {
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "NEW_ROLE");
 	} else {
 	    Log.debug("Logged In: " + player.getCharacter().getName());
+	    World.getWorld().getMaps().get(player.getCharacter().getMapid()).addPlayer(player);
+	    player.getCharacter().ourPlayer = player;
 	    player.getActionSender().sendHeroInfo();
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "ANSWER_OK");
 	    player.getActionSender().sendInventory();

@@ -1,4 +1,4 @@
-package jonquer.game;
+package jonquer.core;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +14,10 @@ import java.util.Properties;
 import java.util.concurrent.Executors;
 
 import jonquer.debug.Log;
+import jonquer.misc.Constants;
+import jonquer.misc.Formula;
+import jonquer.misc.StaticData;
+import jonquer.misc.Tools;
 import jonquer.model.Map;
 import jonquer.model.Npc;
 import jonquer.model.World;
@@ -24,9 +28,6 @@ import jonquer.model.def.COItemDef.ClassRequired;
 import jonquer.net.AuthConnectionHandler;
 import jonquer.net.GameConnectionHandler;
 import jonquer.packethandler.PacketHandler;
-import jonquer.util.Formula;
-import jonquer.util.StaticData;
-import jonquer.util.Tools;
 
 import org.apache.mina.common.IoAcceptor;
 import org.apache.mina.common.IoAcceptorConfig;
@@ -489,7 +490,7 @@ public class Server {
 			throw new Exception("Invalid Npc data.");
 		    }
 		    count++;
-		    StaticData.npcs.add(new Npc(id, ownerid, playerid, name, type, lookface, idxserver, mapid, cellx, celly, task0, task1, task2, task3, task4, task5, task6, task7, data0, data1, data2, data3, datastr, linkid, life, maxlife, base, sort, itemid));
+		    World.getWorld().getNpcs().add(new Npc(id, ownerid, playerid, name, type, lookface, idxserver, mapid, cellx, celly, task0, task1, task2, task3, task4, task5, task6, task7, data0, data1, data2, data3, datastr, linkid, life, maxlife, base, sort, itemid));
 		} catch (Exception ex) {
 		    ex.printStackTrace();
 		    Log.log("Npc " + id + " not loaded. Invalid Npc data.");
