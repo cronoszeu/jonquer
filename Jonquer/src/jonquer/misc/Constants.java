@@ -1,4 +1,4 @@
-package jonquer.game;
+package jonquer.misc;
 
 import java.io.File;
 

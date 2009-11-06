@@ -1,9 +1,9 @@
 package jonquer.model;
 
-import jonquer.game.Constants;
+import jonquer.misc.Constants;
+import jonquer.misc.StaticData;
 import jonquer.model.def.COMonsterDef;
 import jonquer.model.def.COMonsterSpawnDef;
-import jonquer.util.StaticData;
 
 public class Monster {
     
@@ -45,6 +45,10 @@ public class Monster {
     public int getY() {
         return y;
     }
+    
+    public Map getMap() {
+	return World.getWorld().getMaps().get(getSpawnDef().getMapid());
+    }
     public void setY(int y) {
         this.y = y;
     }
@@ -75,7 +79,7 @@ public class Monster {
     public void setMap(int map) {
 	this.map = map;
     }
-    public int getMap() {
+    public int getMapID() {
 	return map;
     }
 

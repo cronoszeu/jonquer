@@ -4,16 +4,18 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import jonquer.delay.DelayedAbstractEvent;
-import jonquer.game.GameEngine;
-import jonquer.game.Server;
+import jonquer.core.GameEngine;
+import jonquer.core.Server;
+import jonquer.debug.Log;
+import jonquer.event.DelayedAbstractEvent;
+import jonquer.misc.Formula;
+import jonquer.misc.StaticData;
 import jonquer.model.def.COMonsterSpawnDef;
 import jonquer.packethandler.PacketHandler;
-import jonquer.util.Formula;
-import jonquer.util.StaticData;
 
 /**
  * the singleton World class, should be able to access most of the server from
@@ -82,36 +84,33 @@ public class World {
     }
 
     public void spawnNpcs() {
-	for(COMonsterSpawnDef spawndef : StaticData.monsterSpawnDefs.values()) {
-	    int count = spawndef.getMaxNpcs();  
-	    for(int i=0; i < count; i++) {
-		int x;
-		if(spawndef.getBound_cx() > 0)
-		    x = Formula.rand(spawndef.getBound_x(), spawndef.getBound_x() + spawndef.getBound_cx());
-		else
-		    x = spawndef.getBound_x();
-		int y;
-		if(spawndef.getBound_cy() > 0)
-		    y = Formula.rand(spawndef.getBound_y(), spawndef.getBound_y() + spawndef.getBound_cy());
-		else
-		    y = spawndef.getBound_y();
-		getMonsters().add(new Monster(spawndef.getNpctype(), x, y, spawndef.getMapid(), spawndef.getId()));
+	try {
+	    for(COMonsterSpawnDef spawndef : StaticData.monsterSpawnDefs.values()) {
+		int count = spawndef.getMaxNpcs();  
+		for(int i=0; i < count; i++) {
+		    int x;
+		    if(spawndef.getBound_cx() > 0)
+			x = Formula.rand(spawndef.getBound_x(), spawndef.getBound_x() + spawndef.getBound_cx());
+		    else
+			x = spawndef.getBound_x();
+		    int y;
+		    if(spawndef.getBound_cy() > 0)
+			y = Formula.rand(spawndef.getBound_y(), spawndef.getBound_y() + spawndef.getBound_cy());
+		    else
+			y = spawndef.getBound_y();
+		   
+		    if(getMaps().get(spawndef.getMapid()) == null)
+			continue;
+		    Monster m = new Monster(spawndef.getNpctype(), x, y, spawndef.getMapid(), spawndef.getId());
+		    getMonsters().add(m);
+		    getMaps().get(spawndef.getMapid()).addMonster(m);
+		}
 	    }
+	} catch(Exception e) {
+	    Log.error(e);
 	}
     }
 
-    public void playerMove(Player player, ByteBuffer data, int prevX, int prevY) {
-	byte[] buff = data.array().clone();
-	for(Player p : getPlayers()) {
-	    if(p != player)
-		if(p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
-		    if(p.getCharacter().inview(player.getCharacter())) {
-			System.out.println(buff[5]);
-			p.getActionSender().write(ByteBuffer.wrap(buff));
-		    }
-		}
-	}
-    }
 
     /**
      * 
@@ -143,6 +142,14 @@ public class World {
 
     public HashMap<Integer, Map> getMaps() {
 	return maps;
+    }
+
+    public void setNpcs(HashSet<Npc> npcs) {
+	this.npcs = npcs;
+    }
+
+    public HashSet<Npc> getNpcs() {
+	return npcs;
     }
 
     /**
@@ -187,6 +194,10 @@ public class World {
      * the Single instance of this World.
      */
     public static World world;
+    /**
+     * All NPC definitions, @todo needs work
+     */
+    private HashSet<Npc> npcs = new HashSet<Npc>();
 
     public static int PLAYER_INDEXES = 0;
 }

@@ -1,6 +1,6 @@
 package jonquer.debug;
 
-import jonquer.game.Constants;
+import jonquer.misc.Constants;
 
 public class JonquerError extends Exception {
     

@@ -1,11 +1,11 @@
 package jonquer.packethandler;
 
 import jonquer.debug.Log;
+import jonquer.misc.Formula;
+import jonquer.misc.StaticData;
+import jonquer.misc.Tools;
 import jonquer.model.Character;
 import jonquer.model.Player;
-import jonquer.util.Formula;
-import jonquer.util.StaticData;
-import jonquer.util.Tools;
 
 /**
  * Check and authorize the player to login.

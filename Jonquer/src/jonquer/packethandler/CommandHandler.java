@@ -1,12 +1,12 @@
 package jonquer.packethandler;
 
 import jonquer.debug.Log;
+import jonquer.misc.Formula;
+import jonquer.misc.StaticData;
 import jonquer.model.Item;
 import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.model.def.COItemDef;
-import jonquer.util.Formula;
-import jonquer.util.StaticData;
 
 public class CommandHandler {
 

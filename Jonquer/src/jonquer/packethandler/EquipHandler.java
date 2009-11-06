@@ -3,12 +3,12 @@ package jonquer.packethandler;
 import java.nio.ByteBuffer;
 
 import jonquer.debug.Log;
+import jonquer.misc.Formula;
 import jonquer.model.Equipment;
 import jonquer.model.Inventory;
 import jonquer.model.Item;
 import jonquer.model.Player;
 import jonquer.model.World;
-import jonquer.util.Formula;
 
 public class EquipHandler {
 
@@ -261,12 +261,12 @@ public class EquipHandler {
     public static void updateAll(Player p, Item i,byte slot, boolean all) {
 	p.getActionSender().sendEquippedItem(i, slot);
 	if(all) {
-	    for(Player pl : World.getWorld().getPlayers()) {
-		if(pl.getCharacter().getMapid() == p.getCharacter().getMapid()) {
+	    for(Player pl : p.getMap().getPlayers().values()) {
+		
 		    if(Formula.inView(pl.getCharacter(), p.getCharacter())) {
 			pl.getActionSender().sendSpawnPacket(p.getCharacter());
 		    }
-		}
+		
 	    }
 	}
     }
