@@ -1,4 +1,6 @@
-package jonquer.event;
+package jonquer.model.delays;
+
+import jonquer.services.TimerService;
 
 /**
  * This is a time varied rolling delay it will keep on repeating it's self.
@@ -6,7 +8,7 @@ package jonquer.event;
  * @author xEnt
  * 
  */
-public abstract class RollingDelay extends DelayedAbstractEvent {
+public abstract class RollingDelay extends TimerService {
 
 	/**
 	 * 

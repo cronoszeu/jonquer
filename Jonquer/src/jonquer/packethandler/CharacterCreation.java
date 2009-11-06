@@ -4,12 +4,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import jonquer.debug.Log;
-import jonquer.event.Delay;
 import jonquer.misc.Formula;
 import jonquer.misc.StaticData;
 import jonquer.misc.Tools;
 import jonquer.model.Player;
 import jonquer.model.World;
+import jonquer.model.delays.Delay;
 
 public class CharacterCreation implements PacketHandler {
 

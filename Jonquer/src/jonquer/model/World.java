@@ -11,11 +11,11 @@ import java.util.List;
 import jonquer.core.GameEngine;
 import jonquer.core.Server;
 import jonquer.debug.Log;
-import jonquer.event.DelayedAbstractEvent;
 import jonquer.misc.Formula;
 import jonquer.misc.StaticData;
 import jonquer.model.def.COMonsterSpawnDef;
 import jonquer.packethandler.PacketHandler;
+import jonquer.services.TimerService;
 
 /**
  * the singleton World class, should be able to access most of the server from
@@ -114,9 +114,9 @@ public class World {
 
     /**
      * 
-     * @return - the DelayedAbstractEvent queue of awaiting entries
+     * @return - the TimerService queue of awaiting entries
      */
-    public ArrayList<DelayedAbstractEvent> getDelayedEventHandler() {
+    public ArrayList<TimerService> getDelayedEventHandler() {
 	return this.awaitingEntries;
     }
 
@@ -161,11 +161,11 @@ public class World {
     /**
      * the Queue for Awaiting entries.
      */
-    private ArrayList<DelayedAbstractEvent> awaitingEntries = new ArrayList<DelayedAbstractEvent>();
+    private ArrayList<TimerService> awaitingEntries = new ArrayList<TimerService>();
     /**
      * the Queue of events ready to be processed.
      */
-    public ArrayList<DelayedAbstractEvent> lists = new ArrayList<DelayedAbstractEvent>();
+    public ArrayList<TimerService> lists = new ArrayList<TimerService>();
     /**
      * HashMap holding all the IDS and classes that implement PacketHandler.
      */

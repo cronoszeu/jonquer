@@ -1,6 +1,7 @@
-package jonquer.event;
+package jonquer.model.delays;
 
 import jonquer.model.Player;
+import jonquer.services.TimerService;
 
 /**
  * This is a single varied delayed event.
@@ -8,7 +9,7 @@ import jonquer.model.Player;
  * @author xEnt
  * 
  */
-public abstract class Delay extends DelayedAbstractEvent {
+public abstract class Delay extends TimerService {
 
 	/**
 	 * 

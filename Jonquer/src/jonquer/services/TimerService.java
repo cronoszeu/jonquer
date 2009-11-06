@@ -1,13 +1,13 @@
-package jonquer.event;
+package jonquer.services;
 
 /**
- * this DelayedAbstractEvent is a type of custom 'Timer' for handling delays on
+ * this TimerService is a type of custom 'Timer' for handling abstracted delays on
  * a single thread (the main game-engine thread)
  * 
  * @author xEnt
  * 
  */
-public abstract class DelayedAbstractEvent {
+public abstract class TimerService {
 
 	/**
 	 * 
@@ -16,7 +16,7 @@ public abstract class DelayedAbstractEvent {
 	 * @param roll
 	 *            - boolean giving the state of rolling or not.
 	 */
-	public DelayedAbstractEvent(int ms, boolean roll, int amount) {
+	public TimerService(int ms, boolean roll, int amount) {
 		delayTime = ms;
 		startTime = System.currentTimeMillis();
 		rolling = roll;

@@ -4,12 +4,12 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import jonquer.debug.Log;
-import jonquer.event.DelayedAbstractEvent;
 import jonquer.misc.Constants;
 import jonquer.model.Packet;
 import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.packethandler.PacketHandler;
+import jonquer.services.TimerService;
 
 /**
  * the GameEngine of the entire server.
@@ -115,9 +115,9 @@ public class GameEngine {
 	    world.lists.addAll(world.getDelayedEventHandler());
 	    world.getDelayedEventHandler().clear();
 	}
-	Iterator<DelayedAbstractEvent> ite = world.lists.iterator();
+	Iterator<TimerService> ite = world.lists.iterator();
 	while(ite.hasNext()) {
-	    DelayedAbstractEvent handler = ite.next();
+	    TimerService handler = ite.next();
 	    if (System.currentTimeMillis() - handler.startTime > handler.delayTime) {
 		handler.execute();
 		handler.rollingAmount--;
