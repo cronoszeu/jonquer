@@ -35,6 +35,10 @@ public class Inventory implements Serializable {
 	return false;
     }
     
+    public boolean canHold(int amount) {
+	return MAX_SIZE - getItems().size() >= amount;
+    }
+    
     public void removeItem(Item i) {
 	items.remove(i);
     }

@@ -206,6 +206,7 @@ public class Player {
      */
     public void destroy() {
 
+	if(getMap() != null) {
 	for(Player p : getMap().getPlayers().values())
 	    if (p != this) {
 		if (Formula.inView(getCharacter(), p.getCharacter())) {
@@ -213,10 +214,12 @@ public class Player {
 		    getActionSender().removeEntity(p);
 		}
 	    }
+	    getMap().removePlayer(this);
+	}
 
 	try {
 	    world.getPlayers().remove(this);
-	    getMap().removePlayer(this);
+	
 	} catch (ConcurrentModificationException cme) { }
 
 	save();

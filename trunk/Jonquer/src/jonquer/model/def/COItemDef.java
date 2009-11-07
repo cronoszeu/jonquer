@@ -215,6 +215,14 @@ public class COItemDef {
 	return this.type;
     }
 
+    public void setMoney(boolean money) {
+	this.money = money;
+    }
+    public boolean isMoney() {
+	return money;
+    }
+
+    private boolean money = false;
     private int weaponType = 0;
     private int type = 0;
     private int quality = -1;
