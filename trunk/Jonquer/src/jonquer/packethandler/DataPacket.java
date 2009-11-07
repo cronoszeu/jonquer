@@ -32,6 +32,16 @@ public class DataPacket implements PacketHandler {
 	    player.getActionSender().write(bb);
 	    break;
 	    
+	case 117:
+	    
+	    int uid = bb.getInt(12);
+	    Player pl = player.getMap().getPlayers().get(uid);
+	    if(pl != null) {
+		pl.getActionSender().sendSystemMessage(player.getCharacter().getName() + " is viewing your equipment.");
+		player.getActionSender().sendViewedEquips(pl);
+	    }
+	    break;
+	    
 	case 79:
 	    
 	    int dir = bb.get(20);

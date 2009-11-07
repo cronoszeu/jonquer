@@ -50,8 +50,11 @@ public class PickupHandler implements PacketHandler {
 
 	    for(Player p : player.getMap().getPlayers().values()) {
 		if(Formula.inView(it.getX(), it.getY(), p.getCharacter().getX(), p.getCharacter().getY())) {
+		    if(p != player)
+			p.getActionSender().write(bb);
 		    p.getActionSender().removeGroundItem(it);
 		    p.getCharacter().getItemsInView().remove(it);
+		    
 		}
 	    }
 
