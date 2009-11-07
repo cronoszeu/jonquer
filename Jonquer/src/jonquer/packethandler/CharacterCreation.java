@@ -9,7 +9,7 @@ import jonquer.misc.StaticData;
 import jonquer.misc.Tools;
 import jonquer.model.Player;
 import jonquer.model.World;
-import jonquer.model.delays.Delay;
+import jonquer.model.future.Timer;
 
 public class CharacterCreation implements PacketHandler {
 

@@ -1,7 +1,7 @@
 package jonquer.services;
 
 /**
- * this TimerService is a type of custom 'Timer' for handling abstracted delays on
+ * this TimerService is a type of custom 'TimerService' for handling abstracted delays on
  * a single thread (the main game-engine thread)
  * 
  * @author xEnt

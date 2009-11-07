@@ -111,9 +111,9 @@ public class GameEngine {
      */
     private final void processEvents() {
 
-	if (world.getDelayedEventHandler().size() > 0) {
-	    world.lists.addAll(world.getDelayedEventHandler());
-	    world.getDelayedEventHandler().clear();
+	if (world.getTimerService().size() > 0) {
+	    world.lists.addAll(world.getTimerService());
+	    world.getTimerService().clear();
 	}
 	Iterator<TimerService> ite = world.lists.iterator();
 	while(ite.hasNext()) {

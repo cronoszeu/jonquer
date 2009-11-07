@@ -6,9 +6,11 @@ import java.nio.ByteOrder;
 
 import jonquer.debug.Log;
 import jonquer.misc.Formula;
+import jonquer.model.GroundItem;
 import jonquer.model.Item;
 import jonquer.model.Player;
 import jonquer.model.World;
+import jonquer.model.future.Timer;
 
 public class FrameHandler implements PacketHandler {
 
@@ -35,11 +37,27 @@ public class FrameHandler implements PacketHandler {
 	    if(player.getCharacter().getInventory().hasItem(uid))  {
 		Item i = player.getCharacter().getInventory().getItem(uid);
 		Point valid = Formula.validDropTile(player.getCharacter().getX(), player.getCharacter().getY(), player.getCharacter().getMapid());
-		if(valid != null) {
-		    player.getMap().addGroundItem(i, valid, player.getCharacter().getMapid());
-		    player.getCharacter().getInventory().removeItem(i);
-		    player.getActionSender().removeItem(i);
-		}
+		if(valid == null)
+		    return;
+		int map = player.getCharacter().getMapid();
+		final GroundItem gi = new GroundItem(i.getUID(), i.getID(), i.getPlus(), i.getBless(), i.getEnchant(), i.getSoc1(), i.getSoc2(), (int)valid.getX(), (int)valid.getY(), map);
+		player.getMap().addGroundItem(gi, valid, map);
+		player.getCharacter().getInventory().removeItem(i);
+		player.getActionSender().removeItem(i);
+		World.getWorld().getTimerService().add(new Timer(8000, null) {
+		    public void execute() {
+			if(gi != null) {
+			    World.getWorld().getMaps().get(gi.getMap()).getGroundItems().remove(gi);
+			    for(Player p : World.getWorld().getMaps().get(gi.getMap()).getPlayers().values()) {
+				if(Formula.inView(gi.getX(), gi.getY(), p.getCharacter().getX(), p.getCharacter().getY())) {
+				    p.getCharacter().getItemsInView().remove(gi);
+				    p.getActionSender().removeGroundItem(gi);
+				}
+			    }
+			}
+		    }
+		});
+
 	    }
 	    break;
 

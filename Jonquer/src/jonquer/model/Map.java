@@ -34,8 +34,8 @@ public class Map {
 	}
     }
     
-    public void addGroundItem(Item i, Point p, int map) {
-	GroundItem gi = new GroundItem(i.getUID(), i.getID(), i.getPlus(), i.getBless(), i.getEnchant(), i.getSoc1(), i.getSoc2(), (int)p.getX(), (int)p.getY(), map);
+    public void addGroundItem(GroundItem gi, Point p, int map) {
+	
 	getGroundItems().add(gi);
 	for(Player pl : World.getWorld().getMaps().get(map).getPlayers().values()) {
 	    pl.updateGroundItems();
