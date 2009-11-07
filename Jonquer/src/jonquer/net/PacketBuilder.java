@@ -7,6 +7,7 @@ import java.util.Random;
 import jonquer.debug.Log;
 import jonquer.misc.Constants;
 import jonquer.misc.Formula;
+import jonquer.model.GroundItem;
 import jonquer.model.Item;
 import jonquer.model.Monster;
 import jonquer.model.Player;
@@ -21,6 +22,34 @@ import org.apache.mina.common.IoSession;
  * 
  */
 public class PacketBuilder {
+    
+    public void spawnGroundItem(GroundItem i) {
+	ByteBuffer bb = ByteBuffer.allocate(20);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+        bb.putShort(0, (short) bb.limit());
+        bb.putShort(2, (short) 1011); // packet id
+        bb.putInt(4, i.getUID());
+        bb.putInt(8, i.getID());
+        bb.putShort(12, (short)i.getX());
+        bb.putShort(14, (short)i.getY());
+        write(bb);
+    }
+    
+    public void removeGroundItem(GroundItem i) {
+	ByteBuffer bb = ByteBuffer.allocate(20);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+        bb.putShort(0, (short) bb.limit());
+        bb.putShort(2, (short) 1011); // packet id
+        bb.put(8, (byte)0x4d);
+        bb.put(9, (byte)0xa2);
+        bb.putInt(4, i.getUID());
+        bb.putInt(8, i.getID());
+        bb.putShort(10, (short)Formula.rand(1, 9));
+        bb.putShort(12, (short)Formula.rand(99, 153)); // wtf?
+        bb.putShort(14, (short)Formula.rand(208, 273));
+        bb.put(16, (byte)2);
+        write(bb);
+    }
 
     /**
      * Sends the Auth info.
