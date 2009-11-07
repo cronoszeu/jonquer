@@ -14,8 +14,12 @@ import jonquer.model.def.COItemDef;
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
-        
+
     public Item(int id, int plus, int bless, int enchant, int soc1, int soc2) {
+	this(Formula.rand(0, Integer.MAX_VALUE), id, plus, bless, enchant, soc1, soc2);
+    }
+
+    public Item(int uid, int id, int plus, int bless, int enchant, int soc1, int soc2) {
 	setID(id);
 	setPlus(plus);
 	setBless(bless);
@@ -26,21 +30,21 @@ public class Item implements Serializable {
 	    durability = -1;
 	else
 	    setDurability(getDef().getMaxDurability());
-	setUID(Formula.rand(0, Integer.MAX_VALUE));
+	setUID(uid);
     }
-    
+
     public boolean hasDurability() {
 	return durability != -1;
     }
-    
+
     public void setID(int id) {
 	this.id = id;
     }
-    
+
     public int getID() {
 	return id;
     }
-    
+
     public COItemDef getDef() {
 	return StaticData.itemDefs.get(id);
     }
@@ -48,7 +52,7 @@ public class Item implements Serializable {
     public void setPlus(int plus) {
 	this.plus = plus;
     }
-    
+
     public int getPlus() {
 	return plus;
     }
@@ -108,11 +112,11 @@ public class Item implements Serializable {
     public int getDurability() {
 	return durability;
     }
-    
+
     public boolean isNormal() {
 	return durability == -1 && plus == 0 && bless == 0 && enchant == 0 && soc1 == 0 && soc2 == 0;
     }
-    
+
     public Item clone() {
 	Item i = new Item(getID(), getPlus(), getBless(), getEnchant(), getSoc1(), getSoc2());
 	i.arrowAmount = arrowAmount;
@@ -120,7 +124,7 @@ public class Item implements Serializable {
 	i.UID = UID;
 	return i;
     }
-    
+
     // for arrows.
     private int arrowAmount = 50;
     private int durability = -1;

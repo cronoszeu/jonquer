@@ -19,6 +19,14 @@ public class Inventory implements Serializable {
 	    items.add(i);
     }
     
+    public Item getItem(int uid) {
+	for(Item i : getItems()) {
+	    if(i.getUID() == uid)
+		return i;
+	}
+	return null;
+    }
+    
     public boolean hasItem(int UID) {
 	for(Item i : getItems()) {
 	    if(i.getUID() == UID)

@@ -2,8 +2,8 @@ package jonquer.model;
 
 public class GroundItem extends Item {
      
-    public GroundItem(int id, int plus, int bless, int enchant, int soc1, int soc2, int x, int y, int map) {
-	super(id, plus, bless, enchant, soc1, soc2);
+    public GroundItem(int uid, int id, int plus, int bless, int enchant, int soc1, int soc2, int x, int y, int map) {
+	super(uid, id, plus, bless, enchant, soc1, soc2);
 	setX(x);
 	setY(y);
 	setMap(map);
