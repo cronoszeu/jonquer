@@ -1,5 +1,6 @@
 package jonquer.packethandler;
 
+import java.awt.Point;
 import jonquer.debug.Log;
 import jonquer.misc.Formula;
 import jonquer.misc.StaticData;
@@ -132,7 +133,13 @@ public class CommandHandler {
 	} else if(command("/item")) {
 	    player.getCharacter().getInventory().addItem(new Item(Integer.parseInt(args[1]), 0, 0, 0, 0, 0));
 	    player.getActionSender().sendInventory();
-	}
+	} else if(command("/drop")) {
+            for(int x = player.getCharacter().getX() - 20; x <= player.getCharacter().getX() + 20; x++) {
+                for(int y = player.getCharacter().getY() - 20; y <= player.getCharacter().getY() + 20; y++) {
+                    player.getMap().addGroundItem(new Item(Integer.parseInt(args[1]), 0, 0, 0, 0, 0), new Point(x, y), player.getCharacter().getMapid());
+                }
+            }
+        }
     }
 
     public static boolean command(String... s) {
