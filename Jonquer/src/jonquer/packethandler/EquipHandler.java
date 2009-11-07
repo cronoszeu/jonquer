@@ -134,15 +134,15 @@ public class EquipHandler {
 	    if(item.getDef().isArrows()) {
 		if(equips.getRight_hand() != null && equips.getRight_hand().getDef().isTypeBow()) {
 		    if(equips.getLeft_hand() != null) {
+			
+			Item old = equips.getLeft_hand().clone();
+			unequipItem(player, old, slot);
 			equips.setLeft_hand(item);
 			removeItem(player, item);
-			
-		    } else {
-			Item old = equips.getRight_hand().clone();
-			unequipItem(player, old, slot);
-			equips.setRight_hand(item);
-			removeItem(player, item);
 			addItem(player, old);
+		    } else {
+			equips.setLeft_hand(item);
+			removeItem(player, item);
 		    }
 		    updateAll(player, item, Formula.LEFT_WEAPON_EQUIP_SLOT, true);
 		}
@@ -155,14 +155,14 @@ public class EquipHandler {
 		    addItem(player, i);
 		}
 
-		if(equips.getLeft_hand() != null && !equips.getLeft_hand().getDef().isArrows()) {
+		/*if(equips.getLeft_hand() != null && !equips.getLeft_hand().getDef().isArrows()) {
 		    Item i = equips.getLeft_hand().clone();
 		    unequipItem(player, i, slot);
 		    addItem(player, i);
 		}
 
 		equips.setLeft_hand(item);
-		removeItem(player, item);
+		removeItem(player, item);*/
 
 		updateAll(player, item, Formula.RIGHT_WEAPON_EQUIP_SLOT, true);
 	    }
