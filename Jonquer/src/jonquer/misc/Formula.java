@@ -252,7 +252,7 @@ public class Formula {
 	return a.inview(b);
     }
     public static boolean inView(int x, int y, int targetX, int targetY) {
-	return Math.abs(x - targetX) <= FAR_VIEW_RADIUS && Math.abs(y - targetY) <= FAR_VIEW_RADIUS;
+	return Math.abs(x - targetX) <= VIEW_RADIUS && Math.abs(y - targetY) <= VIEW_RADIUS;
     }
     public static boolean inFarView(Character you, Character them) {
 	return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;
