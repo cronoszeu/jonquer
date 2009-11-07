@@ -31,16 +31,24 @@ public class DataPacket implements PacketHandler {
 	case 78:
 	    player.getActionSender().write(bb);
 	    break;
+	    
+	case 79:
+	    
+	    int dir = bb.get(20);
+	    if(dir < 0 || dir > 7)
+		return;
+	    System.out.println(dir);
+	    player.getCharacter().setDirection((byte)dir);
+	    player.move(-1, -1, bb);
+	    break;
 
 	case 81: // actions
 	    player.getCharacter().setAction(bb.get(12));
 	    for (Player p : player.getMap().getPlayers().values()) {
 		if (p != player) {
-		    
 			if (Formula.inView(p.getCharacter(), player.getCharacter())) {
-			    p.getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
+			    p.getActionSender().write(bb);
 			}
-		    
 		}
 	    }
 	    //player.updateMeToOthers();
@@ -78,13 +86,31 @@ public class DataPacket implements PacketHandler {
 	    short prevY = bb.getShort(0x12);
 	    short nextX = bb.getShort(0xc);
 	    short nextY = bb.getShort(0xe);
-	    Log.debug(prevX + " - " + prevY);
+	 
 	    if (prevX != player.getCharacter().getX() || prevY != player.getCharacter().getY()) {
 		Log.hack(player.getCharacter().getName() + " sent invalid old coordinates (From X: " + prevX + ", Y: " + prevY + "  To X: " + nextX + ", Y: " + nextY + ")");
 	    } else {
 		if (Math.abs(prevX - nextX) > 22 || Math.abs(prevY - nextY) > 22) {
 		    player.destroy();
 		} else {
+		    int direction = 0;
+		    if(nextX == prevX && nextY < prevY)
+			direction = 4;
+		    else if(nextX == prevX && nextY > prevY)
+			direction = 0;
+		    else if(nextX < prevX && nextY == prevY)
+			direction = 2;
+		    else if(nextX > prevX && nextY == prevY)
+			direction = 6;
+		    else if(nextX > prevX && nextY > prevY)
+			direction = 7;
+		    else if(nextX < prevX && nextY < prevY)
+			direction = 3;
+		    else if(nextX < prevX && nextY > prevY)
+			direction = 3;
+		    else
+			direction = 5;
+		    player.getCharacter().setDirection((byte)direction);
 		    player.getCharacter().setX(nextX);
 		    player.getCharacter().setY(nextY);
 		    player.getCharacter().setAction(100);

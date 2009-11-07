@@ -8,6 +8,7 @@ import jonquer.model.Item;
 import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.model.def.COItemDef;
+import jonquer.net.PacketBuilder;
 
 public class CommandHandler {
 
@@ -133,7 +134,7 @@ public class CommandHandler {
 	} else if(command("/item")) {
 	    player.getCharacter().getInventory().addItem(new Item(Integer.parseInt(args[1]), 0, 0, 0, 0, 0));
 	    player.getActionSender().sendInventory();
-	} 
+	}
     }
 
     public static boolean command(String... s) {

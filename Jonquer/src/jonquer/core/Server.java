@@ -318,6 +318,9 @@ public class Server {
 			item.setClassReq(ClassRequired.TAOIST);
 		    }
 
+		    if(id == 1090000 || id == 1090010 || id == 1090020 || id == 1091000 || id == 1091010 || id == 1091020)
+			item.setMoney(true);
+
 		    item.setProfLevelReq(Integer.parseInt(args[2]));
 		    item.setLevelReq(Integer.parseInt(args[3]));
 

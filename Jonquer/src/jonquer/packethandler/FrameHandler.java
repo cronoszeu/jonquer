@@ -44,7 +44,7 @@ public class FrameHandler implements PacketHandler {
 		player.getMap().addGroundItem(gi, valid, map);
 		player.getCharacter().getInventory().removeItem(i);
 		player.getActionSender().removeItem(i);
-		World.getWorld().getTimerService().add(new Timer(8000, null) {
+		World.getWorld().getTimerService().add(new Timer(90000, null) {
 		    public void execute() {
 			if(gi != null) {
 			    World.getWorld().getMaps().get(gi.getMap()).getGroundItems().remove(gi);
@@ -52,6 +52,7 @@ public class FrameHandler implements PacketHandler {
 				if(Formula.inView(gi.getX(), gi.getY(), p.getCharacter().getX(), p.getCharacter().getY())) {
 				    p.getCharacter().getItemsInView().remove(gi);
 				    p.getActionSender().removeGroundItem(gi);
+
 				}
 			    }
 			}
@@ -60,6 +61,64 @@ public class FrameHandler implements PacketHandler {
 
 	    }
 	    break;
+
+	case 12:
+
+
+	    int amount = bb.getInt(4);
+	    if(player.getCharacter().getMoney() < 100)
+		return;
+	    if(player.getCharacter().getMoney() < amount) {
+		player.getActionSender().sendSystemMessage("You don't have that much money");
+		return;
+	    }
+	    Point valid = Formula.validDropTile(player.getCharacter().getX(), player.getCharacter().getY(), player.getCharacter().getMapid());
+	    if(valid == null) {
+		player.getActionSender().sendSystemMessage("Please move to a more empty area");
+		return;
+	    }
+	    int picid = -1;
+	    if(amount < 10)
+		picid = 1090000;
+	    else if(amount < 100)
+		picid = 1090010;
+	    else if(amount < 1000)
+		picid = 1090020;
+	    else if(amount < 3000)
+		picid = 1091000;
+	    else if(amount < 10000)
+		picid = 1091010;
+	    else
+		picid = 1091020;
+
+	    Item i = new Item(picid, 0, 0, 0, 0, 0);
+	    
+	    int map = player.getCharacter().getMapid();
+	    final GroundItem gi = new GroundItem(i.getUID(), i.getID(), i.getPlus(), i.getBless(), i.getEnchant(), i.getSoc1(), i.getSoc2(), (int)valid.getX(), (int)valid.getY(), map);
+	    gi.setArrowAmount(amount);
+	    player.getMap().addGroundItem(gi, valid, map);
+	    player.getCharacter().setMoney(player.getCharacter().getMoney() - amount);
+	    player.getActionSender().sendMoney();
+	    player.getActionSender().sendSystemMessage("You have dropped " + amount + " silvers");
+	    World.getWorld().getTimerService().add(new Timer(90000, null) {
+		public void execute() {
+		    if(gi != null) {
+			World.getWorld().getMaps().get(gi.getMap()).getGroundItems().remove(gi);
+			for(Player p : World.getWorld().getMaps().get(gi.getMap()).getPlayers().values()) {
+			    if(Formula.inView(gi.getX(), gi.getY(), p.getCharacter().getX(), p.getCharacter().getY())) {
+				p.getCharacter().getItemsInView().remove(gi);
+				p.getActionSender().removeGroundItem(gi);
+
+			    }
+			}
+		    }
+		}
+	    });
+
+
+	    break;
+
+
 
 	case 6:
 
@@ -116,28 +175,28 @@ public class FrameHandler implements PacketHandler {
 		break;
 
 		//                case Formula.TALISMAN_EQUIP_SLOT:
-		    //                    if(player.getCharacter().getEquipment().
-			    //                            getTalisman().getUID() == itemUID) {
-			//                        item = player.getCharacter().getEquipment().getTalisman();
-			//                        player.getCharacter().getEquipment().setTalisman(null);
-			//                    }
-		    //                    break;
+		//                    if(player.getCharacter().getEquipment().
+		//                            getTalisman().getUID() == itemUID) {
+		//                        item = player.getCharacter().getEquipment().getTalisman();
+		//                        player.getCharacter().getEquipment().setTalisman(null);
+		//                    }
+		//                    break;
 
-		case Formula.BOOT_EQUIP_SLOT:
-		    if (player.getCharacter().getEquipment().
-			    getBoots().getUID() == itemUID) {
-			item = player.getCharacter().getEquipment().getBoots();
-			player.getCharacter().getEquipment().setBoots(null);
-		    }
-		    break;
+	    case Formula.BOOT_EQUIP_SLOT:
+		if (player.getCharacter().getEquipment().
+			getBoots().getUID() == itemUID) {
+		    item = player.getCharacter().getEquipment().getBoots();
+		    player.getCharacter().getEquipment().setBoots(null);
+		}
+		break;
 
-		    //                case Formula.GARMENT_EQUIP_SLOT:
-			//                    if(player.getCharacter().getEquipment().
-		    //                            getGarment().getUID() == itemUID) {
-		    //                        item = player.getCharacter().getEquipment().getGarment();
-		    //                        player.getCharacter().getEquipment().setGarment(null);
-		    //                    }
-		    //                    break;
+		//                case Formula.GARMENT_EQUIP_SLOT:
+		//                    if(player.getCharacter().getEquipment().
+		//                            getGarment().getUID() == itemUID) {
+		//                        item = player.getCharacter().getEquipment().getGarment();
+		//                        player.getCharacter().getEquipment().setGarment(null);
+		//                    }
+		//                    break;
 	    }
 	    if (item != null) {
 		player.getActionSender().sendUnequipItem(item, slot);

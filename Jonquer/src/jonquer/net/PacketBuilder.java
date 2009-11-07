@@ -273,7 +273,6 @@ public class PacketBuilder {
         bb.putShort(20, arg3);
         return bb.array();
     }
-
     public void sendSpawnPacket(jonquer.model.Character hero) {
         ByteBuffer bb = ByteBuffer.allocate(85 + hero.getName().length());
         bb.order(ByteOrder.LITTLE_ENDIAN);
@@ -450,6 +449,21 @@ public class PacketBuilder {
         bb.putInt(12, 6);
         write(bb);
     }
+    
+    public void pickupDroppedItemAction(GroundItem i) {
+	ByteBuffer bb = ByteBuffer.allocate(20);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+        bb.putShort(0, (short) bb.limit());
+        bb.putShort(2, (short) 1101);
+        bb.putInt(4, player.getCharacter().getID());
+        bb.putInt(8, i.getUID());
+        bb.putShort(12, (short)i.getX());
+        bb.putShort(14, (short)i.getY());
+        bb.putShort(16, (short)4);
+        bb.putInt(18, 4);
+        bb.putInt(18, 0);
+        write(bb); 
+    }
 
     public void sendEquippedItem(Item item, byte slot) {
         ByteBuffer bb = ByteBuffer.allocate(36);
@@ -475,6 +489,18 @@ public class PacketBuilder {
         bb.put(29, (byte) item.getBless());
         bb.put(30, (byte) item.getEnchant());
         write(bb);
+    }
+    
+    public void sendMoney() {
+	ByteBuffer bb = ByteBuffer.allocate(28);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+        bb.putShort(0, (short) bb.limit());
+        bb.putShort(2, (short) 1017);
+        bb.putInt(4, player.getCharacter().getID());
+        bb.put(8, (byte)1);
+        bb.putInt(12, 4);
+        bb.putInt(16, player.getCharacter().getMoney());
+        write(bb);    
     }
 
     public void write(ByteBuffer b) {

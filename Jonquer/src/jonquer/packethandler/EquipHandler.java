@@ -26,7 +26,7 @@ public class EquipHandler {
 	    }
 
 	    if(!checkItem(player, itemUID, slot, item)) {
-		player.destroy();
+		return;
 	    }
 	    if(item == null)
 		return;
