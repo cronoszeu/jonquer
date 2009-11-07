@@ -27,11 +27,12 @@ public class PacketBuilder {
 	ByteBuffer bb = ByteBuffer.allocate(20);
         bb.order(ByteOrder.LITTLE_ENDIAN);
         bb.putShort(0, (short) bb.limit());
-        bb.putShort(2, (short) 1011); // packet id
+        bb.putShort(2, (short) 1101); // packet id
         bb.putInt(4, i.getUID());
         bb.putInt(8, i.getID());
         bb.putShort(12, (short)i.getX());
         bb.putShort(14, (short)i.getY());
+        bb.put(16, (byte)1);
         write(bb);
     }
     
@@ -39,7 +40,7 @@ public class PacketBuilder {
 	ByteBuffer bb = ByteBuffer.allocate(20);
         bb.order(ByteOrder.LITTLE_ENDIAN);
         bb.putShort(0, (short) bb.limit());
-        bb.putShort(2, (short) 1011); // packet id
+        bb.putShort(2, (short) 1101); // packet id
         bb.put(8, (byte)0x4d);
         bb.put(9, (byte)0xa2);
         bb.putInt(4, i.getUID());

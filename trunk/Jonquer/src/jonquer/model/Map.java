@@ -1,10 +1,12 @@
 package jonquer.model;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import jonquer.debug.JonquerError;
 import jonquer.debug.Log;
+import jonquer.misc.Formula;
 
 public class Map {
 
@@ -29,6 +31,14 @@ public class Map {
     public void removeMonster(Monster m) {
 	if (getMonsters().containsValue(m)) {
 	    getMonsters().remove(m.getUID());
+	}
+    }
+    
+    public void addGroundItem(Item i, Point p, int map) {
+	GroundItem gi = new GroundItem(i.getUID(), i.getID(), i.getPlus(), i.getBless(), i.getEnchant(), i.getSoc1(), i.getSoc2(), (int)p.getX(), (int)p.getY(), map);
+	getGroundItems().add(gi);
+	for(Player pl : World.getWorld().getMaps().get(map).getPlayers().values()) {
+	    pl.updateGroundItems();
 	}
     }
 

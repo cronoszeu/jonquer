@@ -334,6 +334,13 @@ public class Character implements Serializable {
     public ArrayList<Monster> getMonstersInView() {
 	return monstersInView;
     }
+    public void setItemsInView(ArrayList<GroundItem> itemsInView) {
+	this.itemsInView = itemsInView;
+    }
+
+    public ArrayList<GroundItem> getItemsInView() {
+	return itemsInView;
+    }
     /**
      * The Character's name
      */
@@ -486,4 +493,8 @@ public class Character implements Serializable {
       * View'd monsters
       */
      private transient ArrayList<Monster> monstersInView;
+     /**
+      * View'd items in view (Ground Items)
+      */
+     private transient ArrayList<GroundItem> itemsInView;
 }

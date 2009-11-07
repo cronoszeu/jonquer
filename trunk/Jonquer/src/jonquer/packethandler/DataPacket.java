@@ -63,20 +63,9 @@ public class DataPacket implements PacketHandler {
 		    }
 		}
 	    }
-	    for (Npc npc : World.getWorld().getNpcs()) {
-		if (npc.getMapid() == player.getCharacter().getMapid()) {
-		    if (Formula.distance(player.getCharacter().getX(), player.getCharacter().getY(), npc.getCellx(), npc.getCelly()) <= Character.VIEW_RANGE) {
-			player.getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
-		    }
-		}
-	    }
-	    for (Monster monster : player.getMap().getMonsters().values()) {
-		if (monster != null) {
-		    if (Formula.distance(player.getCharacter().getX(), player.getCharacter().getY(), monster.getX(), monster.getY()) <= Character.VIEW_RANGE) {
-			player.getActionSender().sendMonsterSpawn(monster);
-		    }
-		}
-	    }
+	    player.updateNpcs();
+	    player.updateMonsters();
+	    player.updateGroundItems();
 	    player.getActionSender().write(bb);
 	    break;
 

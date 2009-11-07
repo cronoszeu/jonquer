@@ -48,6 +48,7 @@ public class Player {
 	actionSender = new PacketBuilder(this);
 	getCharacter().setNpcsInView(new ArrayList<Npc>());
 	getCharacter().setMonstersInView(new ArrayList<Monster>());
+	getCharacter().setItemsInView(new ArrayList<GroundItem>());
 	world.getPlayers().add(this);
     }
 
@@ -111,7 +112,47 @@ public class Player {
 	getActionSender().sendProf(i, getCharacter().getProficiency_level()[i], getCharacter().getProficiency()[i]);
     }
 
+    public void updateNpcs() {
+	for (Npc npc : World.getWorld().getNpcs()) {
+	    if (npc.getMapid() == getCharacter().getMapid()) {
+		if (Formula.distance(getCharacter().getX(), getCharacter().getY(), npc.getCellx(), npc.getCelly()) <= Character.VIEW_RANGE) {
+		    if(!getCharacter().getNpcsInView().contains(npc)) {
+			getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
+			getCharacter().getNpcsInView().add(npc);
+		    }
+		} else if(getCharacter().getNpcsInView().contains(npc)) {
+		    getCharacter().getNpcsInView().remove(npc);
+		}
+	    }
+	}
+    }
 
+    public void updateMonsters() {
+	for (Monster monster : getMap().getMonsters().values()) {	   
+	    if (Formula.distance(getCharacter().getX(), getCharacter().getY(), monster.getX(), monster.getY()) <= Character.VIEW_RANGE) {
+		if(!getCharacter().getMonstersInView().contains(monster)) {
+		    getActionSender().sendMonsterSpawn(monster);
+		    getCharacter().getMonstersInView().add(monster);
+		}
+	    } else if(getCharacter().getMonstersInView().contains(monster)) {
+		getCharacter().getMonstersInView().remove(monster);
+	    }    
+	}
+    }
+
+    public void updateGroundItems() {
+	for(GroundItem i : getMap().getGroundItems()) {
+	    if(Formula.inView(i.getX(), i.getY(), getCharacter().getX(), getCharacter().getY())) {
+		if(!getCharacter().getItemsInView().contains(i)) {
+		    getCharacter().getItemsInView().add(i);
+		    getActionSender().spawnGroundItem(i);
+		}
+	    } else if(getCharacter().getItemsInView().contains(i)) {
+		getCharacter().getItemsInView().remove(i);
+		getActionSender().removeGroundItem(i);
+	    }    
+	}
+    }
 
     public void move(int prevX, int prevY, ByteBuffer bb) {
 	getActionSender().write(ByteBuffer.wrap(bb.array().clone()));
@@ -136,28 +177,10 @@ public class Player {
 	    }
 	}
 
-	for (Npc npc : World.getWorld().getNpcs()) {
-	    if (npc.getMapid() == getCharacter().getMapid()) {
-		if (Formula.distance(getCharacter().getX(), getCharacter().getY(), npc.getCellx(), npc.getCelly()) <= Character.VIEW_RANGE) {
-		    if(!getCharacter().getNpcsInView().contains(npc)) {
-			getActionSender().sendNpcSpawn(npc.getId(), npc.getCellx(), npc.getCelly(), npc.getLookface(), 1, npc.getType());
-			getCharacter().getNpcsInView().add(npc);
-		    }
-		} else if(getCharacter().getNpcsInView().contains(npc)) {
-		    getCharacter().getNpcsInView().remove(npc);
-		}
-	    }
-	}
-	for (Monster monster : getMap().getMonsters().values()) {	   
-	    if (Formula.distance(getCharacter().getX(), getCharacter().getY(), monster.getX(), monster.getY()) <= Character.VIEW_RANGE) {
-		if(!getCharacter().getMonstersInView().contains(monster)) {
-		    getActionSender().sendMonsterSpawn(monster);
-		    getCharacter().getMonstersInView().add(monster);
-		}
-	    } else if(getCharacter().getMonstersInView().contains(monster)) {
-		    getCharacter().getMonstersInView().remove(monster);
-		}    
-	}
+	updateNpcs();
+	updateMonsters();
+	updateGroundItems();
+
     }
 
     public Map getMap() {

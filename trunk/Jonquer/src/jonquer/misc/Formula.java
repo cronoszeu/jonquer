@@ -5,6 +5,7 @@ import java.util.Random;
 
 import jonquer.debug.JonquerError;
 import jonquer.model.Character;
+import jonquer.model.GroundItem;
 import jonquer.model.Player;
 import jonquer.model.World;
 
@@ -159,6 +160,23 @@ public class Formula {
     }
 
     private static Random randomNumberGenerator = new Random();
+    
+    public static Point validDropTile(int x, int y, int map) {
+	int[][] dirs = {{x, y}, {x - 1, y}, {x, y - 1}, {x - 1, y - 1}, {x + 1, y + 1}, {x, y + 1}, {x + 1, y}, {x + 1, y - 1}, {x - 1, y + 1}};
+	for(int i=0; i < dirs.length; i++) {
+	    if(!isTileBlocked(map, dirs[i][0], dirs[i][1]) && !tileHasItem(dirs[i][0], dirs[i][1], map))
+		return new Point(dirs[i][0], dirs[i][1]);
+	}
+	return null;
+    }
+    
+    public static boolean tileHasItem(int x, int y, int map) {
+	for(GroundItem i : World.getWorld().getMaps().get(map).getGroundItems()) {
+	    if(i.getX() == x && i.getY() == y)
+		return true;
+	}
+	return false;
+    }
 
     public static Point dirToPoint(int dir) throws JonquerError {
 	switch (dir) {
@@ -233,7 +251,9 @@ public class Formula {
     public static boolean inView(Character a, Character b) {
 	return a.inview(b);
     }
-
+    public static boolean inView(int x, int y, int targetX, int targetY) {
+	return Math.abs(x - targetX) <= FAR_VIEW_RADIUS && Math.abs(y - targetY) <= FAR_VIEW_RADIUS;
+    }
     public static boolean inFarView(Character you, Character them) {
 	return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;
     }

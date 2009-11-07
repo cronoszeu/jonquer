@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import jonquer.debug.Log;
 import jonquer.misc.Formula;
 import jonquer.misc.Tools;
+import jonquer.model.GroundItem;
 import jonquer.model.Monster;
 import jonquer.model.Npc;
 import jonquer.model.Player;
@@ -47,9 +48,10 @@ public class GameLogin implements PacketHandler {
 	player.setCharacter(Tools.loadCharacter(player.getCharacter().getAccount()));
 	player.getCharacter().setNpcsInView(new ArrayList<Npc>());
 	player.getCharacter().setMonstersInView(new ArrayList<Monster>());
+	player.getCharacter().setItemsInView(new ArrayList<GroundItem>());
 	player.getCharacter().setID(id);
 
-
+	//"We: 
 	if(player.getCharacter().getSpouse() == null) {
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "NEW_ROLE");
 	} else {

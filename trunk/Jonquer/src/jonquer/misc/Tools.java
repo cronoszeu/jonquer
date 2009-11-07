@@ -20,10 +20,8 @@ public class Tools {
      * @return - if the account exists or not
      */
     public static boolean accountExists(String s) {
-	// debugging an error i randomly get
-	System.out.println("We: " + s);
+
 	for(String ss : StaticData.getAccounts()) {
-	    System.out.println(ss);
 	    if(s.toLowerCase().equals(ss.toLowerCase()))
 		return true;
 	}
