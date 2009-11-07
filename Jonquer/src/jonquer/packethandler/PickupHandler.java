@@ -16,7 +16,7 @@ public class PickupHandler implements PacketHandler {
     }
 
     public void handlePacket(Player player, byte[] packet) throws Exception {
-	final ByteBuffer bb = ByteBuffer.wrap(packet);
+	ByteBuffer bb = ByteBuffer.wrap(packet);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	int uid = bb.getInt(4);
 
@@ -37,6 +37,17 @@ public class PickupHandler implements PacketHandler {
 	    }
 
 	    Item i = (Item)it;
+	    
+	   
+	    for(Player p : player.getMap().getPlayers().values()) {
+		if(Formula.inView(it.getX(), it.getY(), p.getCharacter().getX(), p.getCharacter().getY())) {
+		    player.getActionSender().write(bb.duplicate());
+		    p.getActionSender().removeGroundItem(it);
+		    p.getCharacter().getItemsInView().remove(it);
+		    
+		}
+	    }
+	    
 	    if(i.getDef().isMoney()) {
 		player.getCharacter().setMoney(player.getCharacter().getMoney() + i.getArrowAmount());
 		player.getActionSender().sendMoney();
@@ -48,15 +59,7 @@ public class PickupHandler implements PacketHandler {
 	    }
 	    player.getMap().getGroundItems().remove(it);
 
-	    for(Player p : player.getMap().getPlayers().values()) {
-		if(Formula.inView(it.getX(), it.getY(), p.getCharacter().getX(), p.getCharacter().getY())) {
-		    if(p != player)
-			p.getActionSender().write(bb);
-		    p.getActionSender().removeGroundItem(it);
-		    p.getCharacter().getItemsInView().remove(it);
-		    
-		}
-	    }
+	   
 
 
 	} else {
