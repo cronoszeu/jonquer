@@ -18,6 +18,8 @@ public class DataPacket implements PacketHandler {
 
 	ByteBuffer bb = ByteBuffer.wrap(packet);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
+	
+	
 	switch (bb.getShort(22)) {
 
 	case 74:

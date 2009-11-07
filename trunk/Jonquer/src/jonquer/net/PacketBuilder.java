@@ -30,9 +30,26 @@ public class PacketBuilder {
 	bb.putShort(2, (short) 1101); // packet id
 	bb.putInt(4, i.getUID());
 	bb.putInt(8, i.getID());
+	
 	bb.putShort(12, (short)i.getX());
 	bb.putShort(14, (short)i.getY());
 	bb.put(16, (byte)1);
+	bb.putShort(18, (short)i.getMap());
+	write(bb);
+    }
+    
+    public void removeItemEffect(GroundItem i) {
+	ByteBuffer bb = ByteBuffer.allocate(20);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1101); // packet id
+	bb.putInt(4, i.getUID());
+	bb.putInt(8, i.getID());
+	
+	bb.putShort(12, (short)i.getX());
+	bb.putShort(14, (short)i.getY());
+	bb.put(16, (byte)3);
+	bb.putShort(18, (short)i.getMap());
 	write(bb);
     }
 
