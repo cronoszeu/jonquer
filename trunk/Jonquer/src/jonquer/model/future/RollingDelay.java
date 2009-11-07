@@ -1,6 +1,7 @@
-package jonquer.model.delays;
+package jonquer.model.future;
 
 import jonquer.services.TimerService;
+
 
 /**
  * This is a time varied rolling delay it will keep on repeating it's self.

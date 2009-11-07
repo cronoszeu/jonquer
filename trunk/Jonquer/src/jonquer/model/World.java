@@ -116,7 +116,7 @@ public class World {
      * 
      * @return - the TimerService queue of awaiting entries
      */
-    public ArrayList<TimerService> getDelayedEventHandler() {
+    public ArrayList<TimerService> getTimerService() {
 	return this.awaitingEntries;
     }
 
