@@ -11,6 +11,18 @@ import java.io.File;
  */
 public class Constants {
     /**
+     * Our servers name.
+     */
+    public static final String GAME_NAME = "Jonquer";
+    /**
+     * This emulator's version
+     */
+    public static final double VERSION = 1.0;	
+    /**
+     * The revision string retrieved from the website (rXX)
+     */
+    public static int REVISION = -1;
+    /**
      * the IP string for the Game host.
      */
     public static final String GAME_HOST = "127.0.0.1";
