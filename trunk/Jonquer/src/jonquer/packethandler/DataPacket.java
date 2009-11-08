@@ -8,10 +8,11 @@ import jonquer.misc.Formula;
 import jonquer.model.Player;
 import jonquer.model.Portal;
 import jonquer.model.World;
+import jonquer.model.future.RollingDelay;
 
 public class DataPacket implements PacketHandler {
 
-    public void handlePacket(Player player, byte[] packet) throws Exception {
+    public void handlePacket(final Player player, byte[] packet) throws Exception {
 
         ByteBuffer bb = ByteBuffer.wrap(packet);
         bb.order(ByteOrder.LITTLE_ENDIAN);
@@ -84,13 +85,14 @@ public class DataPacket implements PacketHandler {
                 if (dir < 0 || dir > 7) {
                     return;
                 }
-                System.out.println(dir);
                 player.getCharacter().setDirection((byte) dir);
                 player.move(-1, -1, bb);
                 break;
 
             case 81: // actions
-                player.getCharacter().setAction(bb.get(12));
+        	int prev = player.getCharacter().getAction();
+        	int id = bb.get(12);
+                player.getCharacter().setAction(id);
                 for (Player p : player.getMap().getPlayers().values()) {
                     if (p != player) {
                         if (Formula.inView(p.getCharacter(), player.getCharacter())) {
@@ -98,7 +100,20 @@ public class DataPacket implements PacketHandler {
                         }
                     }
                 }
-                //player.updateMeToOthers();
+                if(id == -6 && prev != -6) { // sit (recovers stamina)
+                    World.getWorld().getTimerService().add(new RollingDelay(1000, 10) {
+                	public void execute() {
+                	    if(player.getCharacter().getAction() == -6) {
+                		player.getCharacter().setStamina(player.getCharacter().getStamina() + 10);
+                		if(player.getCharacter().getStamina() > 100) {
+                		    player.getCharacter().setStamina(100);
+                		    rolling = false;
+                		}
+                		player.getActionSender().sendStamina();
+                	    } else rolling = false;
+                	}
+                    });
+                }
                 break;
 
             case 96:

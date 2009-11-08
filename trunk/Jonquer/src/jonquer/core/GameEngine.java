@@ -27,9 +27,10 @@ public class GameEngine {
 	try {
 	    while (Constants.serverRunning) {
 		tick();
-		processEvents();
+		processTimedEvents();
 		Thread.currentThread().sleep(Constants.GAME_LOOP_SLEEP_TIME);
 	    }
+	    world.getServer().closeServer();
 	} catch (Exception e) {
 	    Log.error(e);
 	}
@@ -67,11 +68,7 @@ public class GameEngine {
 			    needsDestroy = true;
 			    break;
 			}
-
 			Packet b = i.next();
-		
-			
-			//TODO-fixme: Make this better.
 			if(b.getData().length > 3) {
 			    int packetID = (b.getData()[3] << 8) | (b.getData()[2] & 0xff);
 
@@ -109,8 +106,7 @@ public class GameEngine {
      * This handles all the Queue'd DelayedAbstractEvents events that need to be
      * processed.
      */
-    private final void processEvents() {
-
+    private final void processTimedEvents() {
 	if (world.getTimerService().size() > 0) {
 	    world.lists.addAll(world.getTimerService());
 	    world.getTimerService().clear();
@@ -128,8 +124,6 @@ public class GameEngine {
 		}
 	    }
 	}
-	
-
     }
 
     /**

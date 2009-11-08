@@ -51,8 +51,7 @@ public class GameConnectionHandler implements IoHandler {
 	 * When someone disconnects and the session closes
 	 */
 	public void sessionClosed(IoSession arg0) throws Exception {
-		Player player = (Player) arg0.getAttachment();
-		player.destroy();
+		
 	}
 
 	/**
@@ -67,7 +66,6 @@ public class GameConnectionHandler implements IoHandler {
 	 * over the stream for the set idle time.
 	 */
 	public void sessionIdle(IoSession arg0, IdleStatus arg1) throws Exception {
-		Player player = (Player) arg0.getAttachment();
 	}
 
 	/**

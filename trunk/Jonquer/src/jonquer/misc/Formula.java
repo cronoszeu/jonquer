@@ -237,6 +237,58 @@ public class Formula {
 	character.setMana((short) 0); // ill fix mana up later
 	character.setSpouse("None");
 	character.setLife(character.getMaxlife());
+	
+	character.getProficiency().put(PROF_BLADE, 0);
+	character.getProficiency_level().put(PROF_BLADE, 0);
+	
+	character.getProficiency().put(PROF_SWORD, 0);
+	character.getProficiency_level().put(PROF_SWORD, 0);
+	
+	character.getProficiency().put(PROF_BACKSWORD, 0);
+	character.getProficiency_level().put(PROF_BACKSWORD, 0);
+	
+	character.getProficiency().put(PROF_HOOK, 0);
+	character.getProficiency_level().put(PROF_HOOK, 0);
+	
+	character.getProficiency().put(PROF_WHIP, 0);
+	character.getProficiency_level().put(PROF_WHIP, 0);
+	
+	character.getProficiency().put(PROF_AXE, 0);
+	character.getProficiency_level().put(PROF_AXE, 0);
+	
+	character.getProficiency().put(PROF_HAMMER, 0);
+	character.getProficiency_level().put(PROF_HAMMER, 0);
+	
+	character.getProficiency().put(PROF_CLUB, 0);
+	character.getProficiency_level().put(PROF_CLUB, 0);
+	
+	character.getProficiency().put(PROF_SCEPTER, 0);
+	character.getProficiency_level().put(PROF_SCEPTER, 0);
+	
+	character.getProficiency().put(PROF_DAGGER, 0);
+	character.getProficiency_level().put(PROF_DAGGER, 0);
+	
+	character.getProficiency().put(PROF_BOW, 0);
+	character.getProficiency_level().put(PROF_BOW, 0);
+	
+	character.getProficiency().put(PROF_GLAIVE, 0);
+	character.getProficiency_level().put(PROF_GLAIVE, 0);
+	
+	character.getProficiency().put(PROF_POLEAXE, 0);
+	character.getProficiency_level().put(PROF_POLEAXE, 0);
+	
+	character.getProficiency().put(PROF_LONGHAMMER, 0);
+	character.getProficiency_level().put(PROF_LONGHAMMER, 0);
+	
+	character.getProficiency().put(PROF_SPEAR, 0);
+	character.getProficiency_level().put(PROF_SPEAR, 0);
+	
+	character.getProficiency().put(PROF_HALBERT, 0);
+	character.getProficiency_level().put(PROF_HALBERT, 0);
+	
+	character.getProficiency().put(PROF_WAND, 0);
+	character.getProficiency_level().put(PROF_WAND, 0);
+
 
     }
 

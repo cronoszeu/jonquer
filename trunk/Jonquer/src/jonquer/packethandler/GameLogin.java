@@ -3,6 +3,7 @@ package jonquer.packethandler;
 import java.util.ArrayList;
 
 import jonquer.debug.Log;
+import jonquer.misc.Constants;
 import jonquer.misc.Formula;
 import jonquer.misc.Tools;
 import jonquer.model.GroundItem;
@@ -11,6 +12,7 @@ import jonquer.model.Npc;
 import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.net.StaticPacketBuilder;
+import jonquer.services.IoService;
 
 /**
  * the 'language' packet 0x41c
@@ -45,7 +47,7 @@ public class GameLogin implements PacketHandler {
 	    player.destroy(true);
 	}
 
-	player.setCharacter(Tools.loadCharacter(player.getCharacter().getAccount()));
+	player.setCharacter(IoService.getService().loadCharacter(player.getCharacter().getAccount()));
 	player.getCharacter().setNpcsInView(new ArrayList<Npc>());
 	player.getCharacter().setMonstersInView(new ArrayList<Monster>());
 	player.getCharacter().setItemsInView(new ArrayList<GroundItem>());
@@ -55,6 +57,8 @@ public class GameLogin implements PacketHandler {
 	if(player.getCharacter().getSpouse() == null) {
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "NEW_ROLE");
 	} else {
+	    Constants.TODAYS_CONNECTIONS++;
+	    Constants.PLAYERS_ONLINE++;
 	    Log.debug("Logged In: " + player.getCharacter().getName());
 	    World.getWorld().getMaps().get(player.getCharacter().getMapid()).addPlayer(player);
 	    player.getCharacter().ourPlayer = player;
@@ -62,6 +66,9 @@ public class GameLogin implements PacketHandler {
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "ANSWER_OK");
 	    player.getActionSender().sendInventory();
 	    player.getActionSender().sendEquippedItems();
+	    player.getActionSender().sendProfs();
+	    player.getActionSender().sendMessage(0xfffff, Formula.TALK_MESSAGE_TYPE, "SYSTEM", "ALL", "Welcome to " + Constants.GAME_NAME + " v" + Constants.VERSION + (Constants.REVISION > 0 ? " (r" + Constants.REVISION + ")" : ""));
+	    player.getActionSender().sendMessage(0xfffff, Formula.TALK_MESSAGE_TYPE, "SYSTEM", "ALL", "Players Online: " + Constants.PLAYERS_ONLINE + " Total Connections: " + Constants.TODAYS_CONNECTIONS);
 	}
     }
 

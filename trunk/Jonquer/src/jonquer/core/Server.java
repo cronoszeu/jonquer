@@ -37,6 +37,7 @@ import jonquer.model.def.COItemDef.ClassRequired;
 import jonquer.net.AuthConnectionHandler;
 import jonquer.net.GameConnectionHandler;
 import jonquer.packethandler.PacketHandler;
+import jonquer.services.IoService;
 
 import org.apache.mina.common.IoAcceptor;
 import org.apache.mina.common.IoAcceptorConfig;
@@ -62,13 +63,15 @@ public class Server {
 	    World.getWorld().spawnNpcs();
 	    Log.log("Auth Server Listening on " + Constants.AUTH_PORT);
 	    Log.log("Game Server Listening on " + Constants.GAME_PORT);
+	    Log.log("IO: (Character Data = " + IoService.characterIOType + ") (Server Data = " + IoService.serverIOType + ")");
 	    acceptor = new SocketAcceptor(Runtime.getRuntime().availableProcessors(), Executors.newCachedThreadPool());
 	    org.apache.mina.common.ByteBuffer.allocate(500);
 	    IoAcceptorConfig config = new SocketAcceptorConfig();
 	    config.setDisconnectOnUnbind(true);
 	    config.setThreadModel(ThreadModel.MANUAL);
 	    ((SocketSessionConfig) config.getSessionConfig()).setReuseAddress(true);
-	    ((SocketSessionConfig) config.getSessionConfig()).setReceiveBufferSize(30000);
+	    ((SocketSessionConfig) config.getSessionConfig()).setReceiveBufferSize(5000);
+	    ((SocketSessionConfig) config.getSessionConfig()).setSendBufferSize(5000);
 	    ((SocketSessionConfig) config.getSessionConfig()).setTcpNoDelay(false);
 	    acceptor.bind(new InetSocketAddress(Constants.AUTH_HOST, Constants.AUTH_PORT), new AuthConnectionHandler(), config);
 	    acceptor.bind(new InetSocketAddress(Constants.GAME_HOST, Constants.GAME_PORT), new GameConnectionHandler(), config);
@@ -88,6 +91,7 @@ public class Server {
 	long now = System.currentTimeMillis();
 	Log.log("Loading Data..");
 	startMeasure();
+	IoService.getService().initIoPluggables();
 	prepareAccounts();
 	loadPacketHandlers();
 	loadNpcs();
@@ -302,7 +306,7 @@ public class Server {
     public void loadScripts() {
 	try {
 	    int count = 0;
-	    for (File f : new File(Constants.USER_DIR + "/plugins/npcscripts/").listFiles()) {
+	    for (File f : new File(Constants.USER_DIR + "/src/jonquer/plugins/npcscripts/").listFiles()) {
 		if (f.isDirectory() || !f.getName().endsWith(".bsh")) {
 		    continue;
 		}
@@ -647,11 +651,10 @@ public class Server {
 		}
 		if (f.getName().endsWith(".cfg")) {
 		    StaticData.getAccounts().add(f.getName().replaceAll(".cfg", "").toLowerCase());
-		    jonquer.model.Character ch = Tools.loadCharacter(f.getName().replaceAll(".cfg", "").toLowerCase());
+		    jonquer.model.Character ch = IoService.getService().loadCharacter(f.getName().replaceAll(".cfg", "").toLowerCase());
 		    if (ch != null && ch.getName() != null) {
 			StaticData.getCharacters().add(ch.getName().toLowerCase());
 		    }
-
 		}
 		count++;
 	    }
