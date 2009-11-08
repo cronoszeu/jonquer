@@ -2,7 +2,6 @@ package jonquer.net;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Random;
 
 import jonquer.debug.Log;
 import jonquer.misc.Constants;
@@ -572,6 +571,43 @@ public class PacketBuilder {
 	bb.putInt(12, 4);
 	bb.putInt(16, player.getCharacter().getMoney());
 	write(bb);    
+    }
+
+    public void sendCompleteMapChange() {
+        ByteBuffer bb = ByteBuffer.wrap(createDataPacket((int) System.currentTimeMillis(), player.getCharacter().getID(), 0xffffffff, player.getCharacter().getX(), player.getCharacter().getY(), (short) 0));
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(22, (short) 0x68).array();
+	write(bb);
+    }
+
+    public void sendMapInfo() {
+        ByteBuffer bb = ByteBuffer.allocate(16);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1110);
+        bb.putInt(4, player.getCharacter().getMapid());
+        bb.putInt(8, player.getCharacter().getMapid());
+        bb.putInt(8, 0000); //map type
+        write(bb);
+    }
+
+    public void sendLootItem(int playerid, short cellx, short celly) {
+        ByteBuffer bb = ByteBuffer.allocate(0x14);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+        bb.putShort(0, (short) bb.limit());
+        bb.putShort(2, (short) 1101);
+        bb.putInt(4, playerid);
+        bb.put(8, (byte) 0x00);
+        bb.put(9, (byte) 0x00);
+        bb.put(10, (byte) 0x00);
+        bb.put(11, (byte) 0x00);
+        bb.putShort(12, cellx);
+        bb.putShort(14, celly);
+        bb.put(16, (byte) 0x03);
+        bb.put(17, (byte) 0x00);
+        bb.put(18, (byte) 0x00);
+        bb.put(19, (byte) 0x00);
+        write(bb);
     }
 
     public void write(ByteBuffer b) {

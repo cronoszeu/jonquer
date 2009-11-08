@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import java.util.List;
 import jonquer.debug.JonquerError;
 import jonquer.debug.Log;
 import jonquer.misc.Formula;
@@ -15,6 +16,7 @@ public class Map {
     private HashMap<Integer, Monster> monsters;
     private HashMap<Integer, Player> players;
     private ArrayList<GroundItem> groundItems;
+    private List<Portal> portals;
 
     public Map(int mapid, int xcoords, int ycoords) {
 	this.mapid = mapid;
@@ -22,6 +24,7 @@ public class Map {
 	monsters = new HashMap<Integer, Monster>();
 	players = new HashMap<Integer, Player>();
 	groundItems = new ArrayList<GroundItem>();
+        portals = new ArrayList<Portal>();
     }
 
     public boolean isTileBlocked(int x, int y) {
@@ -75,6 +78,10 @@ public class Map {
 
     public HashMap<Integer, Player> getPlayers() {
 	return players;
+    }
+
+    public List<Portal> getPortals() {
+        return portals;
     }
 
     public void setMapid(int mapid) {
