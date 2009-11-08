@@ -62,13 +62,13 @@ public class DataPacket implements PacketHandler {
                         player.updateMeToOthers();
                         player.updateMonsters();
                         player.updateNpcs();
-                        player.updateNpcs();
                         player.updateOthersToMe();
                     }
                 } else {
                     player.destroy();
                 }
                 break;
+
 
             case 117:
                 int uid = bb.getInt(12);
