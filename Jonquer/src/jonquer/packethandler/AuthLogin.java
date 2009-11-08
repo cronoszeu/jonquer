@@ -6,6 +6,7 @@ import jonquer.misc.StaticData;
 import jonquer.misc.Tools;
 import jonquer.model.Character;
 import jonquer.model.Player;
+import jonquer.services.IoService;
 
 /**
  * Check and authorize the player to login.
@@ -32,7 +33,7 @@ public class AuthLogin implements PacketHandler {
 	    }
 	    if (Tools.accountExists(username)) {
 		Log.debug("USER EXISTS! (" + username + ")");
-		Character ch = Tools.loadCharacter(username);
+		Character ch = IoService.getService().loadCharacter(username);
 		if(ch != null) {
 		    if (ch.getPassword().equals(pass)) {
 			player.setCharacter(ch);
@@ -44,8 +45,7 @@ public class AuthLogin implements PacketHandler {
 		} else {
 		    player.getCharacter().setAccount(username);
 		    player.getCharacter().setPassword(pass);
-
-		    Tools.saveChar(player);
+		    IoService.getService().saveCharacter(player.getCharacter());
 		    Log.debug("CREATED ACCOUNT: " + username);
 		    StaticData.getAccounts().add(username.toLowerCase());
 		    login(player);
@@ -55,7 +55,7 @@ public class AuthLogin implements PacketHandler {
 		player.getCharacter().setAccount(username);
 		player.getCharacter().setPassword(pass);
 
-		Tools.saveChar(player);
+		 IoService.getService().saveCharacter(player.getCharacter());
 		Log.debug("CREATED ACCOUNT: " + username);
 		StaticData.getAccounts().add(username.toLowerCase());
 		login(player);

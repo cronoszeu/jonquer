@@ -19,9 +19,9 @@ public class Constants {
      */
     public static final double VERSION = 1.0;	
     /**
-     * The revision string retrieved from the website (rXX)
+     * The revision string retrieved from the website (rXXX)
      */
-    public static int REVISION = -1;
+    public static int REVISION = 0;
     /**
      * the IP string for the Game host.
      */
@@ -47,9 +47,17 @@ public class Constants {
      */
     public static final String LOG_FILE = USER_DIR + File.separator + "log" + File.separator + "ServerLog.txt";
     /**
+     * Self explanitory
+     */
+    public static int PLAYERS_ONLINE = 0;
+    /**
      * the Status of the server.
      */
     public static boolean serverRunning = true;
+    /**
+     * The amount of people logged in since restart
+     */
+    public static int TODAYS_CONNECTIONS = 0;
     /**
      * the Time the server thread will sleep each game-engine loop in
      * milliseconds.
@@ -79,11 +87,12 @@ public class Constants {
      * How many mobs the server has.
      */
     public static int MOB_COUNT = 0;
-    
-    
-    
     /**
      * the EXP your prof is multiplied by
      */
     public static final double PROF_EXP_MULTIPLIER = 1.0;
+    /**
+     * Time to remove a Player if they don't ping within this time.
+     */
+    public static final int TIMED_OUT = 30000;
 }

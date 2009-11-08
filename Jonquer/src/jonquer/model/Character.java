@@ -1,10 +1,11 @@
 package jonquer.model;
 
 import java.io.Serializable;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import jonquer.misc.Formula;
-import jonquer.misc.SerializedArrayList;
 
 /**
  * Represents a Character.
@@ -299,20 +300,7 @@ public class Character implements Serializable {
     public int getAction() {
 	return action;
     }
-    public void setProficiency(int[] proficiency) {
-	this.proficiency = proficiency;
-    }
 
-    public int[] getProficiency() {
-	return proficiency;
-    }
-    public void setProficiency_level(int[] proficiency_level) {
-	this.proficiency_level = proficiency_level;
-    }
-
-    public int[] getProficiency_level() {
-	return proficiency_level;
-    }
     public void setVirtuePoints(int virtuePoints) {
 	this.virtuePoints = virtuePoints;
     }
@@ -341,6 +329,31 @@ public class Character implements Serializable {
     public ArrayList<GroundItem> getItemsInView() {
 	return itemsInView;
     }
+
+    public void setProficiency_level(HashMap<Integer, Integer> proficiency_level) {
+	this.proficiency_level = proficiency_level;
+    }
+
+    public HashMap<Integer, Integer> getProficiency_level() {
+	return (HashMap<Integer, Integer>) proficiency_level;
+    }
+
+    public void setProficiency(HashMap<Integer, Integer> proficiency) {
+	this.proficiency = proficiency;
+    }
+
+    public HashMap<Integer, Integer> getProficiency() {
+	return  (HashMap<Integer, Integer>)proficiency;
+    }
+
+    public void setStamina(int stamina) {
+	this.stamina = stamina;
+    }
+
+    public int getStamina() {
+	return stamina;
+    }
+
     /**
      * The Character's name
      */
@@ -458,6 +471,10 @@ public class Character implements Serializable {
       */
      private transient long deathTime = 0;
      /**
+      * Stamina of this character, max 100.
+      */
+     private transient int stamina = 0;
+     /**
       * This characters virtue points
       */
      private int virtuePoints = 0;
@@ -480,11 +497,11 @@ public class Character implements Serializable {
      /**
       * Stores the exp of proficiency
       */
-     private int[] proficiency = new int[20000]; // redo do a hash map/array list
+     private AbstractMap<Integer, Integer> proficiency = new HashMap<Integer, Integer>();
      /**
       * Stores the levels of proficiency
       */
-     private int[] proficiency_level = new int[20000];
+     private AbstractMap<Integer, Integer> proficiency_level = new HashMap<Integer, Integer>();
      /**
       * View'd npcs.
       */

@@ -50,7 +50,7 @@ public class AuthConnectionHandler implements IoHandler {
 	 */
 	public void sessionClosed(IoSession arg0) throws Exception {
 		Player player = (Player) arg0.getAttachment();
-		player.destroy(true);
+		player.destroy(false);
 	}
 
 	/**

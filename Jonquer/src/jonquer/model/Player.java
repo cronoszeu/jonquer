@@ -95,21 +95,20 @@ public class Player {
 
 
     public void addProfExp(int i, int exp) {
-	if(getCharacter().getProficiency_level()[i] >= 20)
+	if(getCharacter().getProficiency_level().get(i) >= 20)
 	    return;
 
 	exp *= (int)Constants.PROF_EXP_MULTIPLIER;
-	if( getCharacter().getProficiency_level()[i] < 1)
-	    getCharacter().getProficiency_level()[i] = 1;
-	if(getCharacter().getProficiency()[i] + exp > Formula.PROF_LEVEL_EXP[getCharacter().getProficiency_level()[i] - 1]) {
-	    getCharacter().getProficiency_level()[i]++;
-	    getCharacter().getProficiency()[i] = 0;
-	    Log.log(getCharacter().getProficiency_level()[i] + "f");
+	if(getCharacter().getProficiency_level().get(i) < 1)
+	    getCharacter().getProficiency_level().put(i, 1);
+	if(getCharacter().getProficiency().get(i) + exp > Formula.PROF_LEVEL_EXP[getCharacter().getProficiency_level().get(i) - 1]) {
+	    getCharacter().getProficiency_level().put(i, getCharacter().getProficiency_level().get(i) + 1);
+	    getCharacter().getProficiency().put(i, 0);
 	    getActionSender().sendSystemMessage("Your Proficiency level has been improved");
 	} else {
-	    getCharacter().getProficiency()[i]+=exp;
+	    getCharacter().getProficiency().put(i, getCharacter().getProficiency().get(i) + exp);
 	}
-	getActionSender().sendProf(i, getCharacter().getProficiency_level()[i], getCharacter().getProficiency()[i]);
+	getActionSender().sendProf(i, getCharacter().getProficiency_level().get(i), getCharacter().getProficiency().get(i));
     }
 
     public void updateNpcs() {
@@ -204,40 +203,46 @@ public class Player {
      * Called when a player disconnects, gets kicked or needs to leave the
      * server
      */
-    public void destroy() {
-
-	if(getMap() != null) {
-	for(Player p : getMap().getPlayers().values())
-	    if (p != this) {
-		if (Formula.inView(getCharacter(), p.getCharacter())) {
-		    p.getActionSender().removeEntity(this);
-		    getActionSender().removeEntity(p);
-		}
-	    }
-	    getMap().removePlayer(this);
-	}
-
+    public void destroy(boolean save) {
 	try {
-	    world.getPlayers().remove(this);
-	
-	} catch (ConcurrentModificationException cme) { }
+	    if(getMap() != null) {
+		for(Player p : getMap().getPlayers().values())
+		    if (p != this) {
+			if (Formula.inView(getCharacter(), p.getCharacter())) {
+			    p.getActionSender().removeEntity(this);
+			    getActionSender().removeEntity(p);
+			}
+		    }
+		getMap().removePlayer(this);
+	    }
 
-	save();
-	if (this.getCharacter() != null && this.getCharacter().getName() != null) {
-	    Log.debug(this.getCharacter().getName() + " has Left the server");
+	    try {
+		world.getPlayers().remove(this);
+
+	    } catch (ConcurrentModificationException cme) { }
+
+	    if(save) {
+		save();
+		Constants.PLAYERS_ONLINE--;
+	    }
+
+	    if (this.getCharacter() != null && this.getCharacter().getName() != null) {
+		Log.debug(this.getCharacter().getName() + " has Left the server");
+	    }
+	    getSession().close();
+	    crypt = null;
+	} catch(Exception e) {
+	    Log.error(e);
+
 	}
-	getSession().close();
-	crypt = null;
     }
 
     /**
      * Called when a player disconnects, gets kicked or needs to leave the
      * server
      */
-    public void destroy(boolean nosave) {
-	crypt = null;
-	Log.debug(this.getIP() + " has Left the server");
-	getSession().close();
+    public void destroy() {
+	destroy(true);
     }
 
     public void updateOthersToMe() {
@@ -362,11 +367,19 @@ public class Player {
     public Interpreter getInterpreter() {
 	return interpreter;
     }
+    public void setLastPing(long lastPing) {
+	this.lastPing = lastPing;
+    }
+
+    public long getLastPing() {
+	return lastPing;
+    }
     /**
      * List of players in your view area.
      */
     private int lastOption = -1;
     private Script script = null;
+    private long lastPing = System.currentTimeMillis();
     private Interpreter interpreter = new Interpreter();
     private ArrayList<Player> playersInView = new ArrayList<Player>();
     public static final World world = World.getWorld();

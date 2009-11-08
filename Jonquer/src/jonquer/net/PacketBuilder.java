@@ -144,10 +144,49 @@ public class PacketBuilder {
 	}
     }
 
-    public void sendAllProf() {
-	for(int i=0; i < 20; i++)
-	    if(player.getCharacter().getProficiency_level()[i] > 0)
-		sendProf(i, player.getCharacter().getProficiency_level()[i], player.getCharacter().getProficiency()[i]);
+    public void sendStamina() {
+	sendUpdatePacket(9, player.getCharacter().getStamina());
+    }
+   
+    
+    public void sendProfs() {
+	int type = -1;
+	type = Formula.PROF_BLADE;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_SWORD;
+	if(player.getCharacter().getProficiency_level().get(type) > 0)
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_BACKSWORD;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_HOOK;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_WHIP;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_AXE;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_HAMMER;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_CLUB;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_SCEPTER;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_DAGGER;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_BOW;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_GLAIVE;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_POLEAXE;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_LONGHAMMER;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_SPEAR;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_WAND;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	type = Formula.PROF_HALBERT;
+	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+
     }
 
     public void sendProf(int type, int lv, int exp) {
