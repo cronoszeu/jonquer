@@ -152,6 +152,10 @@ public class World {
 	return npcs;
     }
 
+    public List<Portal> getPortals() {
+        return portals;
+    }
+
     /**
      * When the auth server sends the key off to the client, it also stores it's
      * Player object here, with the key, the client can retain it's old Player
@@ -174,6 +178,8 @@ public class World {
      * Contains all the Maps loaded on the server.
      */
     private HashMap<Integer, Map> maps = new HashMap<Integer, Map>();
+
+    private List<Portal> portals = Collections.synchronizedList(new ArrayList<Portal>());
     /**
      * the Server object.
      */
