@@ -3,7 +3,9 @@ package jonquer.misc;
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import jonquer.model.Npc;
+import jonquer.model.Shop;
 import jonquer.model.def.COItemDef;
 import jonquer.model.def.COMonsterDef;
 import jonquer.model.def.COMonsterSpawnDef;
@@ -41,6 +43,8 @@ public class StaticData {
      * Stored all the monster spawn def's.
      */
     public static HashMap<Integer, COMonsterSpawnDef> monsterSpawnDefs = new HashMap<Integer, COMonsterSpawnDef>();
+
+    public static Map<Integer, Shop> shops = new HashMap<Integer, Shop>();
 
     public static HashSet<String> getAccounts() {
 	return accounts;
