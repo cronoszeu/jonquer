@@ -8,6 +8,7 @@ import jonquer.misc.Constants;
 import jonquer.model.Packet;
 import jonquer.model.Player;
 import jonquer.model.World;
+import jonquer.model.future.RollingDelay;
 import jonquer.packethandler.PacketHandler;
 import jonquer.services.TimerService;
 
@@ -75,6 +76,7 @@ public class GameEngine {
 			    if (!World.getWorld().packetHandlers.containsKey(packetID)) {
 				Log.log("Unhandled Packet: " + packetID + " Length: " + b.getData().length);
 			    } else {
+				Log.debug("Packet ID: " + packetID);
 				PacketHandler ph = World.getWorld().packetHandlers.get(packetID);
 				try {
 				    ph.handlePacket(p, b.getData());
@@ -84,7 +86,7 @@ public class GameEngine {
 				}
 			    }
 			} else {
-			   // Log.log("Invalid Packet: " + new String(b.getData())+ " Length: ?");
+			    // Log.log("Invalid Packet: " + new String(b.getData())+ " Length: ?");
 			}
 
 			i.remove();
@@ -96,7 +98,7 @@ public class GameEngine {
 
 	} catch(ConcurrentModificationException cme) {
 
-	
+
 	} catch (Exception e) {
 	    e.printStackTrace();
 	} 
@@ -115,7 +117,18 @@ public class GameEngine {
 	while(ite.hasNext()) {
 	    TimerService handler = ite.next();
 	    if (System.currentTimeMillis() - handler.startTime > handler.delayTime) {
+		if(handler.rollingAmount == 0 && ite instanceof RollingDelay) {
+		    ite.remove();
+		    continue;
+		}
+		if(handler.rollingAmount == -1) {
+		    handler.startTime = System.currentTimeMillis();
+		    handler.execute();
+		    continue;
+		}
+		
 		handler.execute();
+		
 		handler.rollingAmount--;
 		if (!handler.rolling || handler.rollingAmount < 1) {
 		    ite.remove();

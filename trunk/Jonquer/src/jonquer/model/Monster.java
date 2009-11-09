@@ -1,12 +1,15 @@
 package jonquer.model;
 
+import jonquer.debug.Log;
 import jonquer.misc.Constants;
+import jonquer.misc.Formula;
 import jonquer.misc.StaticData;
 import jonquer.model.def.COMonsterDef;
 import jonquer.model.def.COMonsterSpawnDef;
+import jonquer.model.future.Timer;
 
-public class Monster {
-    
+public class Monster extends Entity {
+
     private int map;
     private int x;
     private int y;
@@ -16,7 +19,7 @@ public class Monster {
     private long deathTime = 0;
     private int id;
     private int spawnDefId = 0;
-    
+
     public Monster(int id, int x, int y, int map, int spawnDefId) {
 	this.spawnDefId = spawnDefId;
 	this.setId(id);
@@ -27,42 +30,42 @@ public class Monster {
 	Constants.MOB_COUNT++;
 	World.getWorld().getMonsters().add(this);
     }
-    
+
     public COMonsterSpawnDef getSpawnDef() {
 	return StaticData.monsterSpawnDefs.get(spawnDefId);
     }
-    
+
     public COMonsterDef getDef() {
 	return StaticData.monsterDefs.get(getId());
     }
-    
+
     public int getX() {
-        return x;
+	return x;
     }
     public void setX(int x) {
-        this.x = x;
+	this.x = x;
     }
     public int getY() {
-        return y;
+	return y;
     }
-    
+
     public Map getMap() {
 	return World.getWorld().getMaps().get(getSpawnDef().getMapid());
     }
     public void setY(int y) {
-        this.y = y;
+	this.y = y;
     }
     public int getUID() {
-        return UID;
+	return UID;
     }
     public void setUID(int uID) {
-        UID = uID;
+	UID = uID;
     }
     public int getCurHP() {
-        return curHP;
+	return curHP;
     }
     public void setCurHP(int curHP) {
-        this.curHP = curHP;
+	this.curHP = curHP;
     }
     public void setDeathTime(long deathTime) {
 	this.deathTime = deathTime;
@@ -97,6 +100,60 @@ public class Monster {
 
     public int getSpawnDefId() {
 	return spawnDefId;
+    }
+
+    public Monster getMonster() {
+	return this;
+    }
+
+    public static int MOB_DEATHS = 0;
+    @Override
+    public void onDeath(Entity killer) {
+	getMap().removeMonster(this);
+	MOB_DEATHS++;
+	for(Player p : getMap().getPlayers().values()) {
+	    if(Formula.inView(p.getCharacter().getX(), p.getCharacter().getY(), getX(), getY())) {
+		p.getActionSender().fadeMonster(this);
+		p.getCharacter().getMonstersInView().remove(this);
+		p.updateMonsters();
+
+	    }
+	}
+	((Player)killer).getCharacter().setTarget(null);
+
+	// set them for respawn.
+	World.getWorld().getTimerService().add(new Timer(getSpawnDef().getRespawnTime() * 1000, null) {
+	    public void execute() {
+		try {
+		    //getMonster().setUID(UID = 400000 + Constants.MOB_COUNT + MOB_DEATHS);
+		    System.out.println("Respawned");
+		    getMap().addMonster(getMonster());
+		    setCurHP(getDef().getLife());
+		    setDead(false);
+		    int x;
+		    if(getSpawnDef().getBound_cx() > 0)
+			x = Formula.rand(getSpawnDef().getBound_x(), getSpawnDef().getBound_x() + getSpawnDef().getBound_cx());
+		    else
+			x = getSpawnDef().getBound_x();
+		    int y;
+		    if(getSpawnDef().getBound_cy() > 0)
+			y = Formula.rand(getSpawnDef().getBound_y(), getSpawnDef().getBound_y() + getSpawnDef().getBound_cy());
+		    else
+			y = getSpawnDef().getBound_y();
+		    setX(getX() + 2);
+		    setY(getY() + 2);
+		    for(Player p : getMap().getPlayers().values()) {
+			if(Formula.inView(p.getCharacter().getX(), p.getCharacter().getY(), getX(), getY())) {
+			    p.getCharacter().getMonstersInView().add(getMonster());
+			    p.updateMonsters();	     
+			    p.getActionSender().respawnMonster(getMonster());
+			}
+		    }
+		} catch (Exception e) {
+		    Log.error(e);
+		}
+	    }
+	});
     }
 
 }

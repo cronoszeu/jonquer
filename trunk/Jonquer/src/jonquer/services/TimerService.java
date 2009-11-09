@@ -24,6 +24,11 @@ public abstract class TimerService {
 	}
 
 	public abstract void execute();
+	
+	public void stop() {
+	    rolling = false;
+	    rollingAmount = 0;
+	}
 
 	/**
 	 * the starting time in milliseconds

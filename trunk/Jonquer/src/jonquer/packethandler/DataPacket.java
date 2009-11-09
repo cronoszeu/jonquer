@@ -16,14 +16,14 @@ public class DataPacket implements PacketHandler {
 
         ByteBuffer bb = ByteBuffer.wrap(packet);
         bb.order(ByteOrder.LITTLE_ENDIAN);
-
-
-        switch (bb.getShort(22)) {
+        int subID = bb.getShort(22);
+        Log.debug("Data Packet ID: " + subID);
+        switch (subID) {
 
             case 74:
                 player.getActionSender().sendLocation();
                 break;
-
+                
             case 76:
                 player.getActionSender().write(bb);
                 break;
@@ -90,6 +90,7 @@ public class DataPacket implements PacketHandler {
                 break;
 
             case 81: // actions
+        	player.checkAndStopAttack();
         	int prev = player.getCharacter().getAction();
         	int id = bb.get(12);
                 player.getCharacter().setAction(id);
@@ -107,17 +108,31 @@ public class DataPacket implements PacketHandler {
                 		player.getCharacter().setStamina(player.getCharacter().getStamina() + 10);
                 		if(player.getCharacter().getStamina() > 100) {
                 		    player.getCharacter().setStamina(100);
-                		    rolling = false;
+                		    stop();
                 		}
                 		player.getActionSender().sendStamina();
-                	    } else rolling = false;
+                	    } else stop();
                 	}
                     });
                 }
                 break;
-
-            case 96:
-                player.getActionSender().write(bb);
+            case 96: // change fight mode
+        	
+        	int mode = bb.get(12);
+        	if(mode < 0 || mode > 4) {
+        	    Log.hack(player.getCharacter().getName() + " tried to send an invalid fight mode");
+        	    player.destroy();
+        	    return;
+        	}
+        	player.getCharacter().setFightmode(mode);
+        	if(mode == Formula.MODE_PK)
+        	    player.getActionSender().sendSystemMessage("Free PK mode. You can attack anyone.");
+        	else if(mode == Formula.MODE_CAPTURE)
+        	    player.getActionSender().sendSystemMessage("Restrictive PK mode. You can only attack monsters, black-name and blue-name players.");
+        	else if(mode == Formula.MODE_TEAM)
+        	    player.getActionSender().sendSystemMessage("Team PK mode. YOu can attack monsters and players except for your teammates.");
+        	else if(mode == Formula.MODE_PEACE)
+        	    player.getActionSender().sendSystemMessage("Peace mode. You can only attack monsters and won't hurt other players.");
                 break;
 
             case 97:
@@ -173,6 +188,7 @@ public class DataPacket implements PacketHandler {
                         } else {
                             direction = 5;
                         }
+                        player.checkAndStopAttack();
                         player.getCharacter().setDirection((byte) direction);
                         player.getCharacter().setX(nextX);
                         player.getCharacter().setY(nextY);
