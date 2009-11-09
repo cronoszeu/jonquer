@@ -10,10 +10,10 @@ SetText("Which class do you want to master?");
 	option = AddOptions("Warrior", "Trojan", "Archer");
 if(option == 1) {
 
-player.getCharacter().getProficiency_level()[PROF_WAND] = 19;
-player.getCharacter().getProficiency_level()[PROF_CLUB] = 19;
-player.getCharacter().getProficiency_level()[PROF_SWORD] = 19;
-player.getCharacter().getProficiency_level()[PROF_BLADE] = 19;
+player.getCharacter().getProficiency_level().put(PROF_WAND, 19);
+player.getCharacter().getProficiency_level().put(PROF_CLUB, 19);
+player.getCharacter().getProficiency_level().put(PROF_SWORD, 19);
+player.getCharacter().getProficiency_level().put(PROF_BLADE, 19);
 player.addProfExp(PROF_WAND, 1);
 player.addProfExp(PROF_SWORD, 1);
 player.addProfExp(PROF_CLUB, 1);
@@ -22,6 +22,10 @@ player.getCharacter().setStrength((short)200);
 player.getCharacter().setLevel(130);
 player.getCharacter().setProfession((byte)25);
 player.getActionSender().sendHeroInfo();
+player.updateNpcs();
+player.updateMonsters();
+player.updateGroundItems();
+player.updateOthersToMe();
 
 AddItem(112619, 9, 7, 255, 15, 15);
 AddItem(136999, 9, 7, 255, 15, 15);
@@ -37,10 +41,10 @@ AddItem(410339, 9, 7, 255, 15, 15);
 
 } else if(option == 2) {
 
-player.getCharacter().getProficiency_level()[PROF_WAND] = 19;
-player.getCharacter().getProficiency_level()[PROF_CLUB] = 19;
-player.getCharacter().getProficiency_level()[PROF_SWORD] = 19;
-player.getCharacter().getProficiency_level()[PROF_BLADE] = 19;
+player.getCharacter().getProficiency_level().put(PROF_WAND, 19);
+player.getCharacter().getProficiency_level().put(PROF_CLUB, 19);
+player.getCharacter().getProficiency_level().put(PROF_SWORD, 19);
+player.getCharacter().getProficiency_level().put(PROF_BLADE, 19);
 player.addProfExp(PROF_WAND, 1);
 player.addProfExp(PROF_SWORD, 1);
 player.addProfExp(PROF_CLUB, 1);
@@ -49,6 +53,10 @@ player.getCharacter().setStrength((short)200);
 player.getCharacter().setLevel(130);
 player.getCharacter().setProfession((byte)15);
 player.getActionSender().sendHeroInfo();
+player.updateNpcs();
+player.updateMonsters();
+player.updateGroundItems();
+player.updateOthersToMe();
 
 AddItem(135999, 9, 7, 255, 15, 15);
 AddItem(112989, 9, 7, 255, 15, 15);
@@ -63,7 +71,7 @@ AddItem(410339, 9, 7, 255, 15, 15);
 
 } else if(option == 3) {
 
-player.getCharacter().getProficiency_level()[PROF_BOW] = 19;
+player.getCharacter().getProficiency_level().put(PROF_BOW, 19);
 
 player.addProfExp(PROF_BOW, 1);
 
@@ -72,6 +80,10 @@ player.getCharacter().setStrength((short)256);
 player.getCharacter().setLevel(130);
 player.getCharacter().setProfession((byte)45);
 player.getActionSender().sendHeroInfo();
+player.updateNpcs();
+player.updateMonsters();
+player.updateGroundItems();
+player.updateOthersToMe();
 
 AddItem(138999, 9, 7, 255, 15, 15);
 AddItem(112939, 9, 7, 255, 15, 15);
