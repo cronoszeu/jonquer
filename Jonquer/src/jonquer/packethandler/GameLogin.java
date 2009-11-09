@@ -53,7 +53,6 @@ public class GameLogin implements PacketHandler {
 	player.getCharacter().setItemsInView(new ArrayList<GroundItem>());
 	player.getCharacter().setID(id);
 
-	//"We: 
 	if(player.getCharacter().getSpouse() == null) {
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "NEW_ROLE");
 	} else {
@@ -67,6 +66,7 @@ public class GameLogin implements PacketHandler {
 	    player.getActionSender().sendInventory();
 	    player.getActionSender().sendEquippedItems();
 	    player.getActionSender().sendProfs();
+	    player.getActionSender().sendFightMode();
 	    player.getActionSender().sendMessage(0xfffff, Formula.TALK_MESSAGE_TYPE, "SYSTEM", "ALL", "Welcome to " + Constants.GAME_NAME + " v" + Constants.VERSION + (Constants.REVISION > 0 ? " (r" + Constants.REVISION + ")" : ""));
 	    player.getActionSender().sendMessage(0xfffff, Formula.TALK_MESSAGE_TYPE, "SYSTEM", "ALL", "Players Online: " + Constants.PLAYERS_ONLINE + " Total Connections: " + Constants.TODAYS_CONNECTIONS);
 	}

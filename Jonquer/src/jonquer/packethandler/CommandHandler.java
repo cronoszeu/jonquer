@@ -9,6 +9,7 @@ import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.model.def.COItemDef;
 import jonquer.net.PacketBuilder;
+import jonquer.services.IoService;
 
 public class CommandHandler {
 
@@ -107,7 +108,7 @@ public class CommandHandler {
 	    }
 	} else if (command("/saveall")) {
 	    for (Player p : World.getWorld().getPlayers()) {
-		p.save();
+		IoService.getService().saveCharacter(p.getCharacter());
 	    }
 	} else if (command("/kickall")) {
 	    for (Player p : World.getWorld().getPlayers()) {

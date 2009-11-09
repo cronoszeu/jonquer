@@ -17,6 +17,7 @@ public class Map {
     private HashMap<Integer, Player> players;
     private ArrayList<GroundItem> groundItems;
     private List<Portal> portals;
+    private boolean pkMap = true;
 
     public Map(int mapid, int xcoords, int ycoords) {
 	this.mapid = mapid;
@@ -24,7 +25,7 @@ public class Map {
 	monsters = new HashMap<Integer, Monster>();
 	players = new HashMap<Integer, Player>();
 	groundItems = new ArrayList<GroundItem>();
-        portals = new ArrayList<Portal>();
+	portals = new ArrayList<Portal>();
     }
 
     public boolean isTileBlocked(int x, int y) {
@@ -36,9 +37,9 @@ public class Map {
 	    getMonsters().remove(m.getUID());
 	}
     }
-    
+
     public void addGroundItem(GroundItem gi, Point p, int map) {
-	
+
 	getGroundItems().add(gi);
 	for(Player pl : World.getWorld().getMaps().get(map).getPlayers().values()) {
 	    pl.updateGroundItems();
@@ -46,12 +47,7 @@ public class Map {
     }
 
     public void addMonster(Monster m) throws Exception {
-
-	if (!getMonsters().containsValue(m)) {
-	    getMonsters().put(m.getUID(), m);
-	} else {
-	    throw new JonquerError("Error!! Monster already exists in collection");
-	}
+	getMonsters().put(m.getUID(), m);
     }
 
     public void removePlayer(Player p) {
@@ -61,11 +57,11 @@ public class Map {
     }
 
     public void addPlayer(Player p) throws Exception {
-	    if (!getPlayers().containsValue(p)) {
-		getPlayers().put(p.getCharacter().getID(), p);
-	    } else {
-		throw new JonquerError("Error!! Player already exists in collection");
-	    }
+	if (!getPlayers().containsValue(p)) {
+	    getPlayers().put(p.getCharacter().getID(), p);
+	} else {
+	    throw new JonquerError("Error!! Player already exists in collection");
+	}
     }
 
     public HashMap<Integer, Monster> getMonsters() {
@@ -81,7 +77,7 @@ public class Map {
     }
 
     public List<Portal> getPortals() {
-        return portals;
+	return portals;
     }
 
     public void setMapid(int mapid) {
@@ -102,5 +98,13 @@ public class Map {
 
     public ArrayList<GroundItem> getGroundItems() {
 	return groundItems;
+    }
+
+    public void setPkMap(boolean pkMap) {
+	this.pkMap = pkMap;
+    }
+
+    public boolean isPkMap() {
+	return pkMap;
     }
 }

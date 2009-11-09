@@ -354,6 +354,26 @@ public class Character implements Serializable {
 	return stamina;
     }
 
+    public void setFightmode(int fightmode) {
+	this.fightmode = fightmode;
+    }
+
+    public int getFightmode() {
+	return fightmode;
+    }
+    
+    public boolean isFighting() {
+	return target != null;
+    }
+
+    public void setTarget(Entity target) {
+	this.target = target;
+    }
+
+    public Entity getTarget() {
+	return target;
+    }
+
     /**
      * The Character's name
      */
@@ -495,6 +515,10 @@ public class Character implements Serializable {
       */
      public transient Player ourPlayer;
      /**
+      * Our fightmode (PK, TEAM, PEACE, CAPTURE)
+      */
+     private int fightmode = 0;
+     /**
       * Stores the exp of proficiency
       */
      private AbstractMap<Integer, Integer> proficiency = new HashMap<Integer, Integer>();
@@ -514,4 +538,8 @@ public class Character implements Serializable {
       * View'd items in view (Ground Items)
       */
      private transient ArrayList<GroundItem> itemsInView;
+     /**
+      * The monster we are currently attacking
+      */
+     private transient Entity target = null;
 }

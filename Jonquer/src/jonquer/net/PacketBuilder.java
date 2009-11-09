@@ -21,6 +21,68 @@ import org.apache.mina.common.IoSession;
  * 
  */
 public class PacketBuilder {
+    
+    public void fadeMonster(Monster m) {
+	ByteBuffer bb = ByteBuffer.allocate(28);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1017); // packet id
+	bb.putInt(4, m.getUID());
+	bb.put(8, (byte)1);
+	bb.put(12, (byte)26);
+	bb.putShort(16, (short)2080);
+	write(bb);
+    }//
+    
+    public void respawnMonster(Monster m) {
+	String name = "MBStandard";
+	ByteBuffer bb = ByteBuffer.allocate(13 + name.length());
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1015); // packet id
+	bb.putInt(4, m.getUID());
+	bb.put(8, (byte)10);
+	bb.put(9, (byte)1);
+	bb.put(10, (byte)name.length());
+	
+	for (int i = 0; i < name.length(); i++) {
+	    bb.put(11 + i, (byte) name.charAt(i));
+	}
+	write(bb);
+    }
+    
+
+
+    public void attack(int targetUID, int targetX, int targetY, int attackType, int damage) {
+
+	ByteBuffer bb = ByteBuffer.allocate(28);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1022); // packet id
+	bb.putInt(8, player.getCharacter().getID());
+	bb.putInt(12, targetUID);
+	bb.putShort(16, (short)targetX);
+	bb.putShort(18, (short)targetY);
+	bb.putInt(20, attackType);
+	bb.putInt(24, damage);
+	write(bb);
+    }
+
+    public void sendFightMode() {
+	ByteBuffer bb = ByteBuffer.allocate(24);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1010); // packet id
+	bb.putInt(4, (int) System.currentTimeMillis());
+	bb.putInt(8, player.getCharacter().getID());
+	bb.putShort(12, (short) player.getCharacter().getFightmode());
+	bb.putShort(14, (short) 0);
+	bb.putShort(16, (short) 0);
+	bb.putShort(18, (short) 0);
+	bb.putShort(20, (short) 0);
+	bb.putShort(22, (short) 96);
+	write(bb);
+    }
 
     public void spawnGroundItem(GroundItem i) {
 	ByteBuffer bb = ByteBuffer.allocate(20);
@@ -29,14 +91,14 @@ public class PacketBuilder {
 	bb.putShort(2, (short) 1101); // packet id
 	bb.putInt(4, i.getUID());
 	bb.putInt(8, i.getID());
-	
+
 	bb.putShort(12, (short)i.getX());
 	bb.putShort(14, (short)i.getY());
 	bb.put(16, (byte)1);
 	bb.putShort(18, (short)i.getMap());
 	write(bb);
     }
-    
+
     public void removeItemEffect(GroundItem i) {
 	ByteBuffer bb = ByteBuffer.allocate(20);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
@@ -44,7 +106,7 @@ public class PacketBuilder {
 	bb.putShort(2, (short) 1101); // packet id
 	bb.putInt(4, i.getUID());
 	bb.putInt(8, i.getID());
-	
+
 	bb.putShort(12, (short)i.getX());
 	bb.putShort(14, (short)i.getY());
 	bb.put(16, (byte)3);
@@ -147,15 +209,15 @@ public class PacketBuilder {
     public void sendStamina() {
 	sendUpdatePacket(9, player.getCharacter().getStamina());
     }
-   
-    
+
+
     public void sendProfs() {
 	int type = -1;
 	type = Formula.PROF_BLADE;
 	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
 	type = Formula.PROF_SWORD;
 	if(player.getCharacter().getProficiency_level().get(type) > 0)
-	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
+	    sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
 	type = Formula.PROF_BACKSWORD;
 	sendProf(type, player.getCharacter().getProficiency_level().get(type), player.getCharacter().getProficiency().get(type));
 	type = Formula.PROF_HOOK;
@@ -613,40 +675,40 @@ public class PacketBuilder {
     }
 
     public void sendCompleteMapChange() {
-        ByteBuffer bb = ByteBuffer.wrap(createDataPacket((int) System.currentTimeMillis(), player.getCharacter().getID(), 0xffffffff, player.getCharacter().getX(), player.getCharacter().getY(), (short) 0));
+	ByteBuffer bb = ByteBuffer.wrap(createDataPacket((int) System.currentTimeMillis(), player.getCharacter().getID(), 0xffffffff, player.getCharacter().getX(), player.getCharacter().getY(), (short) 0));
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	bb.putShort(22, (short) 0x68).array();
 	write(bb);
     }
 
     public void sendMapInfo() {
-        ByteBuffer bb = ByteBuffer.allocate(16);
+	ByteBuffer bb = ByteBuffer.allocate(16);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	bb.putShort(0, (short) bb.limit());
 	bb.putShort(2, (short) 1110);
-        bb.putInt(4, player.getCharacter().getMapid());
-        bb.putInt(8, player.getCharacter().getMapid());
-        bb.putInt(8, 0000); //map type
-        write(bb);
+	bb.putInt(4, player.getCharacter().getMapid());
+	bb.putInt(8, player.getCharacter().getMapid());
+	bb.putInt(8, 0000); //map type
+	write(bb);
     }
 
     public void sendLootItem(int playerid, short cellx, short celly) {
-        ByteBuffer bb = ByteBuffer.allocate(0x14);
-        bb.order(ByteOrder.LITTLE_ENDIAN);
-        bb.putShort(0, (short) bb.limit());
-        bb.putShort(2, (short) 1101);
-        bb.putInt(4, playerid);
-        bb.put(8, (byte) 0x00);
-        bb.put(9, (byte) 0x00);
-        bb.put(10, (byte) 0x00);
-        bb.put(11, (byte) 0x00);
-        bb.putShort(12, cellx);
-        bb.putShort(14, celly);
-        bb.put(16, (byte) 0x03);
-        bb.put(17, (byte) 0x00);
-        bb.put(18, (byte) 0x00);
-        bb.put(19, (byte) 0x00);
-        write(bb);
+	ByteBuffer bb = ByteBuffer.allocate(0x14);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1101);
+	bb.putInt(4, playerid);
+	bb.put(8, (byte) 0x00);
+	bb.put(9, (byte) 0x00);
+	bb.put(10, (byte) 0x00);
+	bb.put(11, (byte) 0x00);
+	bb.putShort(12, cellx);
+	bb.putShort(14, celly);
+	bb.put(16, (byte) 0x03);
+	bb.put(17, (byte) 0x00);
+	bb.put(18, (byte) 0x00);
+	bb.put(19, (byte) 0x00);
+	write(bb);
     }
 
     public void write(ByteBuffer b) {

@@ -102,6 +102,7 @@ public class World {
 		    if(getMaps().get(spawndef.getMapid()) == null)
 			continue;
 		    Monster m = new Monster(spawndef.getNpctype(), x, y, spawndef.getMapid(), spawndef.getId());
+		    m.setCurHP(m.getDef().getLife());
 		    getMonsters().add(m);
 		    getMaps().get(spawndef.getMapid()).addMonster(m);
 		}

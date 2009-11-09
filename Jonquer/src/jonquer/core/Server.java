@@ -170,6 +170,9 @@ public class Server {
 		index += 4;
 		int mapid = mapids.get(c);
 		Map map = new Map(mapid, xCount, yCount);
+		for(int i=0; i < Formula.NO_PK_MAPS.length; i++)
+		    if(i == mapid)
+			map.setPkMap(false);
 		for (int y = 0; y < yCount; y++) {
 		    for (int x = 0; x < xCount; x++) {
 			map.getData()[x][y] = bb.get(index);

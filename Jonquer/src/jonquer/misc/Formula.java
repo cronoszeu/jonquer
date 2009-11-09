@@ -44,6 +44,14 @@ public class Formula {
     public static final int RAISE_FLAG_UPDATE_TYPE = 26;
     public static final int LUCKY_TIME_UPDATE_TYPE = 29;
     public static final int HAIR_STYLE_UPDATE_TYPE = 31;
+    
+    public static final int[] NO_PK_MAPS = {1002, 1036};
+    
+    /** Fight Modes */
+    public static final int MODE_PK = 0;
+    public static final int MODE_TEAM = 2;
+    public static final int MODE_CAPTURE = 3;
+    public static final int MODE_PEACE = 1;
 
     /** Item qualities. */
     public static final int FIXED = 0;

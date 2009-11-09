@@ -19,6 +19,11 @@ public abstract class RollingDelay extends TimerService {
 	public RollingDelay(int ms, int amount) {
 		super(ms, true, amount);
 	}
+	
+	public RollingDelay(int ms) {
+		super(ms, true, -1);
+	}
+
 
 	public abstract void execute();
 

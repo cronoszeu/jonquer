@@ -18,6 +18,7 @@ import jonquer.misc.Formula;
 import jonquer.misc.Script;
 import jonquer.misc.StaticData;
 import jonquer.net.PacketBuilder;
+import jonquer.services.IoService;
 
 import org.apache.mina.common.IoSession;
 
@@ -30,7 +31,7 @@ import bsh.Interpreter;
  * @author xEnt
  * 
  */
-public class Player {
+public class Player extends Entity {
 
     /**
      * Create this Player object from a MINA session.
@@ -50,6 +51,11 @@ public class Player {
 	getCharacter().setMonstersInView(new ArrayList<Monster>());
 	getCharacter().setItemsInView(new ArrayList<GroundItem>());
 	world.getPlayers().add(this);
+    }
+    
+    public void checkAndStopAttack() {
+	if(getCharacter().getTarget() != null)
+	    getCharacter().setTarget(null);
     }
 
     /**
@@ -127,7 +133,9 @@ public class Player {
     }
 
     public void updateMonsters() {
-	for (Monster monster : getMap().getMonsters().values()) {	   
+	for (Monster monster : getMap().getMonsters().values()) {
+	    if(monster.isDead())
+		continue;
 	    if (Formula.distance(getCharacter().getX(), getCharacter().getY(), monster.getX(), monster.getY()) <= Character.VIEW_RANGE) {
 		if(!getCharacter().getMonstersInView().contains(monster)) {
 		    getActionSender().sendMonsterSpawn(monster);
@@ -135,6 +143,7 @@ public class Player {
 		}
 	    } else if(getCharacter().getMonstersInView().contains(monster)) {
 		getCharacter().getMonstersInView().remove(monster);
+		// send remove to client
 	    }    
 	}
     }
@@ -186,17 +195,10 @@ public class Player {
 	return World.getWorld().getMaps().get(getCharacter().getMapid());
     }
 
-    public void save() {
-	ObjectOutputStream oos;
-	try {
-	    oos = new ObjectOutputStream(new FileOutputStream(Constants.SAVED_GAME_DIRECTORY + getCharacter().getAccount() + ".cfg"));
-	    oos.writeObject(getCharacter());
-	    oos.close();
-	} catch (FileNotFoundException e) {
-	    e.printStackTrace();
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
+    
+    @Override
+    public void onDeath(Entity killer) {
+	
     }
 
     /**
@@ -222,7 +224,7 @@ public class Player {
 	    } catch (ConcurrentModificationException cme) { }
 
 	    if(save) {
-		save();
+		IoService.getService().saveCharacter(getCharacter());
 		Constants.PLAYERS_ONLINE--;
 	    }
 
@@ -348,6 +350,7 @@ public class Player {
      */
     public void runScript(final int id) {
 	final Player p = this;
+	this.setLastOption(-1);
 	new Thread(new Runnable() {
 
 	    public void run() {

@@ -78,7 +78,7 @@ public class Constants {
     /**
      * Prints extra data, helpful for debugging etc.
      */
-    public static final boolean VERBOSE_DEBUG_MODE = false;
+    public static final boolean VERBOSE_DEBUG_MODE = true;
     /**
      * If a JonquerError gets thrown, enabling this will print a stack trace on the current thread.
      */
