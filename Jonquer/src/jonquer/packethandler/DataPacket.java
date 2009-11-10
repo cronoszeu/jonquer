@@ -95,11 +95,10 @@ public class DataPacket implements PacketHandler {
         	int id = bb.get(12);
                 player.getCharacter().setAction(id);
                 for (Player p : player.getMap().getPlayers().values()) {
-                    if (p != player) {
                         if (Formula.inView(p.getCharacter(), player.getCharacter())) {
                             p.getActionSender().write(bb);
                         }
-                    }
+                    
                 }
                 if(id == -6 && prev != -6) { // sit (recovers stamina)
                     World.getWorld().getTimerService().add(new RollingDelay(1000, 10) {
