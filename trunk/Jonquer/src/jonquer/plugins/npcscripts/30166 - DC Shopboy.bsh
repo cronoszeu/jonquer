@@ -1,0 +1,45 @@
+/**
+*
+* @author xEnt
+*
+*/
+
+ESCORT_CERTIFICATE = 721251;
+GREEN_BLADE = 721252;
+
+if(HasItem(GREEN_BLADE)) {
+	    SetText("Are there any other things I can do for you?");
+	    AddOptions("No, thanks.");
+	} else if(HasItem(ESCORT_CERTIFICATE)) {
+	    SetText("What can I do for you?");
+	    option = AddOptions("Inquire about escort team.", "Just passing by..");
+	    if(option == 1) {
+		SetText("You are asking the right person. At the time, more than 100 guards arrived \nhere. But they were killed the following day");
+		option = AddOptions("Did you find anything?", "That sounds terrible");
+		if(option == 1) {
+		    SetText("Let me think. I found a bloody blade in the well a couple of days ago. I don't \nknow whether it relates to the case or not");
+		    option = AddOptions("Show me the blade?", "I don't think it's helpful");
+		    if(option == 1) {
+			SetText("If you give me 10,000 silver. I will send you the blade.");
+			option = AddOptions("Ok, give me the blade", "Forget it.");
+			if(option == 1) {
+			    if(HasMoney(10000)) {
+				if(CanHold(1)) {
+				    RemoveMoney(10000);
+				    AddItem(GREEN_BLADE);
+				    SetText("You are generous. I will tell you another clue. Miss Roy in the maple forest is \nwell-informed and knows much about weapons. You may speak to her for \nmore information.");
+				    AddOptions("I will go right away.");
+				} else {
+				    SendSystemMessage("You don't have enough free bag space");
+				}
+			    } else {
+				SendSystemMessage("You don't have enough money");
+			    }
+			}
+		    }
+		}
+	    }
+	} else {
+	    SetText("What can I do for you?");
+	    AddOptions("Just passing by");
+	}
