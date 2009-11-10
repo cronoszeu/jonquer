@@ -377,10 +377,18 @@ public class Player extends Entity {
     public long getLastPing() {
 	return lastPing;
     }
+    public void setLoggedIn(boolean loggedIn) {
+	this.loggedIn = loggedIn;
+    }
+
+    public boolean isLoggedIn() {
+	return loggedIn;
+    }
     /**
      * List of players in your view area.
      */
     private int lastOption = -1;
+    private boolean loggedIn = false;
     private Script script = null;
     private long lastPing = System.currentTimeMillis();
     private Interpreter interpreter = new Interpreter();

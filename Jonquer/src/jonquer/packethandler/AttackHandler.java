@@ -36,9 +36,6 @@ public class AttackHandler implements PacketHandler {
 	player.getCharacter().setTarget(m);
 	World.getWorld().getTimerService().add(new RollingDelay(25) {
 	    public void execute() {
-
-
-
 		if(player.getCharacter().getTarget() != (Entity)m || m.isDead()) {
 		    stop();
 		    return;

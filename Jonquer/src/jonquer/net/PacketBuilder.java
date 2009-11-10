@@ -349,10 +349,10 @@ public class PacketBuilder {
 	bb.putShort(58, (short) player.getCharacter().getMana()); // mp
 	bb.put(62, (byte) player.getCharacter().getLevel()); // lvl
 	bb.put(63, (byte) player.getCharacter().getProfession()); // prof
-	bb.put(64, (byte) 5);
+	bb.put(64, (byte) 5); // 5
 	bb.put(65, (byte) 0);
 	bb.put(66, (byte) 1);
-	bb.put(67, (byte) 2);
+	bb.put(67, (byte) 0);
 	bb.put(68, (byte) name.length());
 	for (int i = 0; i < name.length(); i++) {
 	    bb.put(69 + i, (byte) name.charAt(i));
@@ -388,7 +388,7 @@ public class PacketBuilder {
     }
 
     public void sendLocation() {
-	ByteBuffer bb = ByteBuffer.wrap(createDataPacket((int) System.currentTimeMillis(), player.getCharacter().getID(), player.getCharacter().getMapid(), player.getCharacter().getX(), player.getCharacter().getY(), (short) 0));
+	ByteBuffer bb = ByteBuffer.wrap(createDataPacket((int) System.currentTimeMillis(), player.getCharacter().getID(), player.getCharacter().getMapid(), player.getCharacter().getX(), player.getCharacter().getY(), (short) player.getCharacter().getDirection()));
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	bb.putShort(22, (short) 74).array();
 	write(bb);

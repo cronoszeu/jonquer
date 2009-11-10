@@ -20,6 +20,8 @@ import jonquer.services.TimerService;
  */
 public class GameEngine {
 
+
+
     /**
      * the Game-Engine loop
      */
@@ -30,6 +32,15 @@ public class GameEngine {
 		tick();
 		processTimedEvents();
 		Thread.currentThread().sleep(Constants.GAME_LOOP_SLEEP_TIME);
+		if(System.currentTimeMillis() - lastPing > 5000) { // check every 5 secs.
+		    lastPing = System.currentTimeMillis();
+		    for(Player player : world.getWorld().getPlayers()) {
+			if(System.currentTimeMillis() - player.getLastPing() > 10000 + Constants.TIMED_OUT) {
+			    player.destroy(); // remove them upon timeout
+			    return;
+			} 
+		    }
+		}
 	    }
 	    world.getServer().closeServer();
 	} catch (Exception e) {
@@ -145,6 +156,8 @@ public class GameEngine {
      * the Elapsed time of the last major update.
      */
     private long lastTick = 0;
+
+    private long lastPing = 0;
     /**
      * the World instance.
      */

@@ -279,10 +279,6 @@ public class FrameHandler implements PacketHandler {
 	    return;
 
 	case 27: // Ping (client pings every 10 seconds)
-	    if(System.currentTimeMillis() - player.getLastPing() > 10000 + Constants.TIMED_OUT) {
-		player.destroy(); // remove them upon timeout
-		return;
-	    } 
 	    player.setLastPing(System.currentTimeMillis());
 	    player.getActionSender().write(bb);
 	    break;

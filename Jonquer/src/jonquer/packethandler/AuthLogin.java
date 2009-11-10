@@ -6,6 +6,7 @@ import jonquer.misc.StaticData;
 import jonquer.misc.Tools;
 import jonquer.model.Character;
 import jonquer.model.Player;
+import jonquer.model.World;
 import jonquer.services.IoService;
 
 /**
@@ -55,7 +56,7 @@ public class AuthLogin implements PacketHandler {
 		player.getCharacter().setAccount(username);
 		player.getCharacter().setPassword(pass);
 
-		 IoService.getService().saveCharacter(player.getCharacter());
+		IoService.getService().saveCharacter(player.getCharacter());
 		Log.debug("CREATED ACCOUNT: " + username);
 		StaticData.getAccounts().add(username.toLowerCase());
 		login(player);
