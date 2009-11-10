@@ -18,7 +18,6 @@ public class Map {
     private ArrayList<GroundItem> groundItems;
     private List<Portal> portals;
     private boolean pkMap = true;
-
     public Map(int mapid, int xcoords, int ycoords) {
 	this.mapid = mapid;
 	data = new byte[xcoords][ycoords];

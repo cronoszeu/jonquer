@@ -88,6 +88,8 @@ public class Server {
      * Loads all data needed for the server
      */
     public void loadConfig() {
+	loadSpells();
+	System.exit(0);
 	long now = System.currentTimeMillis();
 	Log.log("Loading Data..");
 	startMeasure();
@@ -102,9 +104,40 @@ public class Server {
 	loadMaps();
 	loadPortals();
 	loadShops();
+	
 	loadRevision();
 	Runtime.getRuntime().gc();
 	Log.log("Data loaded in " + (System.currentTimeMillis() - now) + "ms (" + finishMeasure() + "kb Allocated Memory)");
+    }
+    
+  //  public static final int SPELL_TYPE_HEALING = 2;
+   // public static final int SPELL_TYPE_RANGED_SINGLE_MAGIC_SPELL; // thunder, tornado, meteor etc
+    public void loadSpells() {
+	Properties properties = new Properties();
+	int count = 0;
+	for (File f : new File(Constants.USER_DIR + "/data/cq_magictype/").listFiles()) {
+	    if (f.isDirectory()) {
+		continue;
+	    }
+	    FileInputStream in = null;
+	    try {
+		in = new FileInputStream(f);
+		properties.load(in);
+	
+		String name = properties.getProperty("Name");
+	
+		in.close();
+		count++;
+
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    } catch (Exception e) {
+		e.printStackTrace();
+		System.out.println("Skipped: " + f.getName());
+		continue;
+	    }
+	}
+	System.out.println("Loaded " + count + " SpellDefs...  ");
     }
 
     public void loadRevision() {
@@ -608,6 +641,7 @@ public class Server {
 		for(int i = 0; i < itemAmount; i++) {
 		    itemids[i] = Integer.parseInt(properties.getProperty("Item" + i));
 		}
+		
 		StaticData.shops.put(id, new Shop(id, name, type, moneyType, itemAmount, itemids));
 		count++;
 	    } catch (Exception e) {

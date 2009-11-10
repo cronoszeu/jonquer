@@ -6,6 +6,7 @@ import java.nio.ByteOrder;
 import jonquer.debug.Log;
 import jonquer.misc.Formula;
 import jonquer.model.Entity;
+import jonquer.model.Item;
 import jonquer.model.Monster;
 import jonquer.model.Player;
 import jonquer.model.World;
@@ -33,54 +34,78 @@ public class AttackHandler implements PacketHandler {
 	player.getActionSender().sendSystemMessage("cq_generator ID: " + m.getSpawnDef().getId() + " / " + m.getId());
 	player.getActionSender().sendSystemMessage("NPC Type: " + m.getDef().getType());
 
-	player.getCharacter().setTarget(m);
-	World.getWorld().getTimerService().add(new RollingDelay(25) {
-	    public void execute() {
-		if(player.getCharacter().getTarget() != (Entity)m || m.isDead()) {
-		    stop();
-		    return;
-		}
-
-		if(!checkRestrictions(player, m)){
-		    stop();
-		    return;
-		}
-		int damage = Formula.rand(10, 15);
-		if(player.getCharacter().getEquipment().getRight_hand() != null)
-		    damage = Formula.rand(player.getCharacter().getEquipment().getRight_hand().getDef().getMinDamage(), player.getCharacter().getEquipment().getRight_hand().getDef().getMaxDamage());
-		System.out.println("DMG: " + damage);
-		if(type == 2) {
-		    m.setCurHP((m.getCurHP() - damage) <= 0 ? 0 : (m.getCurHP() - damage));
-		    for(Player p : player.getMap().getPlayers().values()) {
-			if(Formula.inView(p.getCharacter(), player.getCharacter())) {
-			    p.getActionSender().attack(player, m.getUID(), m.getX(), m.getY(), type, damage);
-			}
+	if(type == 2 || type == 25) {
+	    player.getCharacter().setTarget(m);
+	    World.getWorld().getTimerService().add(new RollingDelay(25) {
+		public void execute() {
+		    if(player.getCharacter().getTarget() != (Entity)m || m.isDead()) {
+			stop();
+			return;
 		    }
 
-		    if(m.getCurHP() - damage < 1)
+		    if(!checkRestrictions(player, m)){
+			stop();
+			return;
+		    }
+		    Item righthand = player.getCharacter().getEquipment().getRight_hand();
+		      
+		    int damage = Formula.rand(10, 15);
+		    if(righthand != null)
+			damage = Formula.rand(righthand.getDef().getMinDamage(), righthand.getDef().getMaxDamage());
+		    if(type == 2 || type == 25) {
+			m.setCurHP((m.getCurHP() - damage) <= 0 ? 0 : (m.getCurHP() - damage));
 			for(Player p : player.getMap().getPlayers().values()) {
 			    if(Formula.inView(p.getCharacter(), player.getCharacter())) {
-				p.getActionSender().attack(player, m.getUID(), m.getX(), m.getY(), 14, 0); // final hit (kill)
+				p.getActionSender().attack(player, m.getUID(), m.getX(), m.getY(), type, damage);
 			    }
 			}
 
+			if(m.getCurHP() - damage < 1)
+			    for(Player p : player.getMap().getPlayers().values()) {
+				if(Formula.inView(p.getCharacter(), player.getCharacter())) {
+				    p.getActionSender().attack(player, m.getUID(), m.getX(), m.getY(), 14, 0); // final hit (kill)
+				}
+			    }
 
-		    if(m.getCurHP() - damage < 1) {
-			m.onDeath(player);
-			stop();
-		    } 
+			if(m.getCurHP() - damage < 1) {
+			    m.onDeath(player);
+			    stop();
+			} 
+			
+			    // check & remove arrows.
+			    if(righthand != null && righthand.getDef().isTypeBow() && type == 25) {
+				Item arrow = player.getCharacter().getEquipment().getLeft_hand();
+				if(arrow != null && arrow.getDef().isArrows())
+				    if(arrow.getArrowAmount() > 1) {
+					arrow.setArrowAmount(arrow.getArrowAmount() - 1);
+					player.getActionSender().sendEquippedItem(arrow, Formula.LEFT_WEAPON_EQUIP_SLOT);
+				    } else {
+					player.getActionSender().sendSystemMessage("You have ran out of arrows");
+					player.getActionSender().sendUnequipItem(arrow, Formula.LEFT_WEAPON_EQUIP_SLOT);
+					player.getActionSender().removeItem(arrow);
+					player.getCharacter().getEquipment().setLeft_hand(null);
+					stop();
+					return;
+				    }
+				
+			    } else  {
+				stop();
+				return;
+			    }
+
+		    }
+		    super.delayTime = Formula.rand(800, 1200);
 
 		}
-		super.delayTime = Formula.rand(800, 1200);
-
-	    }
-	});
+	    });
+	}
     }
 
     public boolean checkRestrictions(Player player, Entity ent) {
 
 	if(player.getCharacter().isDead())
 	    return false;
+
 
 	if(ent instanceof Monster) {
 	    Monster m = (Monster)ent;
@@ -89,10 +114,11 @@ public class AttackHandler implements PacketHandler {
 
 
 	    double dist = Formula.distance(m.getX(), m.getY(), player.getCharacter().getX(), player.getCharacter().getY());
-	    if(dist > 4)
+	    Item righthand = player.getCharacter().getEquipment().getRight_hand();
+	    if((dist > 4 && !righthand.getDef().isTypeBow() && righthand != null) || !righthand.getDef().isTypeBow() && dist > 15 && righthand != null)
 		return false;
 	    // 2h weapons can hit from a little further
-	    if(dist == 4 && player.getCharacter().getEquipment().getRight_hand() != null && !player.getCharacter().getEquipment().getRight_hand().getDef().isTypeTwoHand())
+	    if(dist == 4 && righthand != null && !righthand.getDef().isTypeTwoHand())
 		return false;
 
 	}

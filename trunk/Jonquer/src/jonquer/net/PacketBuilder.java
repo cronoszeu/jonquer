@@ -41,7 +41,7 @@ public class PacketBuilder {
 	bb.putShort(2, (short) 1010); // packet id
 	bb.putInt(4, (int) System.currentTimeMillis());
 	bb.putInt(8, m.getUID());
-	bb.putShort(12, (short) player.getCharacter().getFightmode());
+	bb.putShort(12, (short) player.getCharacter().getMapid());
 	bb.putShort(14, (short) m.getX());
 	bb.putShort(16, (short) m.getY());
 	bb.putShort(18, (short) 0);
@@ -297,6 +297,8 @@ public class PacketBuilder {
 	    bb.put(14, (byte) 1); // leave
 	} else {
 	    if (i.hasDurability()) { // sets durability (if possible)
+		System.out.println(i.getDurability());
+		System.out.println(i.getDef().getMaxDurability());
 		bb.putShort(12, (short) (i.getDurability() * 100));
 		bb.putShort(14, (short) (i.getDef().getMaxDurability() * 100));
 	    }
