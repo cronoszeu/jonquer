@@ -116,7 +116,7 @@ public class Monster extends Entity {
 		p.getActionSender().fadeMonster(this);
 		p.getCharacter().getMonstersInView().remove(this);
 		p.updateMonsters();
-	
+
 	    }
 	}
 	((Player)killer).getCharacter().setTarget(null);
@@ -127,24 +127,31 @@ public class Monster extends Entity {
 		try {
 		    getMap().addMonster(getMonster());
 		    setCurHP(getDef().getLife());
+
 		    setDead(false);
 		    int x;
-		    if(getSpawnDef().getBound_cx() > 0)
-			x = Formula.rand(getSpawnDef().getBound_x(), getSpawnDef().getBound_x() + getSpawnDef().getBound_cx());
-		    else
-			x = getSpawnDef().getBound_x();
-		    int y;
-		    if(getSpawnDef().getBound_cy() > 0)
-			y = Formula.rand(getSpawnDef().getBound_y(), getSpawnDef().getBound_y() + getSpawnDef().getBound_cy());
-		    else
-			y = getSpawnDef().getBound_y();
+		    
+		    do {
+			
+			if(getSpawnDef().getBound_cx() > 0)
+			    x = Formula.rand(getSpawnDef().getBound_x(), getSpawnDef().getBound_x() + getSpawnDef().getBound_cx());
+			else
+			    x = getSpawnDef().getBound_x();
+			int y;
+			if(getSpawnDef().getBound_cy() > 0)
+			    y = Formula.rand(getSpawnDef().getBound_y(), getSpawnDef().getBound_y() + getSpawnDef().getBound_cy());
+			else
+			    y = getSpawnDef().getBound_y();
+			
+		    } while(Formula.isTileBlocked(getMap().getMapid(), x, y));
+
 		    setX(x);
 		    setY(y);
 		    for(Player p : getMap().getPlayers().values()) {
 			if(Formula.inView(p.getCharacter().getX(), p.getCharacter().getY(), getMonster().getX(), getMonster().getY())) {
 			    p.getActionSender().removeMonster(getMonster());
 			    p.getCharacter().getMonstersInView().add(getMonster());
-			    
+
 			    p.getActionSender().sendMonsterSpawn(getMonster());
 			    p.getActionSender().respawnMonster(getMonster());
 			    p.updateMonsters();	 

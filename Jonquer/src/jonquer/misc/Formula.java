@@ -44,9 +44,9 @@ public class Formula {
     public static final int RAISE_FLAG_UPDATE_TYPE = 26;
     public static final int LUCKY_TIME_UPDATE_TYPE = 29;
     public static final int HAIR_STYLE_UPDATE_TYPE = 31;
-    
+
     public static final int[] NO_PK_MAPS = {1002, 1036};
-    
+
     /** Fight Modes */
     public static final int MODE_PK = 0;
     public static final int MODE_TEAM = 2;
@@ -117,7 +117,7 @@ public class Formula {
     public static final int INTERN_TAOIST_PRO = 100;
     public static final int VIEW_RADIUS = 15;
     public static final int FAR_VIEW_RADIUS = 30;
-    
+
     /** Prof IDS **/    
     public static final int PROF_BLADE = 410;
     public static final int PROF_SWORD = 420;
@@ -136,9 +136,9 @@ public class Formula {
     public static final int PROF_SPEAR = 560;
     public static final int PROF_WAND = 561;
     public static final int PROF_HALBERT = 580;
-    
-    
-    
+
+
+
 
     //    public static final int VIEW_RADIUS = 16;
     //    public static final int FAR_VIEW_RADIUS = 30;
@@ -168,7 +168,7 @@ public class Formula {
     }
 
     private static Random randomNumberGenerator = new Random();
-    
+
     public static Point validDropTile(int x, int y, int map) {
 	int[][] dirs = {{x, y}, {x - 1, y}, {x, y - 1}, {x - 1, y - 1}, {x + 1, y + 1}, {x, y + 1}, {x + 1, y}, {x + 1, y - 1}, {x - 1, y + 1}};
 	for(int i=0; i < dirs.length; i++) {
@@ -177,7 +177,7 @@ public class Formula {
 	}
 	return null;
     }
-    
+
     public static boolean tileHasItem(int x, int y, int map) {
 	for(GroundItem i : World.getWorld().getMaps().get(map).getGroundItems()) {
 	    if(i.getX() == x && i.getY() == y)
@@ -245,59 +245,84 @@ public class Formula {
 	character.setMana((short) 0); // ill fix mana up later
 	character.setSpouse("None");
 	character.setLife(character.getMaxlife());
-	
+
 	character.getProficiency().put(PROF_BLADE, 0);
 	character.getProficiency_level().put(PROF_BLADE, 0);
-	
+
 	character.getProficiency().put(PROF_SWORD, 0);
 	character.getProficiency_level().put(PROF_SWORD, 0);
-	
+
 	character.getProficiency().put(PROF_BACKSWORD, 0);
 	character.getProficiency_level().put(PROF_BACKSWORD, 0);
-	
+
 	character.getProficiency().put(PROF_HOOK, 0);
 	character.getProficiency_level().put(PROF_HOOK, 0);
-	
+
 	character.getProficiency().put(PROF_WHIP, 0);
 	character.getProficiency_level().put(PROF_WHIP, 0);
-	
+
 	character.getProficiency().put(PROF_AXE, 0);
 	character.getProficiency_level().put(PROF_AXE, 0);
-	
+
 	character.getProficiency().put(PROF_HAMMER, 0);
 	character.getProficiency_level().put(PROF_HAMMER, 0);
-	
+
 	character.getProficiency().put(PROF_CLUB, 0);
 	character.getProficiency_level().put(PROF_CLUB, 0);
-	
+
 	character.getProficiency().put(PROF_SCEPTER, 0);
 	character.getProficiency_level().put(PROF_SCEPTER, 0);
-	
+
 	character.getProficiency().put(PROF_DAGGER, 0);
 	character.getProficiency_level().put(PROF_DAGGER, 0);
-	
+
 	character.getProficiency().put(PROF_BOW, 0);
 	character.getProficiency_level().put(PROF_BOW, 0);
-	
+
 	character.getProficiency().put(PROF_GLAIVE, 0);
 	character.getProficiency_level().put(PROF_GLAIVE, 0);
-	
+
 	character.getProficiency().put(PROF_POLEAXE, 0);
 	character.getProficiency_level().put(PROF_POLEAXE, 0);
-	
+
 	character.getProficiency().put(PROF_LONGHAMMER, 0);
 	character.getProficiency_level().put(PROF_LONGHAMMER, 0);
-	
+
 	character.getProficiency().put(PROF_SPEAR, 0);
 	character.getProficiency_level().put(PROF_SPEAR, 0);
-	
+
 	character.getProficiency().put(PROF_HALBERT, 0);
 	character.getProficiency_level().put(PROF_HALBERT, 0);
-	
+
 	character.getProficiency().put(PROF_WAND, 0);
 	character.getProficiency_level().put(PROF_WAND, 0);
 
 
+    }
+
+    public static Point findValidTile(int map, int minX, int minY, int maxX, int maxY) {
+	int x = minX;
+	int y = minY;
+	if(World.getWorld().getMaps().get(map) == null)
+	    return null;
+	
+	for(int i=0; i < 10; i++) {
+	    
+	   // if(minX == maxX)
+		//x = rand(minX, maxX);
+	   // if(minY == maxY)
+		//y = rand(minY, maxY);
+	    x = rand(minX, maxX + 1);
+	    y = rand(minY, maxY + 1);
+
+	    if(x > World.getWorld().getMaps().get(map).getData().length)
+		continue;
+	    if(y > World.getWorld().getMaps().get(map).getData()[x].length)
+		continue;
+	    if(!Formula.isTileBlocked(map, x, y))
+		return new Point(x, y);
+	}
+	return null;
     }
 
     /**

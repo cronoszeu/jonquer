@@ -7,6 +7,7 @@ public class Shop {
     private int moneyType;
     private int itemAmount;
     private int[] itemids;
+    private Npc npc;
 
     public Shop(int id, String name, int type, int moneyType, int itemAmount,
             int[] itemids) {
@@ -47,5 +48,13 @@ public class Shop {
 
     public int getType() {
         return type;
+    }
+
+    public void setNpc(Npc npc) {
+	this.npc = npc;
+    }
+
+    public Npc getNpc() {
+	return npc;
     }
 }

@@ -38,7 +38,7 @@ public class FrameHandler implements PacketHandler {
 	}
 
 	switch (id) {
-	case 1:
+	case 1: // shops
 	    int item_id = bb.getInt(8);
 	    int timestamp = bb.getInt(16);
 	    short zero1 = bb.getShort(20);
@@ -54,7 +54,15 @@ public class FrameHandler implements PacketHandler {
 					COItemDef itemDef = StaticData.itemDefs.get(item_id);
 					if (player.getCharacter().getMoney() >= itemDef.getPrice()) {
 					    Item item = new Item(item_id, 0, 0, 0, 0, 0);
-					    item.getDef().getPrice();
+					    if(item.getDef().isArrows()) {
+						if(item_id == 1050000)
+						    item.setArrowAmount(20);
+						else if(item_id == 1050001)
+						    item.setArrowAmount(100);
+						else if(item_id == 1050002)
+						    item.setArrowAmount(500);
+					    }
+					    item.setDurability(40);
 					    player.getCharacter().getInventory().addItem(item);
 					    player.getCharacter().setMoney(player.getCharacter().getMoney() - itemDef.getPrice());
 					    player.getActionSender().sendItem(item);
