@@ -21,7 +21,7 @@ import org.apache.mina.common.IoSession;
  * 
  */
 public class PacketBuilder {
-    
+
     public void fadeMonster(Monster m) {
 	ByteBuffer bb = ByteBuffer.allocate(28);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
@@ -32,8 +32,25 @@ public class PacketBuilder {
 	bb.put(12, (byte)26);
 	bb.putShort(16, (short)2080);
 	write(bb);
-    }//
-    
+    }//1010
+
+    public void removeMonster(Monster m) {
+	ByteBuffer bb = ByteBuffer.allocate(24);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1010); // packet id
+	bb.putInt(4, (int) System.currentTimeMillis());
+	bb.putInt(8, m.getUID());
+	bb.putShort(12, (short) player.getCharacter().getFightmode());
+	bb.putShort(14, (short) m.getX());
+	bb.putShort(16, (short) m.getY());
+	bb.putShort(18, (short) 0);
+	bb.putShort(20, (short) 0);
+	bb.putShort(22, (short) 132);
+	write(bb);
+
+    }
+
     public void respawnMonster(Monster m) {
 	String name = "MBStandard";
 	ByteBuffer bb = ByteBuffer.allocate(13 + name.length());
@@ -44,22 +61,22 @@ public class PacketBuilder {
 	bb.put(8, (byte)10);
 	bb.put(9, (byte)1);
 	bb.put(10, (byte)name.length());
-	
+
 	for (int i = 0; i < name.length(); i++) {
 	    bb.put(11 + i, (byte) name.charAt(i));
 	}
 	write(bb);
     }
-    
 
 
-    public void attack(int targetUID, int targetX, int targetY, int attackType, int damage) {
+
+    public void attack(Player attacker, int targetUID, int targetX, int targetY, int attackType, int damage) {
 
 	ByteBuffer bb = ByteBuffer.allocate(28);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	bb.putShort(0, (short) bb.limit());
 	bb.putShort(2, (short) 1022); // packet id
-	bb.putInt(8, player.getCharacter().getID());
+	bb.putInt(8, attacker.getCharacter().getID());
 	bb.putInt(12, targetUID);
 	bb.putShort(16, (short)targetX);
 	bb.putShort(18, (short)targetY);

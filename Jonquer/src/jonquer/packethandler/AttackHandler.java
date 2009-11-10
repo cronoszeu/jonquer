@@ -54,10 +54,18 @@ public class AttackHandler implements PacketHandler {
 		System.out.println("DMG: " + damage);
 		if(type == 2) {
 		    m.setCurHP((m.getCurHP() - damage) <= 0 ? 0 : (m.getCurHP() - damage));
+		    for(Player p : player.getMap().getPlayers().values()) {
+			if(Formula.inView(p.getCharacter(), player.getCharacter())) {
+			    p.getActionSender().attack(player, m.getUID(), m.getX(), m.getY(), type, damage);
+			}
+		    }
 
-		    player.getActionSender().attack(m.getUID(), m.getX(), m.getY(), type, damage);
 		    if(m.getCurHP() - damage < 1)
-			player.getActionSender().attack(m.getUID(), m.getX(), m.getY(), 14, 0); // final hit (kill)
+			for(Player p : player.getMap().getPlayers().values()) {
+			    if(Formula.inView(p.getCharacter(), player.getCharacter())) {
+				p.getActionSender().attack(player, m.getUID(), m.getX(), m.getY(), 14, 0); // final hit (kill)
+			    }
+			}
 
 
 		    if(m.getCurHP() - damage < 1) {
@@ -84,10 +92,10 @@ public class AttackHandler implements PacketHandler {
 
 
 	    double dist = Formula.distance(m.getX(), m.getY(), player.getCharacter().getX(), player.getCharacter().getY());
-	    if(dist > 2)
+	    if(dist > 4)
 		return false;
 	    // 2h weapons can hit from a little further
-	    if(dist == 2 && player.getCharacter().getEquipment().getRight_hand() != null && !player.getCharacter().getEquipment().getRight_hand().getDef().isTypeTwoHand())
+	    if(dist == 4 && player.getCharacter().getEquipment().getRight_hand() != null && !player.getCharacter().getEquipment().getRight_hand().getDef().isTypeTwoHand())
 		return false;
 
 	}
