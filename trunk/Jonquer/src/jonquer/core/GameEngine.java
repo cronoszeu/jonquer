@@ -60,40 +60,42 @@ public class GameEngine {
 	    for (Player p : world.getPlayers()) {
 		boolean needsDestroy = false;
 		if (p != null && p.getIncomingPackets().size() > 0) {
+		    synchronized(p.getIncomingPackets()) {
+			Iterator<Packet> i = p.getIncomingPackets().iterator();
+			while (i.hasNext()) {
 
-		    Iterator<Packet> i = p.getIncomingPackets().iterator();
-		    while (i.hasNext()) {
-
-			if (p.crypt == null) {
-			    World.getWorld().getPlayers().remove(p);
-			    needsDestroy = true;
-			    break;
-			}
-			Packet b = i.next();
-			if(b.getData().length > 3) {
-			    int packetID = (b.getData()[3] << 8) | (b.getData()[2] & 0xff);
-
-			    if (!World.getWorld().packetHandlers.containsKey(packetID)) {
-				Log.log("Unhandled Packet: " + packetID + " Length: " + b.getData().length);
-			    } else {
-				Log.debug("Packet ID: " + packetID);
-				PacketHandler ph = World.getWorld().packetHandlers.get(packetID);
-				try {
-				    ph.handlePacket(p, b.getData());
-				} catch(Exception e) {
-				    e.printStackTrace();
-				    p.destroy();
-				}
+			    if (p.crypt == null) {
+				World.getWorld().getPlayers().remove(p);
+				needsDestroy = true;
+				break;
 			    }
-			} else {
-			    // Log.log("Invalid Packet: " + new String(b.getData())+ " Length: ?");
-			}
+			    Packet b = i.next();
+			    if(b.getData().length > 3) {
+				int packetID = (b.getData()[3] << 8) | (b.getData()[2] & 0xff);
 
-			i.remove();
+				if (!World.getWorld().packetHandlers.containsKey(packetID)) {
+				    Log.log("Unhandled Packet: " + packetID + " Length: " + b.getData().length);
+				} else {
+				    Log.debug("Packet ID: " + packetID);
+				    PacketHandler ph = World.getWorld().packetHandlers.get(packetID);
+				    try {
+					ph.handlePacket(p, b.getData());
+				    } catch(Exception e) {
+					e.printStackTrace();
+					p.destroy();
+				    }
+				}
+			    } else {
+				// Log.log("Invalid Packet: " + new String(b.getData())+ " Length: ?");
+			    }
+
+			    i.remove();
+			}
+			if (needsDestroy)
+			    continue;
 		    }
-		    if (needsDestroy)
-			continue;
 		}
+
 	    }
 
 	} catch(ConcurrentModificationException cme) {
@@ -126,9 +128,9 @@ public class GameEngine {
 		    handler.execute();
 		    continue;
 		}
-		
+
 		handler.execute();
-		
+
 		handler.rollingAmount--;
 		if (!handler.rolling || handler.rollingAmount < 1) {
 		    ite.remove();

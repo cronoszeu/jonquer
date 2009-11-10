@@ -116,7 +116,7 @@ public class Monster extends Entity {
 		p.getActionSender().fadeMonster(this);
 		p.getCharacter().getMonstersInView().remove(this);
 		p.updateMonsters();
-
+	
 	    }
 	}
 	((Player)killer).getCharacter().setTarget(null);
@@ -125,8 +125,6 @@ public class Monster extends Entity {
 	World.getWorld().getTimerService().add(new Timer(getSpawnDef().getRespawnTime() * 1000, null) {
 	    public void execute() {
 		try {
-		    //getMonster().setUID(UID = 400000 + Constants.MOB_COUNT + MOB_DEATHS);
-		    System.out.println("Respawned");
 		    getMap().addMonster(getMonster());
 		    setCurHP(getDef().getLife());
 		    setDead(false);
@@ -140,13 +138,16 @@ public class Monster extends Entity {
 			y = Formula.rand(getSpawnDef().getBound_y(), getSpawnDef().getBound_y() + getSpawnDef().getBound_cy());
 		    else
 			y = getSpawnDef().getBound_y();
-		    setX(getX() + 2);
-		    setY(getY() + 2);
+		    setX(x);
+		    setY(y);
 		    for(Player p : getMap().getPlayers().values()) {
-			if(Formula.inView(p.getCharacter().getX(), p.getCharacter().getY(), getX(), getY())) {
+			if(Formula.inView(p.getCharacter().getX(), p.getCharacter().getY(), getMonster().getX(), getMonster().getY())) {
+			    p.getActionSender().removeMonster(getMonster());
 			    p.getCharacter().getMonstersInView().add(getMonster());
-			    p.updateMonsters();	     
+			    
+			    p.getActionSender().sendMonsterSpawn(getMonster());
 			    p.getActionSender().respawnMonster(getMonster());
+			    p.updateMonsters();	 
 			}
 		    }
 		} catch (Exception e) {
