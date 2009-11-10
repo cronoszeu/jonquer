@@ -47,7 +47,16 @@ public class GameLogin implements PacketHandler {
 	    player.destroy(true);
 	}
 
-	player.setCharacter(IoService.getService().loadCharacter(player.getCharacter().getAccount()));
+	jonquer.model.Character ch = IoService.getService().loadCharacter(player.getCharacter().getAccount());
+	for(Player pl : World.getWorld().getPlayers()) {
+	    if(pl.isLoggedIn() && pl.getCharacter().getName().equals(ch.getName())) {
+		pl.destroy(); // disconnect the other person if they are logged into your account.
+		ch = IoService.getService().loadCharacter(player.getCharacter().getAccount());
+		break;
+	    }
+	}
+	
+	player.setCharacter(ch);
 	player.getCharacter().setNpcsInView(new ArrayList<Npc>());
 	player.getCharacter().setMonstersInView(new ArrayList<Monster>());
 	player.getCharacter().setItemsInView(new ArrayList<GroundItem>());
@@ -58,8 +67,10 @@ public class GameLogin implements PacketHandler {
 	} else {
 	    Constants.TODAYS_CONNECTIONS++;
 	    Constants.PLAYERS_ONLINE++;
+
 	    Log.debug("Logged In: " + player.getCharacter().getName());
 	    World.getWorld().getMaps().get(player.getCharacter().getMapid()).addPlayer(player);
+	    player.setLoggedIn(true);
 	    player.getCharacter().ourPlayer = player;
 	    player.getActionSender().sendHeroInfo();
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "ANSWER_OK");
