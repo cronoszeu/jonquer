@@ -80,6 +80,7 @@ public class GameLogin implements PacketHandler {
 	    player.getActionSender().sendFightMode();
 	    player.getActionSender().sendMessage(0xfffff, Formula.TALK_MESSAGE_TYPE, "SYSTEM", "ALL", "Welcome to " + Constants.GAME_NAME + " v" + Constants.VERSION + (Constants.REVISION > 0 ? " (r" + Constants.REVISION + ")" : ""));
 	    player.getActionSender().sendMessage(0xfffff, Formula.TALK_MESSAGE_TYPE, "SYSTEM", "ALL", "Players Online: " + Constants.PLAYERS_ONLINE + " Total Connections: " + Constants.TODAYS_CONNECTIONS);
+	    player.getActionSender().giveSkill(8001, 3, 500000);
 	}
     }
 

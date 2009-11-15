@@ -21,6 +21,18 @@ import org.apache.mina.common.IoSession;
  * 
  */
 public class PacketBuilder {
+    
+    
+    public void giveSkill(int skillID, int lv, int exp) {
+	ByteBuffer bb = ByteBuffer.allocate(12);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1103); // packet id
+	bb.putInt(4, exp);
+	bb.putShort(8, (short)skillID);
+	bb.putShort(10, (short)lv);
+	write(bb);
+    }
 
     public void fadeMonster(Monster m) {
 	ByteBuffer bb = ByteBuffer.allocate(28);

@@ -144,7 +144,6 @@ public class Player extends Entity {
 	    } else if(getCharacter().getMonstersInView().contains(monster)) {
 		getCharacter().getMonstersInView().remove(monster);
 		getActionSender().removeMonster(monster);
-		// send remove to client
 	    }    
 	}
     }
