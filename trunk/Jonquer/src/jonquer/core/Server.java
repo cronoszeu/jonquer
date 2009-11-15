@@ -21,6 +21,7 @@ import java.util.Scanner;
 import java.util.concurrent.Executors;
 
 import jonquer.debug.Log;
+import jonquer.listeners.SkillListener;
 import jonquer.misc.Constants;
 import jonquer.misc.Formula;
 import jonquer.misc.StaticData;
@@ -33,6 +34,7 @@ import jonquer.model.World;
 import jonquer.model.def.COItemDef;
 import jonquer.model.def.COMonsterDef;
 import jonquer.model.def.COMonsterSpawnDef;
+import jonquer.model.def.COSpellDef;
 import jonquer.model.def.COItemDef.ClassRequired;
 import jonquer.net.AuthConnectionHandler;
 import jonquer.net.GameConnectionHandler;
@@ -88,12 +90,11 @@ public class Server {
      * Loads all data needed for the server
      */
     public void loadConfig() {
-	loadSpells();
-	System.exit(0);
 	long now = System.currentTimeMillis();
 	Log.log("Loading Data..");
 	startMeasure();
 	IoService.getService().initIoPluggables();
+	loadSpellDefs();
 	prepareAccounts();
 	loadPacketHandlers();
 	loadNpcs();
@@ -101,6 +102,7 @@ public class Server {
 	loadMonsterDefs();
 	loadItems();
 	loadScripts();
+	loadSkills();
 	loadMaps();
 	loadPortals();
 	loadShops();
@@ -112,7 +114,7 @@ public class Server {
     
   //  public static final int SPELL_TYPE_HEALING = 2;
    // public static final int SPELL_TYPE_RANGED_SINGLE_MAGIC_SPELL; // thunder, tornado, meteor etc
-    public void loadSpells() {
+    public void loadSpellDefs() {
 	Properties properties = new Properties();
 	int count = 0;
 	for (File f : new File(Constants.USER_DIR + "/data/cq_magictype/").listFiles()) {
@@ -123,8 +125,21 @@ public class Server {
 	    try {
 		in = new FileInputStream(f);
 		properties.load(in);
-	
-		String name = properties.getProperty("Name");
+			
+		COSpellDef def = new COSpellDef();
+		def.setID(Integer.parseInt(properties.getProperty("ID")));
+		def.setType(Integer.parseInt(properties.getProperty("Type")));
+		def.setName(properties.getProperty("Name"));
+		def.setOffensive(Integer.parseInt(properties.getProperty("Offensive")));
+		def.setGround(Integer.parseInt(properties.getProperty("Ground")));
+		def.setMultiTarget(Integer.parseInt(properties.getProperty("MultiTarget")));
+		def.setLevel(Integer.parseInt(properties.getProperty("Level")));
+		def.setMana(Integer.parseInt(properties.getProperty("Mana")));
+		def.setBaseDamage(Integer.parseInt(properties.getProperty("BaseDamage")));
+		def.setStamina(Integer.parseInt(properties.getProperty("Stamina")));
+		def.setRange(Integer.parseInt(properties.getProperty("Range")));
+		def.setAccuracy(Integer.parseInt(properties.getProperty("Accuracy")));
+		StaticData.spellDefs.put(def.getID(), def);
 	
 		in.close();
 		count++;
@@ -355,6 +370,30 @@ public class Server {
 	    Log.error(e);
 	}
 
+    }
+    
+    public void loadSkills() {
+	try {
+	    
+	    int count = 0;
+	    for (File f : new File(Constants.USER_DIR + "/src/jonquer/plugins/skills/").listFiles()) {
+
+		if (f.isDirectory()) {
+		    continue;
+		}
+
+		Class<?> c = Class.forName("jonquer.plugins.skills." + f.getName().replaceAll(".java", ""));
+		Object o = c.newInstance();
+		if (o instanceof SkillListener) {
+		    count++;
+		    SkillListener sk = (SkillListener) o;
+		    StaticData.skills.put(sk.getSkillID(), sk);
+		}
+	    }
+	    System.out.println("Loaded " + count + " Skills...   ");
+	} catch (Exception e) {
+	    Log.error(e);
+	}
     }
 
     /**

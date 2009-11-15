@@ -374,6 +374,21 @@ public class Character implements Serializable {
 	return target;
     }
 
+    public void setSkill_levels(AbstractMap<Integer, Integer> skill_levels) {
+	this.skill_levels = skill_levels;
+    }
+
+    public AbstractMap<Integer, Integer> getSkill_levels() {
+	return skill_levels;
+    }
+
+    public void setSkill_exp(AbstractMap<Integer, Integer> skill_exp) {
+	this.skill_exp = skill_exp;
+    }
+
+    public AbstractMap<Integer, Integer> getSkill_exp() {
+	return skill_exp;
+    }
     /**
      * The Character's name
      */
@@ -526,6 +541,14 @@ public class Character implements Serializable {
       * Stores the levels of proficiency
       */
      private AbstractMap<Integer, Integer> proficiency_level = new HashMap<Integer, Integer>();
+     /**
+      * Stores the exp of our skills
+      */
+     private AbstractMap<Integer, Integer> skill_exp = new HashMap<Integer, Integer>();
+     /**
+      * Stores the levels of our skills
+      */
+     private AbstractMap<Integer, Integer> skill_levels = new HashMap<Integer, Integer>();
      /**
       * View'd npcs.
       */

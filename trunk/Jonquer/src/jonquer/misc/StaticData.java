@@ -4,11 +4,14 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+
+import jonquer.listeners.SkillListener;
 import jonquer.model.Npc;
 import jonquer.model.Shop;
 import jonquer.model.def.COItemDef;
 import jonquer.model.def.COMonsterDef;
 import jonquer.model.def.COMonsterSpawnDef;
+import jonquer.model.def.COSpellDef;
 
 /**
  * Contains any type of easy-to-access data.
@@ -18,7 +21,6 @@ import jonquer.model.def.COMonsterSpawnDef;
  * 
  */
 public class StaticData {
-
     /**
      * Every account created on this server is stored here.
      */
@@ -43,6 +45,14 @@ public class StaticData {
      * Stored all the monster spawn def's.
      */
     public static HashMap<Integer, COMonsterSpawnDef> monsterSpawnDefs = new HashMap<Integer, COMonsterSpawnDef>();
+    /**
+     * Stored all the spell def's.
+     */
+    public static HashMap<Integer, COSpellDef> spellDefs = new HashMap<Integer, COSpellDef>();
+    /**
+     * Holds all the scripted Skills, pulled by the skill ID.
+     */
+    public static HashMap<Integer, SkillListener> skills = new HashMap<Integer, SkillListener>();
 
     public static Map<Integer, Shop> shops = new HashMap<Integer, Shop>();
 

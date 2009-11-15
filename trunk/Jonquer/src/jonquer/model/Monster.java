@@ -116,7 +116,6 @@ public class Monster extends Entity {
 		p.getActionSender().fadeMonster(this);
 		p.getCharacter().getMonstersInView().remove(this);
 		p.updateMonsters();
-
 	    }
 	}
 	((Player)killer).getCharacter().setTarget(null);
