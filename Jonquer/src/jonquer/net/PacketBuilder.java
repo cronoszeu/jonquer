@@ -742,6 +742,30 @@ public class PacketBuilder {
 	write(bb);
     }
 
+    public void sendWeather(int weatherType, int intensity, int direction, int appearance) {
+        ByteBuffer msg = ByteBuffer.allocate(0x14);
+	msg.order(ByteOrder.LITTLE_ENDIAN);
+        msg.putShort((short) 0x14);
+        msg.putShort(CONetMsgType.WEATHER);
+        msg.putInt(weatherType);
+        msg.putInt(intensity);
+        msg.putInt(direction);
+        msg.putInt(appearance);
+        write(msg);
+    }
+
+    public void sendStringInfo(int stringID, byte stringType, String string) {
+        ByteBuffer msg = ByteBuffer.allocate(0xa + string.length());
+	msg.order(ByteOrder.LITTLE_ENDIAN);
+        msg.putShort((short) (0xa + string.length()));
+        msg.putShort(CONetMsgType.STRING_INFO);
+        msg.putInt(stringID);
+        msg.put(stringType);
+        msg.put((byte) string.length());
+        msg.put(string.getBytes());
+        write(msg);
+    }
+
     public void write(ByteBuffer b) {
 	byte[] buff = b.array();
 	if (buff != null && b != null && buff.length > 4 || player.crypt != null) {

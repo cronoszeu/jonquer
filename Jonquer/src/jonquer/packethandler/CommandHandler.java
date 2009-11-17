@@ -135,7 +135,25 @@ public class CommandHandler {
 	} else if(command("/item")) {
 	    player.getCharacter().getInventory().addItem(new Item(Integer.parseInt(args[1]), 0, 0, 0, 0, 0));
 	    player.getActionSender().sendInventory();
-	}
+	} else if(command("/awardskill")) {
+            player.getActionSender().giveSkill(Integer.parseInt(args[1]), Integer.parseInt(args[2]), 0);
+        } else if(command("/awardwskill")) {
+            // . . .
+        } else if(command("/superman")) {
+            player.getCharacter().setSpirit((short) 500);
+            player.getCharacter().setMana((short) 10000);
+            player.getActionSender().sendUpdatePacket(Formula.MANA_UPDATE_TYPE, player.getCharacter().getMana());
+        } else if(command("/weather")) {
+            player.getActionSender().sendWeather(Integer.parseInt(args[1]),
+                                                 Integer.parseInt(args[2]),
+                                                 Integer.parseInt(args[3]),
+                                                 Integer.parseInt(args[4]));
+        } else if(command("/string_info")) {
+            player.getActionSender().
+                    sendStringInfo(player.getCharacter().getID(),
+                                   Byte.parseByte(args[1]),
+                                   args[2]);
+        }
     }
 
     public static boolean command(String... s) {
