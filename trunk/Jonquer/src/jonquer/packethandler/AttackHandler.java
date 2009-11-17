@@ -25,6 +25,7 @@ public class AttackHandler implements PacketHandler {
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	final int type = bb.getInt(20);
 	final Monster m = World.getWorld().getMonster(bb.getInt(12));
+        System.out.println(type);
 	if(m == null)
 	    return;
 
