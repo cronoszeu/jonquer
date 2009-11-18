@@ -61,9 +61,10 @@ public class DataPacket implements PacketHandler {
                         player.getActionSender().sendMapInfo();
                         player.updateGroundItems();
                         player.updateMeToOthers();
+                        player.updateOthersToMe();
                         player.updateMonsters();
                         player.updateNpcs();
-                        player.updateOthersToMe();
+                       
                     }
                 } else {
                     player.destroy();
@@ -94,7 +95,7 @@ public class DataPacket implements PacketHandler {
         	int prev = player.getCharacter().getAction();
         	int id = bb.get(12);
                 player.getCharacter().setAction(id);
-             //   player.getActionSender().write(bb);
+                //player.getActionSender().write(bb);
                 for (Player p : player.getMap().getPlayers().values()) {
                     if(p != player)
                         if (Formula.inView(p.getCharacter(), player.getCharacter())) {
@@ -125,6 +126,7 @@ public class DataPacket implements PacketHandler {
         	    return;
         	}
         	player.getCharacter().setFightmode(mode);
+        	player.getActionSender().write(bb);
         	if(mode == Formula.MODE_PK)
         	    player.getActionSender().sendSystemMessage("Free PK mode. You can attack anyone.");
         	else if(mode == Formula.MODE_CAPTURE)
@@ -134,6 +136,7 @@ public class DataPacket implements PacketHandler {
         	else if(mode == Formula.MODE_PEACE)
         	    player.getActionSender().sendSystemMessage("Peace mode. You can only attack monsters and won't hurt other players.");
                 break;
+                
 
             case 97:
                 player.getActionSender().write(bb);

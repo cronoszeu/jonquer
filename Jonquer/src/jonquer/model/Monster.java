@@ -163,4 +163,9 @@ public class Monster extends Entity {
 	});
     }
 
+    @Override
+    public int getMaxHealth() {
+	return getDef().getLife();
+    }
+
 }
