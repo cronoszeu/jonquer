@@ -116,6 +116,23 @@ public class Player extends Entity {
 	}
 	getActionSender().sendProf(i, getCharacter().getProficiency_level().get(i), getCharacter().getProficiency().get(i));
     }
+    
+    public void addSkillExp(int i, int exp) {
+	if(getCharacter().getSkill_levels().get(i) >= 20)
+	    return;
+
+	exp *= (int)Constants.PROF_EXP_MULTIPLIER;
+	if(getCharacter().getSkill_levels().get(i) < 1)
+	    getCharacter().getSkill_levels().put(i, 1);
+	if(getCharacter().getSkill_exp().get(i) + exp > Formula.PROF_LEVEL_EXP[getCharacter().getSkill_levels().get(i) - 1]) {
+	    getCharacter().getSkill_levels().put(i, getCharacter().getSkill_levels().get(i) + 1);
+	    getCharacter().getSkill_exp().put(i, 0);
+	    getActionSender().sendSystemMessage("Your Skill level has been improved");
+	} else {
+	    getCharacter().getSkill_exp().put(i, getCharacter().getSkill_exp().get(i) + exp);
+	}
+	getActionSender().giveSkill(i, getCharacter().getSkill_levels().get(i), getCharacter().getSkill_exp().get(i));
+    }
 
     public void updateNpcs() {
 	for (Npc npc : World.getWorld().getNpcs()) {
@@ -134,8 +151,13 @@ public class Player extends Entity {
 
     public void updateMonsters() {
 	for (Monster monster : getMap().getMonsters().values()) {
-	    if(monster.isDead())
+	    if(monster.isDead()) {
+		if(getCharacter().getMonstersInView().contains(monster)) {
+		    getCharacter().getMonstersInView().remove(monster);
+		}
 		continue;
+	    }
+		
 	    if (Formula.distance(getCharacter().getX(), getCharacter().getY(), monster.getX(), monster.getY()) <= Character.VIEW_RANGE) {
 		if(!getCharacter().getMonstersInView().contains(monster)) {
 		    getActionSender().sendMonsterSpawn(monster);

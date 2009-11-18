@@ -92,6 +92,10 @@ public class Constants {
      */
     public static final double PROF_EXP_MULTIPLIER = 1.0;
     /**
+     * the EXP your skills are multiplied by
+     */
+    public static final double SKILL_EXP_MULTIPLIER = 1.0;
+    /**
      * Time to remove a Player if they don't ping within this time.
      */
     public static final int TIMED_OUT = 30000;
