@@ -41,43 +41,35 @@ public class GameLogin implements PacketHandler {
 	} else {
 	    Log.error("Error @ GameLogin 01");
 	    player.destroy(true);
+	    return;
 	}
 	if(id == -1) {
 	    Log.error("Error @ GameLogin 02");
 	    player.destroy(true);
+	    return;
 	}
 
-	jonquer.model.Character ch = IoService.getService().loadCharacter(player.getCharacter().getAccount());
-	for(Player pl : World.getWorld().getPlayers()) {
-	    if(pl.isLoggedIn() && pl.getCharacter().getName().equals(ch.getName())) {
-		pl.destroy(); // disconnect the other person if they are logged into your account.
-		ch = IoService.getService().loadCharacter(player.getCharacter().getAccount());
-		break;
-	    }
-	}
-	
-	player.setCharacter(ch);
+	player.setCharacter(IoService.getService().loadCharacter(player.getCharacter().getAccount()));
 	player.getCharacter().setNpcsInView(new ArrayList<Npc>());
 	player.getCharacter().setMonstersInView(new ArrayList<Monster>());
 	player.getCharacter().setItemsInView(new ArrayList<GroundItem>());
 	player.getCharacter().setID(id);
 
+	//"We: 
 	if(player.getCharacter().getSpouse() == null) {
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "NEW_ROLE");
 	} else {
 	    Constants.TODAYS_CONNECTIONS++;
 	    Constants.PLAYERS_ONLINE++;
-
 	    Log.debug("Logged In: " + player.getCharacter().getName());
 	    World.getWorld().getMaps().get(player.getCharacter().getMapid()).addPlayer(player);
-	    player.setLoggedIn(true);
 	    player.getCharacter().ourPlayer = player;
+
 	    player.getActionSender().sendHeroInfo();
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "ANSWER_OK");
 	    player.getActionSender().sendInventory();
 	    player.getActionSender().sendEquippedItems();
 	    player.getActionSender().sendProfs();
-	    player.getActionSender().sendFightMode();
 	    player.getActionSender().sendMessage(0xfffff, Formula.TALK_MESSAGE_TYPE, "SYSTEM", "ALL", "Welcome to " + Constants.GAME_NAME + " v" + Constants.VERSION + (Constants.REVISION > 0 ? " (r" + Constants.REVISION + ")" : ""));
 	    player.getActionSender().sendMessage(0xfffff, Formula.TALK_MESSAGE_TYPE, "SYSTEM", "ALL", "Players Online: " + Constants.PLAYERS_ONLINE + " Total Connections: " + Constants.TODAYS_CONNECTIONS);
 	    player.getActionSender().giveSkill(8001, 3, 500000);
