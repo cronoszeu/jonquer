@@ -22,12 +22,10 @@ public class ChatHandler implements PacketHandler {
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	int type = bb.getShort(8);
 	int pos = 26;
-	System.out.println("Real: " + bb.getShort(0) + "  BB: " + packet.length);
 	try {
 	String from = new String(bb.array(), pos, bb.get(25));
 	pos+=from.length();
 	String to = new String(bb.array(), pos + 1, bb.get(pos));
-	int temp = pos + to.length();
 	pos+=to.length() + 2;
 	
 	String msg = new String(bb.array(), pos + 1, bb.get(pos));

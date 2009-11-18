@@ -1,9 +1,5 @@
 package jonquer.model;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -17,6 +13,7 @@ import jonquer.misc.Crypto;
 import jonquer.misc.Formula;
 import jonquer.misc.Script;
 import jonquer.misc.StaticData;
+import jonquer.model.future.Timer;
 import jonquer.net.PacketBuilder;
 import jonquer.services.IoService;
 
@@ -25,7 +22,7 @@ import org.apache.mina.common.IoSession;
 import bsh.Interpreter;
 
 /**
- * All Player variables/properties will be held here. Each instance represents 1
+ * All Player variables/properties will be held here, as well as in the Character class for credidentials. Each instance represents 1
  * player.
  * 
  * @author xEnt
@@ -52,7 +49,7 @@ public class Player extends Entity {
 	getCharacter().setItemsInView(new ArrayList<GroundItem>());
 	world.getPlayers().add(this);
     }
-    
+
     public void checkAndStopAttack() {
 	if(getCharacter().getTarget() != null)
 	    getCharacter().setTarget(null);
@@ -116,14 +113,14 @@ public class Player extends Entity {
 	}
 	getActionSender().sendProf(i, getCharacter().getProficiency_level().get(i), getCharacter().getProficiency().get(i));
     }
-    
+
     public void addSkillExp(int i, int exp) {
 	if(getCharacter().getSkill_levels().get(i) >= 20)
 	    return;
 
-	exp *= (int)Constants.PROF_EXP_MULTIPLIER;
+	exp *= (int)Constants.SKILL_EXP_MULTIPLIER;
 	if(getCharacter().getSkill_levels().get(i) < 1)
-	    getCharacter().getSkill_levels().put(i, 1);
+	    getCharacter().getSkill_levels().put(i, 1); // needs a skill exp table added.
 	if(getCharacter().getSkill_exp().get(i) + exp > Formula.PROF_LEVEL_EXP[getCharacter().getSkill_levels().get(i) - 1]) {
 	    getCharacter().getSkill_levels().put(i, getCharacter().getSkill_levels().get(i) + 1);
 	    getCharacter().getSkill_exp().put(i, 0);
@@ -157,7 +154,7 @@ public class Player extends Entity {
 		}
 		continue;
 	    }
-		
+
 	    if (Formula.distance(getCharacter().getX(), getCharacter().getY(), monster.getX(), monster.getY()) <= Character.VIEW_RANGE) {
 		if(!getCharacter().getMonstersInView().contains(monster)) {
 		    getActionSender().sendMonsterSpawn(monster);
@@ -217,10 +214,32 @@ public class Player extends Entity {
 	return World.getWorld().getMaps().get(getCharacter().getMapid());
     }
 
-    
+
     @Override
     public void onDeath(Entity killer) {
-	
+	final Player playa = this;
+	getCharacter().setDead(true);
+	World.getWorld().getTimerService().add(new Timer(2000, null) {
+	    public void execute() {
+		int model = 15199;
+		if (getCharacter().getLook() == 1003 || getCharacter().getLook() == 1004)
+		    model = 15099;
+		
+		getActionSender().vital(getCharacter().getID(), 26, getCharacter().getStats());
+		getActionSender().death(getCharacter());
+		
+		getCharacter().setLook(model);
+		getActionSender().deathModel(getCharacter().getID(), model);
+		
+		for(Player p : getMap().getPlayers().values()) {
+		    if(p != playa)
+		    if(p.getCharacter().inview(getCharacter())) {
+			p.getActionSender().sendSpawnPacket(getCharacter());
+		    }
+		}
+	    }
+	});
+
     }
 
     /**
@@ -320,6 +339,41 @@ public class Player extends Entity {
 
     public void setCurrentLogin(long currentLogin) {
 	this.currentLogin = currentLogin;
+    }
+
+    @Override
+    public int getCurHP() {
+	return getCharacter().getLife();
+    }
+
+    @Override
+    public int getUID() {
+	return getCharacter().getID();
+    }
+
+    @Override
+    public int getMaxHealth() {
+	return getCharacter().getMaxlife();
+    }
+
+    @Override
+    public int getX() {
+	return getCharacter().getX();
+    }
+
+    @Override
+    public int getY() {
+	return getCharacter().getY();
+    }
+
+    @Override
+    public boolean isDead() {
+	return getCharacter().isDead();
+    }
+
+    @Override
+    public void setCurHP(int hp) {
+	getCharacter().setLife((short)hp);
     }
 
     public PacketBuilder getActionSender() {
@@ -425,4 +479,7 @@ public class Player extends Entity {
     private long currentLogin;
     private PacketBuilder actionSender;
     private IoSession session;
+
+
+
 }

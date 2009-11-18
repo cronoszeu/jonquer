@@ -31,20 +31,25 @@ public class GameEngine {
 	    while (Constants.serverRunning) {
 		tick();
 		processTimedEvents();
+		checkPings();
 		Thread.currentThread().sleep(Constants.GAME_LOOP_SLEEP_TIME);
-		if(System.currentTimeMillis() - lastPing > 5000) { // check every 5 secs.
-		    lastPing = System.currentTimeMillis();
-		    for(Player player : world.getWorld().getPlayers()) {
-			if(System.currentTimeMillis() - player.getLastPing() > 10000 + Constants.TIMED_OUT) {
-			    player.destroy(); // remove them upon timeout
-			    return;
-			} 
-		    }
-		}
+		
 	    }
 	    world.getServer().closeServer();
 	} catch (Exception e) {
 	    Log.error(e);
+	}
+    }
+    
+    public void checkPings() {
+	if(System.currentTimeMillis() - lastPing > 5000) { // check every 5 secs.
+	    lastPing = System.currentTimeMillis();
+	    for(Player player : world.getPlayers()) {
+		if(System.currentTimeMillis() - player.getLastPing() > 10000 + Constants.TIMED_OUT) {
+		    player.destroy(); // remove them upon timeout
+		    return;
+		} 
+	    }
 	}
     }
 
@@ -130,7 +135,12 @@ public class GameEngine {
 	while(ite.hasNext()) {
 	    TimerService handler = ite.next();
 	    if (System.currentTimeMillis() - handler.startTime > handler.delayTime) {
-		if(handler.rollingAmount == 0 && ite instanceof RollingDelay) {
+		if(handler instanceof RollingDelay && !handler.rolling && handler.rollingAmount == 0) {
+		    ite.remove();
+		    continue;
+		}
+		if(handler.rollingAmount == 0 && handler instanceof RollingDelay) {
+		    handler.startTime = System.currentTimeMillis();
 		    ite.remove();
 		    continue;
 		}
@@ -139,11 +149,10 @@ public class GameEngine {
 		    handler.execute();
 		    continue;
 		}
-
 		handler.execute();
 
 		handler.rollingAmount--;
-		if (!handler.rolling || handler.rollingAmount < 1) {
+		if (!handler.rolling || handler.rollingAmount == 1) {
 		    ite.remove();
 		} else {
 		    handler.startTime = System.currentTimeMillis();

@@ -1,5 +1,7 @@
 package jonquer.services;
 
+import jonquer.debug.Log;
+
 /**
  * this TimerService is a type of custom 'TimerService' for handling abstracted delays on
  * a single thread (the main game-engine thread)

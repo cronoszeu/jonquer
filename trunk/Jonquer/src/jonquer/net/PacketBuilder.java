@@ -9,6 +9,7 @@ import jonquer.misc.Formula;
 import jonquer.model.GroundItem;
 import jonquer.model.Item;
 import jonquer.model.Monster;
+import jonquer.model.Packet;
 import jonquer.model.Player;
 import jonquer.model.World;
 
@@ -21,8 +22,8 @@ import org.apache.mina.common.IoSession;
  * 
  */
 public class PacketBuilder {
-    
-    
+
+
     public void giveSkill(int skillID, int lv, int exp) {
 	ByteBuffer bb = ByteBuffer.allocate(12);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
@@ -325,6 +326,35 @@ public class PacketBuilder {
 	write(bb);
     }
 
+    public void death(jonquer.model.Character c) {
+
+	ByteBuffer bb = ByteBuffer.allocate(36);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1017); // packet id
+	bb.putInt(4, c.getID());
+	bb.put(8, (byte)2);
+	bb.put(13, (byte)0xff);
+	bb.put(14, (byte)0xff);
+	bb.put(15, (byte)0xff);
+	bb.put(16, (byte)0xff);
+	bb.put(21, (byte)26);
+	write(bb);
+    }
+    
+    public void vital(int charID, int type, int value) {
+
+	ByteBuffer bb = ByteBuffer.allocate(28);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1017); // packet id
+	bb.putInt(4, charID);
+	bb.put(8, (byte)1);
+	bb.put(12, (byte)type);
+	bb.put(16, (byte)value);
+	write(bb);
+    }
+
     public void sendJump(int x, int y, int prevX, int prevY, int id) {
 	ByteBuffer bb = ByteBuffer.allocate(28);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
@@ -350,7 +380,7 @@ public class PacketBuilder {
 	bb.putShort(0, (short) bb.limit());
 	bb.putShort(2, (short) 1006); // packet id
 	bb.putInt(4, player.getCharacter().getID()); // id
-	bb.putInt(8, Integer.parseInt("" + player.getCharacter().getFace() + "" + player.getCharacter().getLook())); // model
+	bb.putInt(8, Integer.parseInt(player.getCharacter().getFace() + "" + player.getCharacter().getLook())); // model
 	bb.putShort(12, (short) player.getCharacter().getHairstyle()); // hairstyle
 	bb.putInt(14, player.getCharacter().getMoney()); // money
 	bb.putInt(18, player.getCharacter().getConquerPoints()); // CP
@@ -363,7 +393,7 @@ public class PacketBuilder {
 	bb.putShort(58, (short) player.getCharacter().getMana()); // mp
 	bb.put(62, (byte) player.getCharacter().getLevel()); // lvl
 	bb.put(63, (byte) player.getCharacter().getProfession()); // prof
-	bb.put(64, (byte) 5); // 5
+	bb.put(64, (byte) 5);
 	bb.put(65, (byte) 0);
 	bb.put(66, (byte) 1);
 	bb.put(67, (byte) 0);
@@ -375,6 +405,20 @@ public class PacketBuilder {
 	for (int i = 0; i < spouse.length(); i++) {
 	    bb.put(70 + name.length() + i, (byte) spouse.charAt(i));
 	}
+	write(bb);
+    }
+
+    public void deathModel(int uid, int model) {
+	ByteBuffer bb = ByteBuffer.allocate(28);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1017);
+	bb.putInt(4, uid);
+	bb.put(8, (byte)1);
+	bb.put(12, (byte)12);
+	bb.put(16, (byte)225);
+	bb.put(17, (byte)226);
+	bb.putShort(18, (short)model);
 	write(bb);
     }
 
@@ -743,27 +787,27 @@ public class PacketBuilder {
     }
 
     public void sendWeather(int weatherType, int intensity, int direction, int appearance) {
-        ByteBuffer msg = ByteBuffer.allocate(0x14);
+	ByteBuffer msg = ByteBuffer.allocate(0x14);
 	msg.order(ByteOrder.LITTLE_ENDIAN);
-        msg.putShort((short) 0x14);
-        msg.putShort(CONetMsgType.WEATHER);
-        msg.putInt(weatherType);
-        msg.putInt(intensity);
-        msg.putInt(direction);
-        msg.putInt(appearance);
-        write(msg);
+	msg.putShort((short) 0x14);
+	msg.putShort(CONetMsgType.WEATHER);
+	msg.putInt(weatherType);
+	msg.putInt(intensity);
+	msg.putInt(direction);
+	msg.putInt(appearance);
+	write(msg);
     }
 
     public void sendStringInfo(int stringID, byte stringType, String string) {
-        ByteBuffer msg = ByteBuffer.allocate(0xa + string.length());
+	ByteBuffer msg = ByteBuffer.allocate(0xa + string.length());
 	msg.order(ByteOrder.LITTLE_ENDIAN);
-        msg.putShort((short) (0xa + string.length()));
-        msg.putShort(CONetMsgType.STRING_INFO);
-        msg.putInt(stringID);
-        msg.put(stringType);
-        msg.put((byte) string.length());
-        msg.put(string.getBytes());
-        write(msg);
+	msg.putShort((short) (0xa + string.length()));
+	msg.putShort(CONetMsgType.STRING_INFO);
+	msg.putInt(stringID);
+	msg.put(stringType);
+	msg.put((byte) string.length());
+	msg.put(string.getBytes());
+	write(msg);
     }
 
     public void write(ByteBuffer b) {

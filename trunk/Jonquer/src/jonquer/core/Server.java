@@ -94,7 +94,6 @@ public class Server {
 	Log.log("Loading Data..");
 	startMeasure();
 	IoService.getService().initIoPluggables();
-	loadSpellDefs();
 	prepareAccounts();
 	loadPacketHandlers();
 	loadNpcs();
@@ -102,18 +101,16 @@ public class Server {
 	loadMonsterDefs();
 	loadItems();
 	loadScripts();
+	loadSpellDefs();
 	loadSkills();
 	loadMaps();
 	loadPortals();
 	loadShops();
-	
 	loadRevision();
 	Runtime.getRuntime().gc();
 	Log.log("Data loaded in " + (System.currentTimeMillis() - now) + "ms (" + finishMeasure() + "kb Allocated Memory)");
     }
     
-  //  public static final int SPELL_TYPE_HEALING = 2;
-   // public static final int SPELL_TYPE_RANGED_SINGLE_MAGIC_SPELL; // thunder, tornado, meteor etc
     public void loadSpellDefs() {
 	Properties properties = new Properties();
 	int count = 0;
@@ -141,6 +138,11 @@ public class Server {
 		def.setAccuracy(Integer.parseInt(properties.getProperty("Accuracy")));
 		StaticData.spellDefs.put(def.getID(), def);
 	
+		if(def.getName().equalsIgnoreCase("Fastblade"))
+		    Log.log(def.getType() + "");
+		
+		if(def.getType() == 14)
+		    Log.log("Name: " + def.getName());
 		in.close();
 		count++;
 
