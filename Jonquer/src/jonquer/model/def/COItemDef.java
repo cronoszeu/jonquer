@@ -221,8 +221,29 @@ public class COItemDef {
     public boolean isMoney() {
 	return money;
     }
+    
+    public boolean isHealthPotion() {
+	return potionType == 1;
+    }
+    
+    public boolean isManaPotion() {
+	return potionType == 2;
+    }
+    
+    public void setPotionType(byte type) {
+	this.potionType = type;
+    }
+
+    public void setPotionRecovery(int potionRecovery) {
+	this.potionRecovery = potionRecovery;
+    }
+    public int getPotionRecovery() {
+	return potionRecovery;
+    }
 
     private boolean money = false;
+    private int potionRecovery = -1;
+    private byte potionType = -1;
     private int weaponType = 0;
     private int type = 0;
     private int quality = -1;

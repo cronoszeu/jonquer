@@ -132,11 +132,11 @@ public class Character implements Serializable {
 	this.spirit = spirit;
     }
 
-    public short getStats() {
+    public int getStats() {
 	return stats;
     }
 
-    public void setStats(short stats) {
+    public void setStats(int stats) {
 	this.stats = stats;
     }
 
@@ -452,13 +452,13 @@ public class Character implements Serializable {
      /**
       * I assume the amount of un-allocated stat points they has left to use
       */
-     private short stats;
+     private int stats;
      /**
       * @Todo: figure out of this is current HP, or max HP
       */
      private short life;
      /**
-      * @Todo: figure out of this is current Mana, or max Mana
+      * @Todo: current mana
       */
      private short mana;
      /**
