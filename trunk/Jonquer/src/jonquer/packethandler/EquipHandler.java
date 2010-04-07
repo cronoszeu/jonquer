@@ -274,6 +274,7 @@ public class EquipHandler {
     }
 
     public static void updateAll(Player p, Item i,byte slot, boolean all) {
+	p.updateBaseDamages();
 	p.getActionSender().sendEquippedItem(i, slot);
 	if(all) {
 	    for(Player pl : p.getMap().getPlayers().values()) {

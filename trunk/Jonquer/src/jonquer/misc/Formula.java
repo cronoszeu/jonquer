@@ -384,4 +384,12 @@ public class Formula {
     public static boolean inFarView(int oldx, int oldy, int newx, int newy) {
 	return Math.abs(oldy - newy) <= VIEW_RADIUS && Math.abs(oldx - newx) <= VIEW_RADIUS;
     }
+
+    public static int calcDamage(Player player) {
+	if(player.getMaxBaseDamage() <= player.getMinBaseDamage())
+	    return player.getMaxBaseDamage();
+	if(player.getMaxBaseDamage() <= 0 || player.getMinBaseDamage() <= 0)
+	    return 1;
+	return rand(player.getMinBaseDamage(), player.getMaxBaseDamage());
+    }
 }

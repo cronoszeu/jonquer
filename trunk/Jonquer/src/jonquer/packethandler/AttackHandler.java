@@ -40,14 +40,11 @@ public class AttackHandler implements PacketHandler {
 	    }
 	}
 
-	else if(t instanceof Monster && ((Monster)t).isDead())
-	    return;
-	else if(t instanceof Player && ((Player)t).getCharacter().isDead())
+	if(!player.canAttack(t))
 	    return;
 
 	final Entity target = t;
-	if(player.isDead())
-	    return;
+	
 	player.getCharacter().setTarget(target);
 
 	/*if(type != 2) {
@@ -81,11 +78,9 @@ public class AttackHandler implements PacketHandler {
 		/** Temporary way of getting the damage, @todo: make a variable of max and minimum damage that gets changed upon equip event etc. **/
 		Item righthand = player.getCharacter().getEquipment().getRight_hand();
 
-		int damage = Formula.rand(10, 15);
-		if(righthand != null)
-		    damage = Formula.rand(righthand.getDef().getMinDamage(), righthand.getDef().getMaxDamage());
+		int damage = Formula.calcDamage(player);
 
-		damage = 30;
+		
 
 		player.getCharacter().getTarget().dealDamage(damage);
 		player.getActionSender().sendSystemMessage("HP: " + player.getCharacter().getTarget().getCurHP() + "/" + player.getCharacter().getTarget().getMaxHealth());
@@ -156,7 +151,6 @@ public class AttackHandler implements PacketHandler {
 
 	if(player.getCharacter().isDead() || ent.isDead())
 	    return false;
-
 
 	double dist = Formula.distance(ent.getX(), ent.getY(), player.getCharacter().getX(), player.getCharacter().getY());
 	Item righthand = player.getCharacter().getEquipment().getRight_hand();

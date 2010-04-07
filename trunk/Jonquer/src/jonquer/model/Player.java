@@ -49,6 +49,16 @@ public class Player extends Entity {
 	getCharacter().setItemsInView(new ArrayList<GroundItem>());
 	world.getPlayers().add(this);
     }
+    
+    public boolean canAttack(Entity target) {
+	if(target == null)
+	    return false;
+	if(target.isDead() || this.isDead())
+	    return false;
+	
+	
+	return true;
+    }
 
     public void checkAndStopAttack() {
 	if(getCharacter().getTarget() != null)
@@ -201,6 +211,8 @@ public class Player extends Entity {
 		    if (Formula.inView(getCharacter(), p.getCharacter())) { // new loc is in view
 			getActionSender().sendSpawnPacket(p.getCharacter());
 			p.getActionSender().sendSpawnPacket(getCharacter());
+			if(p.isDead())
+			    getActionSender().deathModel(p.getCharacter().getID(), p.getCharacter().getLook());
 			continue;
 		    }
 		}
@@ -240,10 +252,12 @@ public class Player extends Entity {
 
 
 		for(Player p : getMap().getPlayers().values()) {
-		    if(p != playa)
+		    //if(p != playa)
 			if(p.getCharacter().inview(getCharacter())) {
-			    p.getActionSender().sendSpawnPacket(getCharacter());
-			    p.getActionSender().status(getCharacter().getID(), 26, 1024);
+			  // p.getActionSender().sendSpawnPacket(getCharacter()); // bad one
+			   p.getActionSender().deathModel(getCharacter().getID(), model);
+			   p.getActionSender().status(getCharacter().getID(), 26, 1024);
+			   
 			}
 		}
 	    }
@@ -384,6 +398,44 @@ public class Player extends Entity {
     public void setCurHP(int hp) {
 	getCharacter().setLife((short)hp);
 	getActionSender().vital(getCharacter().getID(), 0, hp);
+    }
+    
+    private int maxBaseDamage = 0;
+    
+    public int getMaxBaseDamage() {
+        return maxBaseDamage;
+    }
+
+    public void setMaxBaseDamage(int maxBaseDamage) {
+        this.maxBaseDamage = maxBaseDamage;
+    }
+
+    public int getMinBaseDamage() {
+        return minBaseDamage;
+    }
+
+    public void setMinBaseDamage(int minBaseDamage) {
+        this.minBaseDamage = minBaseDamage;
+    }
+
+    private int minBaseDamage = 0;
+    
+    public void updateBaseDamages() {
+	maxBaseDamage = 0;
+	minBaseDamage = 0;
+	Equipment e = getCharacter().getEquipment();
+	if(e.getLeft_hand() != null) {
+	    maxBaseDamage+=e.getLeft_hand().getDef().getMaxDamage();
+	    minBaseDamage+=e.getLeft_hand().getDef().getMinDamage();
+	}
+	if(e.getRight_hand() != null) {
+	    maxBaseDamage+=e.getRight_hand().getDef().getMaxDamage();
+	    minBaseDamage+=e.getRight_hand().getDef().getMinDamage();
+	}
+	if(e.getRing() != null) {
+	    maxBaseDamage+=e.getRing().getDef().getMaxDamage();
+	    minBaseDamage+=e.getRing().getDef().getMinDamage();
+	}
     }
 
     public PacketBuilder getActionSender() {

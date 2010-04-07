@@ -1,16 +1,8 @@
 package jonquer.plugins.skills;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import jonquer.listeners.SkillListener;
 import jonquer.misc.CombatWrapper;
-import jonquer.misc.Formula;
-import jonquer.misc.StaticData;
 import jonquer.model.Entity;
-import jonquer.model.Player;
-import jonquer.model.def.COSpellDef;
 
 public class Rage extends CombatWrapper implements SkillListener {
 
