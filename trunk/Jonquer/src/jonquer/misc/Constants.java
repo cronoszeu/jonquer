@@ -25,11 +25,11 @@ public class Constants {
     /**
      * the IP string for the Game host.
      */
-    public static final String GAME_HOST = "127.0.0.1";
+    public static final String GAME_HOST = "5.2.100.44";
     /**
      * the IP string for the Auth host.
      */
-    public static final String AUTH_HOST = "127.0.0.1";
+    public static final String AUTH_HOST = "5.2.100.44";
     /**
      * the Port number for the Auth Server
      */
@@ -47,7 +47,7 @@ public class Constants {
      */
     public static final String LOG_FILE = USER_DIR + File.separator + "log" + File.separator + "ServerLog.txt";
     /**
-     * Self explanitory
+     * Self explanatory
      */
     public static int PLAYERS_ONLINE = 0;
     /**

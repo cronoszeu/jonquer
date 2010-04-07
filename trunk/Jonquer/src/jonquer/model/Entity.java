@@ -21,5 +21,12 @@ public abstract class Entity {
     public abstract int getMaxHealth();
     
     public abstract int getUID();
+    
+    public void dealDamage(int damage) {
+	setCurHP((getCurHP() - damage) < 0 ? 0 : (getCurHP() - damage));
+	if(this instanceof Player) {
+	    ((Player)this).getActionSender().vital(this.getUID(), 0, this.getCurHP());
+	}
+    }
 
 }

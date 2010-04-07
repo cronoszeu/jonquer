@@ -2,14 +2,15 @@ package jonquer.net;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.List;
 
 import jonquer.debug.Log;
 import jonquer.misc.Constants;
 import jonquer.misc.Formula;
+import jonquer.model.Entity;
 import jonquer.model.GroundItem;
 import jonquer.model.Item;
 import jonquer.model.Monster;
-import jonquer.model.Packet;
 import jonquer.model.Player;
 import jonquer.model.World;
 
@@ -22,6 +23,39 @@ import org.apache.mina.common.IoSession;
  * 
  */
 public class PacketBuilder {
+
+
+    public void magicAttack(Entity us, int x, int y, int skillID, int skillLv, List<Entity> e, List<Integer> d) {
+	ByteBuffer bb = ByteBuffer.allocate(20 + (e.size() * 12));
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1105); // packet id
+	bb.putInt(4, us.getUID());
+
+	bb.putShort(8, (short) x);
+	bb.putShort(10, (short) y);
+	bb.putShort(12, (short) skillID);
+	bb.putShort(14, (short) skillLv);
+	bb.putInt(16, e.size());
+	int index = 20;
+	for(int i=0; i < e.size(); i++) {
+	    bb.putInt(index, e.get(i).getUID());
+	    index+=4;
+	    bb.putLong(index, (int)d.get(i));
+	    index+=8;
+	}
+	write(bb);
+    }
+
+
+    public void sendSkills() {
+	for(Integer s : player.getCharacter().getSkill_levels().keySet()) {
+	    int skilllevel = player.getCharacter().getSkill_levels().get(s);
+	    int skillExp = player.getCharacter().getSkill_exp().get(s);
+	    giveSkill(s, skilllevel, skillExp);
+	}
+    }
 
 
     public void giveSkill(int skillID, int lv, int exp) {
@@ -282,6 +316,8 @@ public class PacketBuilder {
     }
 
     public void sendProf(int type, int lv, int exp) {
+	if(lv <= 0 && exp <= 0)
+	    return;
 	ByteBuffer bb = ByteBuffer.allocate(16);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	bb.putShort(0, (short) bb.limit());
@@ -334,14 +370,14 @@ public class PacketBuilder {
 	bb.putShort(2, (short) 1017); // packet id
 	bb.putInt(4, c.getID());
 	bb.put(8, (byte)2);
-	bb.put(13, (byte)0xff);
-	bb.put(14, (byte)0xff);
-	bb.put(15, (byte)0xff);
-	bb.put(16, (byte)0xff);
+	bb.put(13, (byte)255);
+	bb.put(14, (byte)255);
+	bb.put(15, (byte)255);
+	bb.put(16, (byte)255);
 	bb.put(21, (byte)26);
 	write(bb);
     }
-    
+
     public void vital(int charID, int type, int value) {
 
 	ByteBuffer bb = ByteBuffer.allocate(28);
@@ -352,6 +388,47 @@ public class PacketBuilder {
 	bb.put(8, (byte)1);
 	bb.put(12, (byte)type);
 	bb.put(16, (byte)value);
+	write(bb);
+    }
+
+    public void status(int uid, int type, long value) {
+
+	ByteBuffer bb = ByteBuffer.allocate(36);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1017); // packet id
+	bb.putInt(4, uid);
+	bb.putInt(8, 1);
+	bb.putInt(12, type);	
+	bb.putLong(16, value);
+	write(bb);
+    }
+
+    public void status1(int uid, int value) {
+	ByteBuffer bb = ByteBuffer.allocate(28);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1017); // packet id
+	bb.putInt(4, uid);
+	bb.put(8, (byte)(1 & 0xff));
+	bb.put(8, (byte)(12 & 0xff));
+	bb.put(16, (byte)225);
+	bb.put(17, (byte)226);
+	bb.putShort(18, (short)value);
+	write(bb);
+    }
+    
+    public void status3(int uid) {
+	ByteBuffer bb = ByteBuffer.allocate(28);
+	bb.order(ByteOrder.LITTLE_ENDIAN);
+	bb.putShort(0, (short) bb.limit());
+	bb.putShort(2, (short) 1017); // packet id
+	bb.putInt(4, uid);
+	bb.put(8, (byte)1);
+	bb.put(12, (byte)12);
+	bb.put(16, (byte)0x61);
+	bb.put(17, (byte)0xb3);
+	bb.put(18, (byte)0x1e);
 	write(bb);
     }
 
@@ -396,7 +473,8 @@ public class PacketBuilder {
 	bb.put(64, (byte) 5);
 	bb.put(65, (byte) 0);
 	bb.put(66, (byte) 1);
-	bb.put(67, (byte) 0);
+	bb.put(67, (byte) 2);
+	System.out.println("Name: " + name);
 	bb.put(68, (byte) name.length());
 	for (int i = 0; i < name.length(); i++) {
 	    bb.put(69 + i, (byte) name.charAt(i));

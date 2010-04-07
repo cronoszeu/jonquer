@@ -30,6 +30,7 @@ import jonquer.model.Map;
 import jonquer.model.Npc;
 import jonquer.model.Portal;
 import jonquer.model.Shop;
+import jonquer.model.SpellGroup;
 import jonquer.model.World;
 import jonquer.model.def.COItemDef;
 import jonquer.model.def.COMonsterDef;
@@ -106,9 +107,28 @@ public class Server {
 	loadMaps();
 	loadPortals();
 	loadShops();
+	modifyDefs();
 	loadRevision();
 	Runtime.getRuntime().gc();
 	Log.log("Data loaded in " + (System.currentTimeMillis() - now) + "ms (" + finishMeasure() + "kb Allocated Memory)");
+    }
+    
+    public void modifyDefs() {
+	
+	/** Potions **/
+	int[] potionIDs = {1000000,1000010,1000020,1000030,1001000, 1001010, 1001020,1002000,1002010,1002020,1001030,1001040,1002030,1002040,1002050};
+	int[] recover = {70, 100, 250, 500, 70, 200,450,800,1200,2000,1000,2000,3000,4500, 3000};
+	boolean[] healthType = {true, true, true, true, false,false,false,true,true,true,false,false,false,false,true};
+	
+	for(int i=0; i < potionIDs.length; i++) {
+	    if(StaticData.itemDefs.get(potionIDs[i]) == null) {
+		System.out.println("Error: " + potionIDs[i]);
+		continue;
+	    }
+	    StaticData.itemDefs.get(potionIDs[i]).setPotionType((byte)(healthType[i] ? 1 : 2));
+	    StaticData.itemDefs.get(potionIDs[i]).setPotionRecovery(recover[i]);
+	}
+	/*************/
     }
     
     public void loadSpellDefs() {
@@ -136,13 +156,12 @@ public class Server {
 		def.setStamina(Integer.parseInt(properties.getProperty("Stamina")));
 		def.setRange(Integer.parseInt(properties.getProperty("Range")));
 		def.setAccuracy(Integer.parseInt(properties.getProperty("Accuracy")));
-		StaticData.spellDefs.put(def.getID(), def);
+		if(!StaticData.spellGroups.containsKey(def.getID()))
+		    StaticData.spellGroups.put(def.getID(), new SpellGroup());
+		StaticData.spellGroups.get(def.getID()).getSpellDefs().put(def.getLevel(), def);
 	
-		if(def.getName().equalsIgnoreCase("Fastblade"))
-		    Log.log(def.getType() + "");
-		
-		if(def.getType() == 14)
-		    Log.log("Name: " + def.getName());
+	
+
 		in.close();
 		count++;
 

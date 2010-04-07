@@ -8,6 +8,7 @@ import java.util.Map;
 import jonquer.listeners.SkillListener;
 import jonquer.model.Npc;
 import jonquer.model.Shop;
+import jonquer.model.SpellGroup;
 import jonquer.model.def.COItemDef;
 import jonquer.model.def.COMonsterDef;
 import jonquer.model.def.COMonsterSpawnDef;
@@ -46,9 +47,9 @@ public class StaticData {
      */
     public static HashMap<Integer, COMonsterSpawnDef> monsterSpawnDefs = new HashMap<Integer, COMonsterSpawnDef>();
     /**
-     * Stored all the spell def's.
+     * Stored all the spell def groups.
      */
-    public static HashMap<Integer, COSpellDef> spellDefs = new HashMap<Integer, COSpellDef>();
+    public static HashMap<Integer, SpellGroup> spellGroups = new HashMap<Integer, SpellGroup>();
     /**
      * Holds all the scripted Skills, pulled by the skill ID.
      */

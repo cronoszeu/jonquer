@@ -32,18 +32,20 @@ public class FrameHandler implements PacketHandler {
 	ByteBuffer bb = ByteBuffer.wrap(packet);
 	bb.order(ByteOrder.LITTLE_ENDIAN);
 	int id = bb.getInt(0x0c);
+	System.out.println(id);
 	if (id == 4) {
 	    EquipHandler.handlePacket(player, bb);
 	    return;
 	}
-
 	switch (id) {
+	
 	case 1: // shops
 	    int item_id = bb.getInt(8);
 	    int timestamp = bb.getInt(16);
 	    short zero1 = bb.getShort(20);
 	    short zero2 = bb.getShort(22);
 	    search:
+		
 		for (Shop shop : StaticData.shops.values()) {
 		    for (Npc npc : World.getWorld().getNpcs()) {
 			if (shop.getId() == npc.getId()) {

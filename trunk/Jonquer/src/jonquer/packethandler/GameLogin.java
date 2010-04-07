@@ -62,17 +62,25 @@ public class GameLogin implements PacketHandler {
 	    Constants.TODAYS_CONNECTIONS++;
 	    Constants.PLAYERS_ONLINE++;
 	    Log.debug("Logged In: " + player.getCharacter().getName());
+
 	    World.getWorld().getMaps().get(player.getCharacter().getMapid()).addPlayer(player);
 	    player.getCharacter().ourPlayer = player;
 
+
 	    player.getActionSender().sendHeroInfo();
 	    player.getActionSender().sendMessage(0xFFFFFF, Formula.DIALOG_MESSAGE_TYPE, "SYSTEM", "ALLUSERS", "ANSWER_OK");
+	    
 	    player.getActionSender().sendInventory();
+
 	    player.getActionSender().sendEquippedItems();
 	    player.getActionSender().sendProfs();
-	    player.getActionSender().sendMessage(0xfffff, Formula.TALK_MESSAGE_TYPE, "SYSTEM", "ALL", "Welcome to " + Constants.GAME_NAME + " v" + Constants.VERSION + (Constants.REVISION > 0 ? " (r" + Constants.REVISION + ")" : ""));
+	    player.getActionSender().sendSkills();    
+	    player.getActionSender().sendMessage(0xfffff, Formula.TALK_MESSAGE_TYPE, "SYSTEM", "ALL", "Welcome to " + Constants.GAME_NAME + " v" + Constants.VERSION + (Constants.REVISION > 0 ? " (r" + Constants.REVISION + ")" : ""));	    
 	    player.getActionSender().sendMessage(0xfffff, Formula.TALK_MESSAGE_TYPE, "SYSTEM", "ALL", "Players Online: " + Constants.PLAYERS_ONLINE + " Total Connections: " + Constants.TODAYS_CONNECTIONS);
-	    player.getActionSender().giveSkill(8001, 3, 500000);
+
+	   // player.getActionSender().giveSkill(8001, 3, 500000);
+
+
 	}
     }
 

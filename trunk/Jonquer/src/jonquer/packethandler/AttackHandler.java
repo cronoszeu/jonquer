@@ -4,7 +4,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import jonquer.debug.Log;
+import jonquer.listeners.SkillListener;
 import jonquer.misc.Formula;
+import jonquer.misc.StaticData;
 import jonquer.model.Entity;
 import jonquer.model.Item;
 import jonquer.model.Monster;
@@ -74,6 +76,8 @@ public class AttackHandler implements PacketHandler {
 		    return;
 		}
 
+
+
 		/** Temporary way of getting the damage, @todo: make a variable of max and minimum damage that gets changed upon equip event etc. **/
 		Item righthand = player.getCharacter().getEquipment().getRight_hand();
 
@@ -81,7 +85,9 @@ public class AttackHandler implements PacketHandler {
 		if(righthand != null)
 		    damage = Formula.rand(righthand.getDef().getMinDamage(), righthand.getDef().getMaxDamage());
 
-		player.getCharacter().getTarget().setCurHP((player.getCharacter().getTarget().getCurHP() - damage) < 0 ? 0 : (player.getCharacter().getTarget().getCurHP() - damage));
+		damage = 30;
+
+		player.getCharacter().getTarget().dealDamage(damage);
 		player.getActionSender().sendSystemMessage("HP: " + player.getCharacter().getTarget().getCurHP() + "/" + player.getCharacter().getTarget().getMaxHealth());
 		/** Update players around us **/
 		for(Player p : player.getMap().getPlayers().values()) {
@@ -89,6 +95,10 @@ public class AttackHandler implements PacketHandler {
 			p.getActionSender().attack(player, player.getCharacter().getTarget().getUID(), player.getCharacter().getTarget().getX(), player.getCharacter().getTarget().getY(), type, damage);
 		    }
 		}
+
+
+		checkWeaponSkills(player);
+
 
 		/** Handle what happens when they die **/
 		if(player.getCharacter().getTarget().getCurHP() < 1) {
@@ -160,6 +170,18 @@ public class AttackHandler implements PacketHandler {
 
 
 	return true;
+    }
+
+    public void checkWeaponSkills(Player player) {
+	Item righthand = player.getCharacter().getEquipment().getRight_hand();
+	if(righthand != null)
+	if(righthand.getDef().getWeaponType() == Formula.CLUB) {
+	    if(Formula.rand(0, 100) <= StaticData.spellGroups.get(7020).getSpellDefs().get(1).getAccuracy()) {
+		SkillListener sl = StaticData.skills.get(7020);
+		sl.fire(player, player.getCharacter().getTarget());
+	    }
+	}
+
     }
 
 }

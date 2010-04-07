@@ -5,6 +5,7 @@ import java.util.Random;
 
 import jonquer.debug.JonquerError;
 import jonquer.model.Character;
+import jonquer.model.Entity;
 import jonquer.model.GroundItem;
 import jonquer.model.Player;
 import jonquer.model.World;
@@ -210,6 +211,8 @@ public class Formula {
 	    throw new JonquerError("Direction (" + dir + ") is invalid");
 	}
     }
+    
+    public static final int SPIRIT_TO_MANA_MULTIPLIER = 5;
 
     public static void createCharacter(Player p) {
 	Character character = p.getCharacter();
@@ -233,6 +236,10 @@ public class Formula {
 	    character.setSpirit((short) 5);
 	    character.setAgility((short) 2);
 	    character.setStrength((short) 0);
+	    int thunder = 1000;
+	    p.getCharacter().getSkill_levels().put(thunder, 0);
+	    p.getCharacter().getSkill_exp().put(thunder, 0);
+	    p.addSkillExp(thunder, 0);
 	}
 
 	character.setConquerPoints(0);
@@ -242,7 +249,7 @@ public class Formula {
 	character.setX((short) 438);
 	character.setY((short) 377);
 	character.setStats((short) 0);
-	character.setMana((short) 0); // ill fix mana up later
+	character.setMana((short) (character.getSpirit() * SPIRIT_TO_MANA_MULTIPLIER)); // ill fix mana up later
 	character.setSpouse("None");
 	character.setLife(character.getMaxlife());
 
@@ -338,6 +345,10 @@ public class Formula {
     }
     public static boolean inView(int x, int y, int targetX, int targetY) {
 	return Math.abs(x - targetX) <= VIEW_RADIUS && Math.abs(y - targetY) <= VIEW_RADIUS;
+    }
+    
+    public static boolean inRange(Entity you, Entity them, int range) {
+	return Math.abs(you.getX() - them.getX()) <= range && Math.abs(you.getY() - them.getY()) <= range;
     }
     public static boolean inFarView(Character you, Character them) {
 	return Math.abs(you.getX() - them.getX()) <= FAR_VIEW_RADIUS && Math.abs(you.getY() - them.getY()) <= FAR_VIEW_RADIUS;

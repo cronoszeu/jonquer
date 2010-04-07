@@ -9,6 +9,7 @@ import jonquer.model.Player;
 import jonquer.model.World;
 import jonquer.model.def.COItemDef;
 import jonquer.net.PacketBuilder;
+import jonquer.plugins.skills.Rage;
 import jonquer.services.IoService;
 
 public class CommandHandler {
@@ -21,13 +22,28 @@ public class CommandHandler {
 	String cmdd = args[0];
 	command = cmdd;
 
+	if(command("/test")) {
+	    player.getActionSender().status(player.getCharacter().getID(), 26, 512);
+	    return;
+	}
+	if(command("/revive")) {
+	    //player.getCharacter().setStat
+	}
+	if(command("/losemana")) {
+	    player.getCharacter().setMana((short) 10);
+	    player.setCurHP(1);
+	    player.getActionSender().vital(player.getUID(), 2, player.getCharacter().getMana());
+	}
 	if(command("/blocked")) {
 	    if(Formula.isTileBlocked(player.getCharacter().getMapid(), Integer.parseInt(args[1]), Integer.parseInt(args[2]))) {
 		player.getActionSender().sendSystemMessage("Yeah, blocked");
 	    } else {
 		player.getActionSender().sendSystemMessage("Nope, not blocked");
 	    }
-		
+	}
+	if(command("/skill")) {   
+	    Rage.SPELL = Integer.parseInt(args[1]);
+	    Rage.LEVEL = Integer.parseInt(args[2]);
 	}
 	if(command("/prof")) {    
 	    player.addProfExp(Integer.parseInt(args[1]), Integer.parseInt(args[2]));

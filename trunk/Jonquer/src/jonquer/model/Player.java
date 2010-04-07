@@ -115,13 +115,16 @@ public class Player extends Entity {
     }
 
     public void addSkillExp(int i, int exp) {
+
 	if(getCharacter().getSkill_levels().get(i) >= 20)
 	    return;
 
 	exp *= (int)Constants.SKILL_EXP_MULTIPLIER;
-	if(getCharacter().getSkill_levels().get(i) < 1)
-	    getCharacter().getSkill_levels().put(i, 1); // needs a skill exp table added.
-	if(getCharacter().getSkill_exp().get(i) + exp > Formula.PROF_LEVEL_EXP[getCharacter().getSkill_levels().get(i) - 1]) {
+	if(getCharacter().getSkill_levels().get(i) == null) {
+	    getCharacter().getSkill_levels().put(i, 0); // needs a skill exp table added.
+	    getCharacter().getSkill_exp().put(i, 0);
+	}
+	if(getCharacter().getSkill_exp().get(i) + exp > Formula.PROF_LEVEL_EXP[getCharacter().getSkill_levels().get(i)]) {
 	    getCharacter().getSkill_levels().put(i, getCharacter().getSkill_levels().get(i) + 1);
 	    getCharacter().getSkill_exp().put(i, 0);
 	    getActionSender().sendSystemMessage("Your Skill level has been improved");
@@ -214,28 +217,34 @@ public class Player extends Entity {
 	return World.getWorld().getMaps().get(getCharacter().getMapid());
     }
 
+    public long lastDeath = System.currentTimeMillis();
+
+    public int lastModel = -1;
+
 
     @Override
     public void onDeath(Entity killer) {
 	final Player playa = this;
+	playa.lastDeath = System.currentTimeMillis();
 	getCharacter().setDead(true);
 	World.getWorld().getTimerService().add(new Timer(2000, null) {
 	    public void execute() {
 		int model = 15199;
+		playa.lastModel = getCharacter().getLook();
 		if (getCharacter().getLook() == 1003 || getCharacter().getLook() == 1004)
 		    model = 15099;
-		
-		getActionSender().vital(getCharacter().getID(), 26, getCharacter().getStats());
-		getActionSender().death(getCharacter());
-		
+
 		getCharacter().setLook(model);
 		getActionSender().deathModel(getCharacter().getID(), model);
-		
+		getActionSender().status(getCharacter().getID(), 26, 1024);
+
+
 		for(Player p : getMap().getPlayers().values()) {
 		    if(p != playa)
-		    if(p.getCharacter().inview(getCharacter())) {
-			p.getActionSender().sendSpawnPacket(getCharacter());
-		    }
+			if(p.getCharacter().inview(getCharacter())) {
+			    p.getActionSender().sendSpawnPacket(getCharacter());
+			    p.getActionSender().status(getCharacter().getID(), 26, 1024);
+			}
 		}
 	    }
 	});
@@ -374,6 +383,7 @@ public class Player extends Entity {
     @Override
     public void setCurHP(int hp) {
 	getCharacter().setLife((short)hp);
+	getActionSender().vital(getCharacter().getID(), 0, hp);
     }
 
     public PacketBuilder getActionSender() {
