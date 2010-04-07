@@ -30,6 +30,7 @@ public class DataPacket implements PacketHandler {
 	    player.getCharacter().setLook(player.lastModel);
 	    int x = 429;
 	    int y = 380;
+	    int map = 1002;
 	    for(Player p : player.getMap().getPlayers().values()) {
 		if(p.getCharacter().inview(player.getCharacter()) && !Formula.inView(x, y, p.getX(), p.getY())) {
 		    p.getActionSender().removeEntity(player);
@@ -38,9 +39,18 @@ public class DataPacket implements PacketHandler {
 	    }
 	    player.getCharacter().setX((short)x);
 	    player.getCharacter().setY((short)y);
+	    player.getCharacter().setMapid(map);
+
+	    player.getActionSender().sendLocation();
+	    if(player.getMap().getMapid() != map) {
+		player.getActionSender().sendCompleteMapChange();
+		player.getActionSender().sendMapInfo();
+	    }
 	    player.getActionSender().status1(player.getCharacter().getID(), 0);
 	    player.getActionSender().status3(player.getCharacter().getID());
+
 	    player.getActionSender().sendHeroInfo();
+	    player.getActionSender().sendEquippedItems();
 	    player.getActionSender().status(player.getCharacter().getID(), 26, 0);
 	    player.setCurHP(player.getCharacter().getMaxlife());
 	    player.updateNpcs();
@@ -48,7 +58,7 @@ public class DataPacket implements PacketHandler {
 	    player.updateOthersToMe();
 	    player.updateMonsters();
 	    player.updateGroundItems();
-	   
+
 	    break;
 
 	case 74:
@@ -72,8 +82,7 @@ public class DataPacket implements PacketHandler {
 		Portal portal = null;
 		for (Portal p : World.getWorld().getPortals()) {
 		    if (player.getCharacter().getMapid() == p.getMapid() &&
-			    Formula.distance(cellx, celly,
-				    p.getCellx(), p.getCelly()) <= 1) {
+			    Formula.distance(cellx, celly, p.getCellx(), p.getCelly()) <= 1) {
 			portal = p;
 		    }
 		}
@@ -94,8 +103,8 @@ public class DataPacket implements PacketHandler {
 		    player.updateOthersToMe();
 		    player.updateMonsters();
 		    player.updateNpcs();
-		    
-		    
+
+
 
 		}
 	    } else {
@@ -127,7 +136,7 @@ public class DataPacket implements PacketHandler {
 		player.getCharacter().setAction(100);
 		return;
 	    }
-		
+
 	    player.checkAndStopAttack();
 	    int prev = player.getCharacter().getAction();
 	    int id = bb.get(12);

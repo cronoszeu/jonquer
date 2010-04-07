@@ -386,8 +386,8 @@ public class PacketBuilder {
 	bb.putShort(2, (short) 1017); // packet id
 	bb.putInt(4, charID);
 	bb.put(8, (byte)1);
-	bb.put(12, (byte)type);
-	bb.put(16, (byte)value);
+	bb.putInt(12, type);
+	bb.putInt(16, value);
 	write(bb);
     }
 
