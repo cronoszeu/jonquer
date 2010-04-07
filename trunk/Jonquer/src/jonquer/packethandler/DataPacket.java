@@ -25,6 +25,7 @@ public class DataPacket implements PacketHandler {
 		Log.hack(player.getCharacter().getName() + " tried to revive in under 20 seconds");
 		return;
 	    }
+	    player.getCharacter().setAction(100); // default
 	    player.getCharacter().setDead(false);
 	    player.getCharacter().setLook(player.lastModel);
 	    int x = 429;
@@ -122,6 +123,11 @@ public class DataPacket implements PacketHandler {
 	    break;
 
 	case 81: // actions
+	    if(player.isDead()) {
+		player.getCharacter().setAction(100);
+		return;
+	    }
+		
 	    player.checkAndStopAttack();
 	    int prev = player.getCharacter().getAction();
 	    int id = bb.get(12);
@@ -174,7 +180,7 @@ public class DataPacket implements PacketHandler {
 	    break;
 
 	case 114: // get surroundings
-	    for (Player p : World.getWorld().getPlayers()) {
+	    for (Player p : player.getMap().getPlayers().values()) {
 		if (p.getCharacter().getMapid() == player.getCharacter().getMapid()) {
 		    if (p != player) {
 			p.getActionSender().sendSpawnPacket(player.getCharacter());
